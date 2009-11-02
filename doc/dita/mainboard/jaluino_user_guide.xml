@@ -31,13 +31,13 @@
       <title>How Jaluino looks like ? How about specs ?</title>
       <p>Enough talking, here&apos;s a photos showing how Jaluino looks like.</p>
       <fig>
-        <title>Jaluino v1.3b</title>
-        <image placement="break" href="../../images/mainboard/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="500"/>
+        <title>Jaluino Medium v1.3b</title>
+        <image href="../../images/mainboard/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="500" placement="break"/>
       </fig>
-      <p>Jaluino comes in different flavors and sizes. That&apos;s at least our goal at Jaluino Group. For now, one version of Jaluino is available. This version provides the following:<ul>
+      <p>Jaluino comes in different flavors and sizes. That&apos;s at least our goal at Jaluino Group. For now, one version of Jaluino is available. This version, Jaluino medium, provides the following:<ul>
           <li>runs a <b>Microchip PIC 18F4550</b>, with a 20MHz crystal, allowing speeds up to <i>48MHz</i>.</li>
           <li><b>Three power sources</b>: <i>Jack</i>, <i>USB</i>, and <i>serial module</i></li>
-          <li>Up to <b>three available voltages on board</b>: <i>12V</i> (from power source using jack), <i>5V</i> and <i>3.3V</i>.</li>
+          <li>Up to <b>three available voltages on board</b>: <i>Vin</i> (when using power source from jack, Vin is DC voltage on Jack minus VF of diode bridge, 1 to 1.1V), <i>5V</i> and <i>3.3V</i>.</li>
           <li>
             <b>USB connector</b>
           </li>
@@ -47,13 +47,11 @@
             <b>ICSP connector</b>
           </li>
           <li><b>I2C connector</b>, acting either as a master or a slave</li>
-          <li><b>Five pin headers</b> to expose PIC&apos;s pins and power pins to <i>daughter shields</i></li>
+          <li><b>Five pin headers</b> to expose PIC&apos;s pins, reset and power pins to <i>daughter shields</i></li>
           <li>
             <b>Fuse protection</b>
           </li>
-          <li>
-            <b>Reset Push button</b>
-          </li>
+          <li><b>Reset Push button</b> and reset </li>
         </ul></p>
     </section>
   </body>
