@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_userguide">
   <title>Introduction</title>
   <prolog>
@@ -49,7 +50,9 @@
           <li>
             <b>Fuse protection</b>
           </li>
-          <li><b>Reset Push button</b> and reset </li>
+          <li>
+            <b>Reset Push button</b>
+           </li>
         </ul></p>
     </section>
   </body>
