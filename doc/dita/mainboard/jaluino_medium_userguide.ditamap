@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE bookmap PUBLIC "-//OASIS//DTD DITA BookMap//EN" "bookmap.dtd" []>
+<bookmap id="bookmap-1">
+  <booktitle>
+    <mainbooktitle>Jaluino Medium User Guide</mainbooktitle>
+    <booktitlealt><image href="../../images/mainboard/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>A PIC based Arduino-like board, powered by Jalv2 and Jallib </booktitlealt>
+  </booktitle>
+  <bookmeta>
+    <bookrights>
+      <copyrfirst>
+        <year>2009</year>
+      </copyrfirst>
+      <bookowner>
+        <organization>Jaluino Group</organization>
+      </bookowner>
+      <summary>User guide describing and explaining how to setup Jaluino Medium board</summary>
+    </bookrights>
+  </bookmeta>
+  <frontmatter>
+    <booklists>
+      <toc/>
+    </booklists>
+  </frontmatter>
+  <chapter>
+    <topicref href="jaluino_intro.xml"/>
+  </chapter>
+  <chapter navtitle="Mainboard">
+    <topicref href="jaluino_medium_description.xml"/>
+  </chapter>
+</bookmap>

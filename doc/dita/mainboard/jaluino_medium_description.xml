@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="jaluino_userguide">
+  <title>Description</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <author>Richard Zengerink</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <section>
+      <title>Overview</title>
+      <p>TODO: picture overview</p>
+    </section>
+    <section>
+      <title>Board and shield sizes</title>
+      <p>Jaluino Medium board size is rather bigger than Arduino Duemilanove board. This is mainly because microntroller itself is bigger (it has more pins). Jaluino board is also single side, to be easier to build at home. Finally, Jaluino provides more features, like a serial connector<fn>Arduino only provides USB, or serial on older versions, but not both</fn> and an I²C connector.</p>
+      <p><fig>
+          <title>Jaluino Medium under construction, compared to Arduino Duemilanove.</title>
+          <image href="../../images/mainboard/jaluino_medium_arduino_comparison.jpg" width="300" placement="break"/>
+        </fig></p>
+      <p>Jaluino shield aera is smaller than the board itself, whereas Arduino&apos;s shield have quite the same size as the board.</p>
+      <p>Here are Jaluino board and shield sizes specifications:</p>
+      <p><table frame="all">
+          <title>Board size specifications</title>
+          <tgroup cols="2">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <tbody>
+              <row>
+                <entry>Length</entry>
+                <entry>4.6&quot; (or 11.8cm)</entry>
+              </row>
+              <row>
+                <entry>Width</entry>
+                <entry>3.4&quot; (or 8.6cm)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table><table frame="all">
+          <title>Shield size specifications</title>
+          <tgroup cols="2">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <tbody>
+              <row>
+                <entry>Length</entry>
+                <entry>3.4&quot; (or 8.6cm)</entry>
+              </row>
+              <row>
+                <entry>Width</entry>
+                <entry>3.1&quot; (or 8cm)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></p>
+      <p><fig>
+          <title>Jauino Medium with Crumboard shield plugged, showing board and shield size differences</title>
+          <image href="../../images/mainboard/jaluino_medium_crumboard_plugged.jpg" width="300" placement="break"/>
+        </fig></p>
+    </section>
+    <section>
+      <title>Exposed pins through shield connectors</title>
+      <p/>
+    </section>
+    <section>
+      <title>Power sources specifications</title>
+      <p/>
+    </section>
+  </body>
+</topic>
