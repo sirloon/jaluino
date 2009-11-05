@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_userguide">
   <title>Description</title>
   <prolog>
@@ -61,7 +62,11 @@
     </section>
     <section>
       <title>Exposed pins through shield connectors</title>
-      <p/>
+      <p>The following diagram shows 18F4550 pin layout, beside Jaluino shield connector. This is an important diagram, as it shows relation between PIC&apos;s pins and connectors, which pins is exposed<fn>&quot;Exposed&quot; means pin available on shields.</fn>, which is not.</p>
+      <p><fig>
+          <title>Jaluino Medium pin layout mapping related to shield connectors</title>
+          <image placement="break" href="../../images/mainboard/jaluino_medium_pin_layout.png" width="500" otherprops="clickable"/>
+        </fig></p>
     </section>
     <section>
       <title>Power sources specifications</title>

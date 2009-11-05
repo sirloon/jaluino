@@ -6,6 +6,12 @@
     <booktitlealt><image href="../../images/mainboard/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>A PIC based Arduino-like board, powered by Jalv2 and Jallib </booktitlealt>
   </booktitle>
   <bookmeta>
+    <prodinfo>
+      <prodname>Jaluino Medium</prodname>
+      <vrmlist>
+        <vrm version="0.1"/>
+      </vrmlist>
+    </prodinfo>
     <bookrights>
       <copyrfirst>
         <year>2009</year>
