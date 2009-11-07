@@ -55,7 +55,7 @@
           </tgroup>
         </table></p>
       <p><fig>
-          <title>Jauino Medium with Crumboard shield plugged, showing board and shield size differences</title>
+          <title>Jaluino Medium with Crumboard shield plugged, showing board and shield size differences</title>
           <image href="../../images/mainboard/jaluino_medium_crumboard_plugged.jpg" width="300" placement="break"/>
         </fig></p>
     </section>
@@ -94,7 +94,7 @@
             <p><b>Version b</b>: this version uses pin layout <i>Input/Ground/Ouput</i>.</p>
             <fig>
               <title>3.3V regulator pin layout for version <i>b</i></title>
-              <image href="../../images/mainboard/jaluino_vb_layout.png"/>
+              <image placement="break" href="../../images/mainboard/jaluino_vb_layout.png"/>
             </fig>
             <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version b</b>: LM3940, LF33V.</p>
           </li>
