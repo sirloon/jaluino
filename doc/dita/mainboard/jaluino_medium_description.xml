@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_userguide">
   <title>Description</title>
   <prolog>
@@ -65,12 +64,42 @@
       <p>The following diagram shows 18F4550 pin layout, beside Jaluino shield connector. This is an important diagram, as it shows relation between PIC&apos;s pins and connectors, which pins is exposed<fn>&quot;Exposed&quot; means pin available on shields.</fn>, which is not.</p>
       <p><fig>
           <title>Jaluino Medium pin layout mapping related to shield connectors</title>
-          <image placement="break" href="../../images/mainboard/jaluino_medium_pin_layout.png" width="500" otherprops="clickable"/>
+          <image href="../../images/mainboard/jaluino_medium_pin_layout.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
     </section>
     <section>
-      <title>Power sources specifications</title>
-      <p/>
+      <title>Power and voltages specifications</title>
+      <p>Jaluino medium comes with three power sources, and two voltages available on-board. Power sources can be either:<ul>
+          <li><b>AC/DC adaptor</b>, usually delivering up to 12V. Input voltage must be at least 9V. This kind of adaptor can deliver lots of power (typical cheap ones deliver something like 1A).</li>
+          <li><b>USB</b>, power is directly taken from USB connector. USB outputs 5V and usually can deliver up to 500mA.</li>
+          <li><b>serial module</b>, where such modules can also provide power (like a USB-to-serial module). Serial module needs to outputs 5V.</li>
+        </ul></p>
+      <p>Depending on how much power you need, you may use one these options.</p>
+      <p>Jaluino Medium provides two voltages available on-board, 5V and 3.3V:<ul>
+          <li><b>5V</b> : when using AC/DC adaptor, input voltage is regulated by 7805. This component outputs regulated 5V, which is a typical voltage used to power a microcontroller such a PIC 18F4550. When using USB or serial as power sources, no 5V regulation is done: this means there should be 5V as output (USB outputs 5V, if you use your serial module to power the board, make sure it outpus 5V).</li>
+          <li><b>3.3V</b> : whatever the power sources, another voltage regulator produces 3.3V from 5V. Jaluino Medium makes your life easier and provides this commonly used voltage, which is sometime used by specific components. </li>
+        </ul></p>
+    </section>
+    <section>
+      <title>Jaluino Medium version <i>a</i> and version <i>b</i></title>
+      <p>3.3V voltage regulator is kind of a special component: there are different regulators, not that easily available, quite expensive and not using the same pin layout. That&apos;s why Jaluino Medium comes in two flavors, depending on the pin layout<fn>Having two versions actually adds complexity to maintenance and designs. We, at Jaluino Group, wanted to provide both options at the beginning, until we can make a final decision... Which one would you prefer ?</fn>:<ul>
+          <li>
+            <p><b>Version a</b>: this version uses pin layout <i>Ground/Output/Input</i>. </p>
+            <fig>
+              <title>3.3V regulator pin layout for version <i>a</i><image placement="break" href="../../images/mainboard/jaluino_va_layout.png"/></title>
+            </fig>
+            <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version a</b>: LD1117V33, LM1117T, LM1086.</p>
+          </li>
+          <li>
+            <p><b>Version b</b>: this version uses pin layout <i>Input/Ground/Ouput</i>.</p>
+            <fig>
+              <title>3.3V regulator pin layout for version <i>b</i></title>
+              <image href="../../images/mainboard/jaluino_vb_layout.png"/>
+            </fig>
+            <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version b</b>: LM3940, LF33V.</p>
+          </li>
+        </ul></p>
+      <p>Choosing version <i>a</i> or version <i>b</i> really is just about selecting which regulator you mostly can find, at lowest price. Jaluino features remain the same.</p>
     </section>
   </body>
 </topic>
