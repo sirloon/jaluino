@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
-<topic id="jaluino_userguide">
+<topic id="jaluino_medium_description">
   <title>Description</title>
   <prolog>
     <author>Sébastien Lelong</author>
@@ -10,7 +10,17 @@
   <body>
     <section>
       <title>Overview</title>
-      <p>TODO: picture overview</p>
+      <p>The following picture shows the different connectors and important parts composing <b>Jaluino Medium</b>.</p>
+      <p><fig>
+          <title>Jaluino Medium overview</title>
+          <image placement="break" href="../../images/mainboard/jaluino_medium_overview.png" width="500" otherprops="clickable"/>
+        </fig></p>
+      <p>Several <b>power sources options</b> are available, selectable using jumpers. Fuse protection (500mA) helps keeping board safe when handled by distracted users...</p>
+      <p>PIC 18F4550 is clocked by a <b>20MHz crystal</b>, allowing speed up to <b>48MHz using PLL</b> (kind of black magic...). </p>
+      <p>Most used communication protocols are available from the board: <b>USB</b>, <b>serial</b>, <b>I²C</b>, <b>ICSP</b>. Those connectors are right angle male connectors, so easily plug wires and buses.</p>
+      <p>Resetting PIC 18F4550 can be done manually, using <b>Reset push button</b>, or using special RTS serial line, without manual intervention. This <b>Reset-via-RTS</b> feature is enabled using jumper.</p>
+      <p>Finally, female connectors on the center compose <b>shield connectors</b>, used to expose pins to daughter boards.</p>
+      <p>See (TODO: &quot;Setting up Jaluino Medium&quot;) for detailed instructions about using jumpers and enabling/disabling features.</p>
     </section>
     <section>
       <title>Board and shield sizes</title>
@@ -86,7 +96,7 @@
           <li>
             <p><b>Version a</b>: this version uses pin layout <i>Ground/Output/Input</i>. </p>
             <fig>
-              <title>3.3V regulator pin layout for version <i>a</i><image placement="break" href="../../images/mainboard/jaluino_va_layout.png"/></title>
+              <title>3.3V regulator pin layout for version <i>a</i><image href="../../images/mainboard/jaluino_va_layout.png" placement="break"/></title>
             </fig>
             <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version a</b>: LD1117V33, LM1117T, LM1086.</p>
           </li>
@@ -94,12 +104,12 @@
             <p><b>Version b</b>: this version uses pin layout <i>Input/Ground/Ouput</i>.</p>
             <fig>
               <title>3.3V regulator pin layout for version <i>b</i></title>
-              <image placement="break" href="../../images/mainboard/jaluino_vb_layout.png"/>
+              <image href="../../images/mainboard/jaluino_vb_layout.png" placement="break"/>
             </fig>
             <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version b</b>: LM3940, LF33V.</p>
           </li>
         </ul></p>
-      <p>Choosing version <i>a</i> or version <i>b</i> really is just about selecting which regulator you mostly can find, at lowest price. Jaluino features remain the same.</p>
+      <p>Choosing version <i>a</i> or version <i>b</i> really is just about selecting which regulator you mostly can find, at lowest price. Other Jaluino features remain the same.</p>
     </section>
   </body>
 </topic>
