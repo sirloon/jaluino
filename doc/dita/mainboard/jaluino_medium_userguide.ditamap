@@ -30,7 +30,13 @@
   <chapter>
     <topicref href="jaluino_intro.xml"/>
   </chapter>
-  <chapter navtitle="Mainboard">
+  <chapter navtitle="Jaluino Mainboard">
     <topicref href="jaluino_medium_description.xml"/>
+    <topicref href="jaluino_schematics.xml"/>
+  </chapter>
+  <chapter navtitle="Jaluino Shields">
+    <topicref navtitle="Crumboard"/>
+    <topicref navtitle="Styx"/>
+    <topicref navtitle="Building your own shield"/>
   </chapter>
 </bookmap>

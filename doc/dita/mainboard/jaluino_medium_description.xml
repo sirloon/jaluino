@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
 <topic id="jaluino_medium_description">
   <title>Description</title>
   <prolog>
@@ -13,7 +13,7 @@
       <p>The following picture shows the different connectors and important parts composing <b>Jaluino Medium</b>.</p>
       <p><fig>
           <title>Jaluino Medium overview</title>
-          <image placement="break" href="../../images/mainboard/jaluino_medium_overview.png" width="500" otherprops="clickable"/>
+          <image href="../../images/mainboard/jaluino_medium_overview.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Several <b>power sources options</b> are available, selectable using jumpers. Fuse protection (500mA) helps keeping board safe when handled by distracted users...</p>
       <p>PIC 18F4550 is clocked by a <b>20MHz crystal</b>, allowing speed up to <b>48MHz using PLL</b> (kind of black magic...). </p>
@@ -90,7 +90,7 @@
           <li><b>3.3V</b> : whatever the power sources, another voltage regulator produces 3.3V from 5V. Jaluino Medium makes your life easier and provides this commonly used voltage, which is sometime used by specific components. </li>
         </ul></p>
     </section>
-    <section>
+    <section id="jaluino_ab">
       <title>Jaluino Medium version <i>a</i> and version <i>b</i></title>
       <p>3.3V voltage regulator is kind of a special component: there are different regulators, not that easily available, quite expensive and not using the same pin layout. That&apos;s why Jaluino Medium comes in two flavors, depending on the pin layout<fn>Having two versions actually adds complexity to maintenance and designs. We, at Jaluino Group, wanted to provide both options at the beginning, until we can make a final decision... Which one would you prefer ?</fn>:<ul>
           <li>
