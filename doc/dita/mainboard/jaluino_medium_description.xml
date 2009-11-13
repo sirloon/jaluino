@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_medium_description">
   <title>Description</title>
   <prolog>
@@ -8,7 +9,7 @@
     <publisher>Jaluino Group</publisher>
   </prolog>
   <body>
-    <section>
+    <section id="overview">
       <title>Overview</title>
       <p>The following picture shows the different connectors and important parts composing <b>Jaluino Medium</b>.</p>
       <p><fig>
@@ -78,7 +79,7 @@
         </fig></p>
     </section>
     <section>
-      <title>Power and voltages specifications</title>
+      <title id="powersources">Power and voltages specifications</title>
       <p>Jaluino medium comes with three power sources, and two voltages available on-board. Power sources can be either:<ul>
           <li><b>AC/DC adaptor</b>, usually delivering up to 12V. Input voltage must be at least 9V. This kind of adaptor can deliver lots of power (typical cheap ones deliver something like 1A).</li>
           <li><b>USB</b>, power is directly taken from USB connector. USB outputs 5V and usually can deliver up to 500mA.</li>
