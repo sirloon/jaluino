@@ -32,7 +32,7 @@
   </chapter>
   <chapter navtitle="Jaluino Mainboard">
     <topicref href="jaluino_medium_description.xml"/>
-    <topicref href="jaluino_schematics.xml"/>
+    <topicref href="jaluino_medium_schematics.xml"/>
   </chapter>
   <chapter navtitle="Jaluino Shields">
     <topicref navtitle="Crumboard"/>
