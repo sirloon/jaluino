@@ -53,7 +53,7 @@
     </section>
     <section>
       <title>I²C setup</title>
-      <p>Jaluino Medium has built-in, ready-to-use I²C bus. Jaluino can act as a <i>master</i> or a <i>slave</i>. This behavior is under control of jumpers <b>JP5</b> and <b>JP6</b>. These jumpers always go by pair: either you plug JP5 and JP6, either you don&apos;t plug any jumper at all.<fn>Behind the scene, making Jaluino acting as a master requires to connect two resistors to +5, one for SDA line, another for SCL line. Jumpers JP5 and JP6 actually make these two resistors active.</fn>.</p>
+      <p>Jaluino Medium has built-in, ready-to-use I²C bus. Jaluino can act as a <i>master</i> or a <i>slave</i>. This behavior is under control of jumpers <b>JP5</b> and <b>JP6</b>. These jumpers always go by pair: either you plug JP5 and JP6, either you don&apos;t plug any jumper at all.<fn>Behind the scene, making Jaluino acting as a master requires to connect two resistors to +5V, one for SDA line, another for SCL line. Jumpers JP5 and JP6 actually make these two resistors active.</fn>.</p>
       <p><fig>
           <title>Two jumpers, going by pair, control I²C master/slave behavior</title>
           <image placement="break" href="../../images/mainboard/jaluino_medium_i2c_jumpers.jpg" width="500"/>
