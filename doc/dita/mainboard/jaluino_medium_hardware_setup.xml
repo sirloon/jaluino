@@ -26,7 +26,7 @@
         </ul><note type="caution">putting a jumper on JP3 and another JP4 is an <b>invalid combination</b>. Don&apos;t do this, as <b>your Jaluino board won&apos;t be protected by fuse anymore</b> !</note><note type="important">You have to select one of these combinations, this is a mandatory setup. Or your board won&apos;t be powered...</note></p>
       <p><fig>
           <title>Serial jumpers setup</title>
-          <image placement="break" href="../../images/mainboard/serial_jumpers_setup.png"/>
+          <image href="../../images/mainboard/power_jumpers_setup.png" placement="break"/>
         </fig></p>
     </section>
     <section>
@@ -39,7 +39,7 @@
       <p><ul>
           <li><b>JP7</b>: if enabled (jumper plugged), then CTS line is connected to pin <i>RD5</i><p><fig>
                 <title>CTS jumper setup</title>
-                <image placement="break" href="../../images/mainboard/cts_jumpers_setup.png"/>
+                <image href="../../images/mainboard/cts_jumpers_setup.png" placement="break"/>
               </fig></p>. This feature is usually not needed for basic serial communications, but if you need to deal with CTS logic (hardware flow control), you can enable this and handle CTS line using this pin.</li>
           <li><b>J7</b>: this jumper is a tri-state trigger. You can plug a jumper on the left side (segment 1-2), on the right side (segment 2-3), or no jumper at all.<ul>
               <li><b>Reset-via-RTS</b> (segment 1-2): a jumper is plugged, covering the two left pins. In this configuration, <b>Reset-via-RTS</b> is active. This means acting on RTS, for example from a PC, will actually perform reset (PIC is restarting). This feature is mostly important when using a bootloader, and if you want to upload and control your board without having to manually push the Reset button.</li>
@@ -56,7 +56,7 @@
       <p>Jaluino Medium has built-in, ready-to-use I²C bus. Jaluino can act as a <i>master</i> or a <i>slave</i>. This behavior is under control of jumpers <b>JP5</b> and <b>JP6</b>. These jumpers always go by pair: either you plug JP5 and JP6, either you don&apos;t plug any jumper at all.<fn>Behind the scene, making Jaluino acting as a master requires to connect two resistors to +5V, one for SDA line, another for SCL line. Jumpers JP5 and JP6 actually make these two resistors active.</fn>.</p>
       <p><fig>
           <title>Two jumpers, going by pair, control I²C master/slave behavior</title>
-          <image placement="break" href="../../images/mainboard/jaluino_medium_i2c_jumpers.jpg" width="500"/>
+          <image href="../../images/mainboard/jaluino_medium_i2c_jumpers.jpg" width="500" placement="break"/>
         </fig></p>
       <p><ul>
           <li>When jumpers are <b>plugged on JP5 and JP6</b>, Jaluino acts as an <i>I²C master</i>.</li>
@@ -64,7 +64,7 @@
         </ul></p>
       <p><fig>
           <title>I²C jumpers setup</title>
-          <image placement="break" href="../../images/mainboard/i2c_jumpers_setup.png"/>
+          <image href="../../images/mainboard/i2c_jumpers_setup.png" placement="break"/>
         </fig></p>
     </section>
   </body>
