@@ -30,7 +30,7 @@
       <p>Enough talking, here&apos;s a photos showing how Jaluino looks like.</p>
       <fig>
         <title>Jaluino Medium v1.3b</title>
-        <image href="../../images/mainboard/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>
+        <image href="images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>
       </fig>
       <p>Jaluino comes in different flavors and sizes. That&apos;s at least our goal at Jaluino Group. For now, one version of Jaluino is available. This version, Jaluino medium, provides the following:<ul>
           <li>runs a <b>Microchip PIC 18F4550</b>, with a 20MHz crystal, allowing speeds up to <i>48MHz</i>. This PIC provides:<ul>

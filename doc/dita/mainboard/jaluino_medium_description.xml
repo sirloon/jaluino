@@ -14,7 +14,7 @@
       <p>The following picture shows the different connectors and important parts composing <b>Jaluino Medium</b>.</p>
       <p><fig>
           <title>Jaluino Medium overview</title>
-          <image href="../../images/mainboard/jaluino_medium_overview.png" width="500" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_medium_overview.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Several <b>power sources options</b> are available, selectable using jumpers. Fuse protection (500mA) helps keeping board safe when handled by distracted users...</p>
       <p>PIC 18F4550 is clocked by a <b>20MHz crystal</b>, allowing speed up to <b>48MHz using PLL</b> (kind of black magic...). </p>
@@ -28,7 +28,7 @@
       <p>Jaluino Medium board size is rather bigger than Arduino Duemilanove board. This is mainly because microntroller itself is bigger (it has more pins). Jaluino board is also single side, to be easier to build at home. Finally, Jaluino provides more features, like a serial connector<fn>Arduino only provides USB, or serial on older versions, but not both</fn> and an I²C connector.</p>
       <p><fig>
           <title>Jaluino Medium under construction, compared to Arduino Duemilanove.</title>
-          <image href="../../images/mainboard/jaluino_medium_arduino_comparison.jpg" width="300" placement="break"/>
+          <image href="images/jaluino_medium_arduino_comparison.jpg" width="300" placement="break"/>
         </fig></p>
       <p>Jaluino shield aera is smaller than the board itself, whereas Arduino&apos;s shield have quite the same size as the board.</p>
       <p>Here are Jaluino board and shield sizes specifications:</p>
@@ -67,7 +67,7 @@
         </table></p>
       <p><fig>
           <title>Jaluino Medium with Crumboard shield plugged, showing board and shield size differences</title>
-          <image href="../../images/mainboard/jaluino_medium_crumboard_plugged.jpg" width="300" placement="break"/>
+          <image href="images/jaluino_medium_crumboard_plugged.jpg" width="300" placement="break"/>
         </fig></p>
     </section>
     <section>
@@ -75,7 +75,7 @@
       <p>The following diagram shows 18F4550 pin layout, beside Jaluino shield connector. This is an important diagram, as it shows relation between PIC&apos;s pins and connectors, which pins is exposed<fn>&quot;Exposed&quot; means pin available on shields.</fn>, which is not.</p>
       <p><fig>
           <title>Jaluino Medium pin layout mapping related to shield connectors</title>
-          <image href="../../images/mainboard/jaluino_medium_pin_layout.png" width="500" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_medium_pin_layout.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
     </section>
     <section>
@@ -97,7 +97,7 @@
           <li>
             <p><b>Version a</b>: this version uses pin layout <i>Ground/Output/Input</i>. </p>
             <fig>
-              <title>3.3V regulator pin layout for version <i>a</i><image href="../../images/mainboard/jaluino_va_layout.png" placement="break"/></title>
+              <title>3.3V regulator pin layout for version <i>a</i><image href="images/jaluino_va_layout.png" placement="break"/></title>
             </fig>
             <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version a</b>: LD1117V33, LM1117T, LM1086.</p>
           </li>
@@ -105,7 +105,7 @@
             <p><b>Version b</b>: this version uses pin layout <i>Input/Ground/Ouput</i>.</p>
             <fig>
               <title>3.3V regulator pin layout for version <i>b</i></title>
-              <image href="../../images/mainboard/jaluino_vb_layout.png" placement="break"/>
+              <image href="images/jaluino_vb_layout.png" placement="break"/>
             </fig>
             <p>The following components use this pin layout, and can be used to build <b>Jaluino Medium version b</b>: LM3940, LF33V.</p>
           </li>

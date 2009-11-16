@@ -16,14 +16,14 @@
       <p><b>Version a</b> schematic is also available on Jaluino  SVN repository as a <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13a_schematic.pdf" format="pdf">PDF file</xref>. </p>
       <p><fig>
           <title><b>Jaluino Medium version a</b> schematic</title>
-          <image href="../../images/mainboard/jaluino_medium_v13a_schematic.png" width="500" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_medium_v13a_schematic.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
     </section>
     <section>
       <title>Jaluino Medium version b</title>
       <p><b>Version b</b> schematic is also available on Jaluino SVN repository as a <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13b_schematic.pdf" format="pdf">PDF file</xref>. </p>
       <p><fig>
-          <title><b>Jaluino Medium version b</b> schematic<image href="../../images/mainboard/jaluino_medium_v13b_schematic.png" width="500" placement="break" otherprops="clickable"/></title>
+          <title><b>Jaluino Medium version b</b> schematic<image href="images/jaluino_medium_v13b_schematic.png" width="500" placement="break" otherprops="clickable"/></title>
         </fig></p>
     </section>
   </body>
