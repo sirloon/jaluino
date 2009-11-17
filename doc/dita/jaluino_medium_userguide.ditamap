@@ -28,16 +28,16 @@
     </booklists>
   </frontmatter>
   <chapter>
-    <topicref href="jaluino_intro.xml"/>
+    <topicref href="mainboard/jaluino_intro.xml"/>
   </chapter>
   <chapter navtitle="Jaluino Mainboard">
-    <topicref href="jaluino_medium_description.xml"/>
-    <topicref href="jaluino_medium_schematics.xml"/>
-    <topicref href="jaluino_medium_hardware_setup.xml"/>
+    <topicref href="mainboard/jaluino_medium_description.xml"/>
+    <topicref href="mainboard/jaluino_medium_schematics.xml"/>
+    <topicref href="mainboard/jaluino_medium_hardware_setup.xml"/>
   </chapter>
   <chapter navtitle="Jaluino Shields">
     <topicref navtitle="Crumboard"/>
-    <topicref navtitle="Styx"/>
+    <topicref navtitle="Styx" href="shields/styx/jaluino_styx.xml"/>
     <topicref navtitle="Building your own shield"/>
   </chapter>
 </bookmap>

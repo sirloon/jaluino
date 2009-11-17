@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<topic id="jaluino_styx">
+  <title>Styx shield</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <author>Richard Zengerink</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <section>
+      <title>What is Styx ?</title>
+      <table frame="none" pgwide="1">
+        <tgroup cols="2">
+          <colspec colname="c1"/>
+          <colspec colname="c2"/>
+          <tbody>
+            <row>
+              <entry>
+                <image href="images/styx_orig.jpg" width="200" align="left" placement="break"/>
+              </entry>
+              <entry>
+                <p><b>Styx</b>   is a  shield allowing to use original Arduino shields with Jaluino. This is an intermediate shield to make two differents worlds talk together<fn>Shield name, Styx, comes from river Styx (or also his guardian) acting as a boundary between Earth and the Underworld. Reader may choose, from Microchip and Atmel, which is Earth and which is Underworld... See <xref href="http://en.wikipedia.org/wiki/Styx" format="html">http://en.wikipedia.org/wiki/Styx</xref> for more information.</fn>.</p>
+                <p>There&apos;s no magic behind this shield: pins from Jaluino PIC are arbitrarily mapped against pins from Arduino Atmega. Not all pins can be mapped. For instance, Atmel has often more PWM pins than PIC and, on the contrary, PIC often has more ADC channels than Atmega. So this arbitrarily mapping isn&apos;t perfect, but hopefully optimized and usable...</p>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section>
+      <title>Schematic and PCB</title>
+      <p>Styx schematic is simple, it&apos;s just about mapping pins together...</p>
+      <p><fig>
+          <title>Jaluino Styx schematic</title>
+          <image href="images/jaluino_shield_styx.png" width="350" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>While schematic is simple, PCB is more complex, despite the small number of components... Remember not using this image to build your PCB, as it may not be scaled correctly. This image is just here to give an overview. You can access <xref href="http://jaluino.googlecode.com/svn/trunk/shields/styx/jaluino_shield_styx_pcb.pdf" format="pdf">1:1 scale Styx PCB</xref>, PDF format, on Jaluino SVN repository.</p>
+      <p><fig>
+          <title>Jaluino Styx PCB</title>
+          <image href="images/jaluino_shield_styx_pcb.png" width="250" placement="break"/>
+        </fig></p>
+    </section>
+    <section>
+      <title>Building Styx</title>
+      <table frame="none" pgwide="1">
+        <tgroup cols="2">
+          <colspec colname="c1"/>
+          <colspec colname="c2"/>
+          <tbody>
+            <row>
+              <entry>
+                <image href="images/styx.jpg" width="200"/>
+              </entry>
+              <entry>
+                <p>Since PCB looks more complex than one would think, Styx shield isn&apos;t actually easy to build. You&apos;ll have to be careful with thin tracks. Styx is about plugging shield together, so  give also attention while soldering pin headers: make sure they are as vertical with the board, and parallel between them, as possible. Else you&apos;ll get troubles while plugging Arduino shields.</p>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <p>Styx shield is more a <i>mechanical</i> challenge than an <i>electronic</i> one...</p>
+      <p><fig>
+          <title>Styx plugged on Jaluino</title>
+          <image placement="break" href="images/styx_plugged.jpg" width="300"/>
+        </fig></p>
+      <p><fig>
+          <title>Side view of Styx plugged on Jaluino. Pin headers on the left aren&apos;t perfectly vertical, making Arduino shields not easy to plug.</title>
+          <image placement="break" href="images/styx_plugged_side.jpg" width="300"/>
+        </fig></p>
+    </section>
+    <section>
+      <title>Using Styx</title>
+      <p>Using Styx is easy: just plug an Arduino shield on it... The challenge will be to find an Arduino shield compatible with PIC specifications. Theoretically, you could plug any Arduino shields. In practice, prototyping shields are good candidates, due to very simple electronics.</p>
+      <p><fig>
+          <title>Jaluino, Styx and an original Arduino prototyping shield</title>
+          <image placement="break" href="images/jaluino_styx_prototype_boards.jpg" width="300"/>
+          <image placement="break" href="images/styx_all_plugged1.jpg" width="300"/>
+        </fig><fig>
+          <title>Looks like Pise tower...</title>
+          <image placement="break" href="images/styx_all_plugged2.jpg" width="200"/>
+        </fig><fig>
+          <title>LED is blinking. Sweet...</title>
+          <image placement="break" href="images/styx_all_plugged3.jpg" width="300"/>
+        </fig></p>
+      <p>Other more complex shields, even if usable with a PIC, will require you to write the program to drive it. If you&apos;re in the process of such a challenge, please keep inform us at Jaluino Group<fn>Jaluino Group can be reached at: <xref href="http://groups.google.com/group/jaluino" format="html">http://groups.google.com/group/jaluino</xref></fn> !</p>
+    </section>
+    <section>
+      <title>Limitations</title>
+      <p>Styx shield allows to use Arduino shields. To be accurate, it allows to physically plug Arduino shields. Due to the resulting &quot;Pise design&quot;, you may encounter problems when dealing with analog and PWM signals<fn>See this thread for more: <xref href="http://groups.google.com/group/jallib/browse_thread/thread/d8c9bc16ab9598cb/e22785013e5eb55d" format="html">http://groups.google.com/group/jallib/browse_thread/thread/d8c9bc16ab9598cb/e22785013e5eb55d</xref></fn>. Using complex Arduino shields (ie. not prototyping boards as previously shown) may require lots of work to adapt it, writing program on the PIC side.</p>
+      <p>This limitations obsviously exist. But fun is unlimited :)</p>
+    </section>
+  </body>
+</topic>
