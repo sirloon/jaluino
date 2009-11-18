@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="jaluino_styx">
+  <title>Jaluino Shields</title>
+  <body>
+    <p>This section describes  <b>shields</b> compatible with Jaluino board. Shields are daughter boards you can plug onto Jaluino, to extend functionalities and features, experiment new designs...</p>
+    <p><note>Shield name comes from Arduino shields themselves. Arduino names such boards because it covers the entire Arduino board.</note></p>
+    <p><table frame="bottom" pgwide="1">
+        <tgroup cols="2">
+          <colspec colnum="1" colname="c0" colsep="0"/>
+          <colspec colnum="2" colname="c1" colsep="0"/>
+          <tbody>
+            <row rowsep="1">
+              <entry>
+                <image href="crumboard/images/medium_crumboard_side_view.JPG" width="150" placement="break"/>
+              </entry>
+              <entry>
+                <p><b>Crumboard</b> shield is a prototyping shield designed for Jaluino. It embeds a small breadboard (thus the name, crumb-board...), two LEDs and two Push-buttons.</p>
+                <p>This shield is useful to test new hardware designs. It&apos;s also a nice base to learn how to use Jaluino and get started with PIC microcontroller, experimenting very basic tutorials such as famous &quot;blink-a-led&quot; and read input from a push-button. Definitely a <i>must-have</i> !</p>
+                <p><i>Work-In-Progress, documentation soon available</i></p>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <image href="styx/images/styx_all_plugged1.jpg" width="150" placement="break"/>
+                <xref href="styx/jaluino_styx.xml"/>
+              </entry>
+              <entry conref="styx/jaluino_styx.xml#jaluino_styx/global_desc"/>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></p>
+  </body>
+</topic>

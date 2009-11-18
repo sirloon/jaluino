@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_schematics">
   <title>Hardware setup</title>
   <prolog>
@@ -14,7 +15,7 @@
       <p>Jaluino can be powered using different sources (see <xref href="jaluino_medium_description.xml#jaluino_medium_description/powersources">here</xref> for power specifications): a classical AC/DC adaptor, using USB connector or through a serial module (typically a USB-to-serial adaptor). These different possibilities can be configured with jumpers <b>JP1</b>, <b>JP2</b>, <b>JP3</b> and <b>JP4</b>.</p>
       <p>JP1, JP2 and JP3 jumpers are located on top left and JP4 is located on top right of the board, near serial connector.</p>
       <p><fig>
-          <title>Four jumpers allow to setup power sources<image href="images/jaluino_medium_power_jumpers.jpg" width="500" placement="break"/></title>
+          <title>Four jumpers allow to setup power sources<image href="images/jaluino_medium_power_jumpers.jpg" width="300" placement="break"/></title>
         </fig></p>
       <p>Valid combinations are the following:<ul>
           <li>One jumper can be plugged on JP1, JP2 <b>or</b> JP3.<ul>
@@ -34,7 +35,7 @@
       <p>Two jumpers can be used to setup serial, basically to configure RTS and CTS. Involved jumpers are <b>JP7</b> and <b>J7</b>, they are located on top right of the board, near serial connector. </p>
       <p><fig>
           <title>Two jumpers are involved in serial setup (RTS and CTS)</title>
-          <image href="images/jaluino_medium_serial_jumpers.jpg" width="500" placement="break"/>
+          <image href="images/jaluino_medium_serial_jumpers.jpg" width="300" placement="break"/>
         </fig></p>
       <p><ul>
           <li><b>JP7</b>: if enabled (jumper plugged), then CTS line is connected to pin <i>RD5</i><p><fig>
@@ -56,7 +57,7 @@
       <p>Jaluino Medium has built-in, ready-to-use I²C bus. Jaluino can act as a <i>master</i> or a <i>slave</i>. This behavior is under control of jumpers <b>JP5</b> and <b>JP6</b>. These jumpers always go by pair: either you plug JP5 and JP6, either you don&apos;t plug any jumper at all.<fn>Behind the scene, making Jaluino acting as a master requires to connect two resistors to +5V, one for SDA line, another for SCL line. Jumpers JP5 and JP6 actually make these two resistors active.</fn>.</p>
       <p><fig>
           <title>Two jumpers, going by pair, control I²C master/slave behavior</title>
-          <image href="images/jaluino_medium_i2c_jumpers.jpg" width="500" placement="break"/>
+          <image href="images/jaluino_medium_i2c_jumpers.jpg" width="300" placement="break"/>
         </fig></p>
       <p><ul>
           <li>When jumpers are <b>plugged on JP5 and JP6</b>, Jaluino acts as an <i>I²C master</i>.</li>

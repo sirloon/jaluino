@@ -3,13 +3,13 @@
 <bookmap id="bookmap-1">
   <booktitle>
     <mainbooktitle>Jaluino Medium User Guide</mainbooktitle>
-    <booktitlealt><image href="images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>A PIC based Arduino-like board, powered by Jalv2 and Jallib </booktitlealt>
+    <booktitlealt><image href="mainboard/images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>A PIC based Arduino-like board, powered by Jalv2 and Jallib </booktitlealt>
   </booktitle>
   <bookmeta>
     <prodinfo>
       <prodname>Jaluino Medium</prodname>
       <vrmlist>
-        <vrm version="0.1"/>
+        <vrm version="1.3"/>
       </vrmlist>
     </prodinfo>
     <bookrights>
@@ -27,15 +27,13 @@
       <toc/>
     </booklists>
   </frontmatter>
-  <chapter>
-    <topicref href="mainboard/jaluino_intro.xml"/>
-  </chapter>
+  <chapter navtitle="Introduction" href="mainboard/jaluino_intro.xml"/>
   <chapter navtitle="Jaluino Mainboard">
     <topicref href="mainboard/jaluino_medium_description.xml"/>
     <topicref href="mainboard/jaluino_medium_schematics.xml"/>
     <topicref href="mainboard/jaluino_medium_hardware_setup.xml"/>
   </chapter>
-  <chapter navtitle="Jaluino Shields">
+  <chapter navtitle="Jaluino Shields" href="shields/jaluino_shields.xml">
     <topicref navtitle="Crumboard"/>
     <topicref navtitle="Styx" href="shields/styx/jaluino_styx.xml"/>
     <topicref navtitle="Building your own shield"/>
