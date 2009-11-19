@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="jaluino_connectors">
+  <title>About shield connectors...</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <author>Richard Zengerink</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <p><b>Jaluino</b> uses connectors to plug shields. This  design involves that you give special care and attention about them in order to get reliable and durable boards and shields. You&apos;ll also use a lot of them, so finding a good compromise between ease of use, budget and reliability is something very central in Jaluino designs.</p>
+    <p>So this section is about giving you some hints about these connectors. When you plug a shield onto Jaluino, male connectors have to go through the shield board to reach female connectors on mainboard, while providing female connectors for another potential shield. The main challenge is provide such female connectors, with rather long pins...</p>
+    <p> We currently provide two main ways: one is using on-the-shelf connectors you can buy, another requires you to actually build it. The choice is yours, depending your priorities...</p>
+    <section>
+      <title>Option 1: buy specific connectors</title>
+      <p>This first option may be the easier, while by far the most expensive. Connectors issue isn&apos;t a new problem, Arduino has exactly the sames. So, if you search enough, you should be able to buy such female connectors with long pins, named <b>stackable pin headers</b>. Since there are quite specific, so is the price...</p>
+      <p>Just like Arduino, Jaluino uses two type of stackable headers: 8-pins and 6-pins. You&apos;ll have to get both types.</p>
+      <p><fig>
+          <title>Vendors such as Sparkfun sell Arduino&apos;s specific connectors, for few bucks.</title>
+          <image href="images/stackable_header.jpg" width="250" placement="break"/>
+        </fig></p>
+      <p><i>Pros</i> are obvious: this is the simplest way to get your shield built. <i>Cons</i> are also obvious: it may not be the cheapest solution. No, not the cheapest... Also, by pluggin/unpluggin shields, such connectors will eventually get &quot;tired&quot;, and you may soon have to completely replace it...</p>
+    </section>
+    <section>
+      <title>Option 2: build your own specific connectors</title>
+      <p>Another option is build them by yourself. This is the <i>cheap-way</i>, or ghetto building way, something we rather like at Jaluino... So, how does it work ? Female connectors with long pins exist for IC, this is quite standard and easy-to-find connectors. Combining them with classical pin headers and you&apos;ll get nice Jaluino connectors !</p>
+      <p><fig>
+          <title>Building your own specific connectors, with IC dedicated pin headers</title>
+          <image href="images/connectors_seperate.JPG" width="250" placement="break"/>
+        </fig></p>
+      <p>The main advantage is the price: despite the greated number of pieces, since they are standard, the whole is cheaper than some Arduino&apos;s specific connectors. Also, if connectors on top get damaged, you can easily them without having to unsolder your shield and change others. Drawbacks might be top connectors may not get easily plugged on IC headers, or get removed unintentionally...</p>
+      <p><fig>
+          <title>Home-made connectors in action !</title>
+          <image href="images/connectors_on_breadboard_shield.JPG" width="200" placement="break"/>
+        </fig></p>
+    </section>
+  </body>
+</topic>

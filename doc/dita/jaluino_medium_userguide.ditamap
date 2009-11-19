@@ -27,8 +27,7 @@
       <toc/>
     </booklists>
   </frontmatter>
-  <chapter navtitle="Introduction" href="mainboard/jaluino_intro.xml"/>
-  <chapter navtitle="Jaluino Mainboard">
+  <chapter navtitle="Jaluino Mainboard" href="mainboard/jaluino_intro.xml">
     <topicref href="mainboard/jaluino_medium_description.xml"/>
     <topicref href="mainboard/jaluino_medium_schematics.xml"/>
     <topicref href="mainboard/jaluino_medium_hardware_setup.xml"/>
@@ -36,6 +35,7 @@
   <chapter navtitle="Jaluino Shields" href="shields/jaluino_shields.xml">
     <topicref navtitle="Crumboard"/>
     <topicref navtitle="Styx" href="shields/styx/jaluino_styx.xml"/>
+    <topicref href="shields/connectors/jaluino_connectors.xml"/>
     <topicref navtitle="Building your own shield"/>
   </chapter>
 </bookmap>

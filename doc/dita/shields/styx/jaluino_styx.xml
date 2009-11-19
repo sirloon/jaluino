@@ -36,7 +36,7 @@
           <title>Jaluino Styx schematic</title>
           <image href="images/jaluino_shield_styx.png" width="350" placement="break" otherprops="clickable"/>
         </fig></p>
-      <p>While schematic is simple, PCB is more complex, despite the small number of components... Remember not using this image to build your PCB, as it may not be scaled correctly. This image is just here to give an overview. You can access <xref href="http://jaluino.googlecode.com/svn/trunk/shields/styx/jaluino_shield_styx_pcb.pdf" format="pdf">1:1 scale Styx PCB</xref>, PDF format, on Jaluino SVN repository.</p>
+      <p>While schematic is simple, PCB is more complex, despite the small number of components... Remember not using this image to build your PCB, as it may not be scaled correctly. This image is just here to give an overview. You can access 1:1 scale Styx <xref href="http://jaluino.googlecode.com/svn/trunk/shields/styx/jaluino_shield_styx_pcb.pdf" format="pdf">PCB</xref> and <xref href="http://jaluino.googlecode.com/svn/trunk/shields/styx/jaluino_shield_styx_pcb_front.pdf" format="pdf">labels</xref>, PDF format, on Jaluino SVN repository.</p>
       <p><fig>
           <title>Jaluino Styx PCB</title>
           <p><table frame="none" pgwide="1">
@@ -104,7 +104,7 @@
     <section>
       <title>Limitations</title>
       <p>Styx shield allows to use Arduino shields. To be accurate, it allows to physically plug Arduino shields. Due to the resulting &quot;Pise design&quot;, you may encounter problems when dealing with analog and PWM signals<fn>See this thread for more: <xref href="http://groups.google.com/group/jallib/browse_thread/thread/d8c9bc16ab9598cb/e22785013e5eb55d" format="html">http://groups.google.com/group/jallib/browse_thread/thread/d8c9bc16ab9598cb/e22785013e5eb55d</xref></fn>. Using complex Arduino shields (ie. not prototyping boards as previously shown) may require lots of work to adapt it, writing program on the PIC side.</p>
-      <p>This limitations obsviously exist. But fun is unlimited :)</p>
+      <p>These limitations obsviously exist. But fun is unlimited :)</p>
     </section>
   </body>
 </topic>
