@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_crumboard">
   <title>Crumboard shield</title>
   <prolog>
@@ -36,7 +37,7 @@
           <image href="images/crumboard_schematic.png" width="350" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>LEDs and push-buttons can be activated using jumpers JP1, JP2, JP3 and JP4.</p>
-      <p>PCB shouldn&apos;t be a problem to build. You can access 1:1 scale Crumboard <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/Crumboard_pcb.pdf" format="pdf">PCB</xref> and <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/label_for_crumboard.pdf" format="pdf">labels</xref>, PDF format, on <xref href="http://code.google.com/p/jaluino/source/browse/trunk/shields/crumboard/" format="html">Jaluino SVN repository</xref>.</p>
+      <p>PCB shouldn&apos;t be a problem to build. You can access 1:1 scale Crumboard <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/Crumboard_pcb.pdf" format="pdf">PCB</xref>  PDF format, on <xref href="http://code.google.com/p/jaluino/source/browse/trunk/shields/crumboard/" format="html">Jaluino SVN repository</xref>. You can also use Crumboard labels (as <xref>PDF</xref> version), to stick on the board, in order to get a nice board as shown on photos (TODO: link to labels howto tutorial).</p>
       <p><fig>
           <title>Crumboard PCB</title>
           <p><table frame="none" pgwide="1">
@@ -46,20 +47,18 @@
                 <tbody>
                   <row>
                     <entry>
-                      <image href="images/Crumboard_pcb.png" height="150" placement="inline" otherprops="clickable"/>
+                      <image href="images/Crumboard_pcb.png" placement="break" otherprops="clickable" width="150"/>
                     </entry>
                     <entry>
-                      <image href="images/Crumboard_pcb_front.png" height="150" otherprops="clickable"/>
+                      <image href="images/Crumboard_pcb_front.png" placement="break" otherprops="clickable" width="150"/>
+                    </entry>
+                    <entry>
+                      <image href="images/label_for_crumboard.png" width="150" placement="break" otherprops="clickable"/>
                     </entry>
                   </row>
                 </tbody>
               </tgroup>
             </table></p>
-          <p>You can also use Crumboard labels, to stick on the board, in order to get a nice board as shown on photos (TODO: link to labels howto tutorial).</p>
-          <p><fig>
-              <title>Crumboard labels</title>
-              <image href="images/label_for_crumboard.png" width="200" placement="break" otherprops="clickable"/>
-            </fig></p>
         </fig></p>
     </section>
     <section>
