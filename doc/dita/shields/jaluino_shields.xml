@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_shields">
   <title>Jaluino Shields</title>
   <body>
@@ -37,6 +37,21 @@
             </row>
             <row>
               <entry conref="styx/jaluino_styx.xml#jaluino_styx/global_desc"/>
+            </row>
+            <row>
+              <entry morerows="1">
+                <image href="connectors/images/stackable_header.jpg" placement="break" width="150"/>
+              </entry>
+              <entry>
+                <p><b>
+                    <xref href="connectors/jaluino_connectors.xml"/>
+                  </b></p>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <p conref="connectors/jaluino_connectors.xml#jaluino_connectors/global_desc"/>
+              </entry>
             </row>
           </tbody>
         </tgroup>

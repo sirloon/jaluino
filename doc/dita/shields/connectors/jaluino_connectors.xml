@@ -8,8 +8,8 @@
     <publisher>Jaluino Group</publisher>
   </prolog>
   <body>
-    <p><b>Jaluino</b> uses connectors to plug shields. This  design involves that you give special care and attention about them in order to get reliable and durable boards and shields. You&apos;ll also use a lot of them, so finding a good compromise between ease of use, budget and reliability is something very central in Jaluino designs.</p>
-    <p>So this section is about giving you some hints about these connectors. When you plug a shield onto Jaluino, male connectors have to go through the shield board to reach female connectors on mainboard, while providing female connectors for another potential shield. The main challenge is provide such female connectors, with rather long pins...</p>
+    <p id="global_desc"><b>Jaluino</b> uses connectors to plug shields. This  design involves that you give special care and attention about them in order to get reliable and durable boards and shields. You&apos;ll also use a lot of them, so finding a good compromise between ease of use, budget and reliability is something very central in Jaluino designs. This section is about giving you some hints about these connectors.</p>
+    <p>When you plug a shield onto Jaluino, male connectors have to go through the shield board to reach female connectors on mainboard, while providing female connectors for another potential shield. The main challenge is provide such female connectors, with rather long pins...</p>
     <p> We currently provide two main ways: one is using on-the-shelf connectors you can buy, another requires you to actually build it. The choice is yours, depending your priorities...</p>
     <section>
       <title>Option 1: buy specific connectors</title>
