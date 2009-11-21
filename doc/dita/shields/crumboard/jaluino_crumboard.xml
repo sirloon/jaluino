@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="jaluino_crumboard">
+  <title>Crumboard shield</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <author>Richard Zengerink</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <section>
+      <title>Shield + small breadboard = crumboard</title>
+      <table frame="none" pgwide="1">
+        <tgroup cols="2">
+          <colspec colname="c1"/>
+          <colspec colname="c2"/>
+          <tbody>
+            <row>
+              <entry>
+                <image href="images/medium_crumboard_side_view.JPG" width="200" align="left" placement="break"/>
+              </entry>
+              <entry id="global_desc">
+                <p><b>Crumboard</b> shield is a prototyping shield designed for Jaluino. It embeds a small breadboard (thus the name, crumb-board...), two LEDs and two Push-buttons.</p>
+                <p>This shield is useful to test new hardware designs. It&apos;s also a nice base to learn how to use Jaluino and get started with PIC microcontrollers, experimenting very basic tutorials such as famous &quot;blink-a-led&quot;, and read input from a push-button. Definitely a  <i>must-have</i>!</p>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section>
+      <title>Schematic and PCB</title>
+      <p>Crumboard includes two LEDs and two push-buttons, as exposed in the following  schematic:</p>
+      <p><fig>
+          <title>Crumboard shield schematic</title>
+          <image href="images/crumboard_schematic.png" width="350" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>LEDs and push-buttons can be activated using jumpers JP1, JP2, JP3 and JP4.</p>
+      <p>PCB shouldn&apos;t be a problem to build. You can access 1:1 scale Crumboard <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/Crumboard_pcb.pdf" format="pdf">PCB</xref> and <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/label_for_crumboard.pdf" format="pdf">labels</xref>, PDF format, on <xref href="http://code.google.com/p/jaluino/source/browse/trunk/shields/crumboard/" format="html">Jaluino SVN repository</xref>.</p>
+      <p><fig>
+          <title>Crumboard PCB</title>
+          <p><table frame="none" pgwide="1">
+              <tgroup cols="2">
+                <colspec colnum="1" colname="c0" colsep="0" rowsep="0"/>
+                <colspec colnum="2" colname="c1" colsep="0" rowsep="0"/>
+                <tbody>
+                  <row>
+                    <entry>
+                      <image href="images/Crumboard_pcb.png" height="150" placement="inline" otherprops="clickable"/>
+                    </entry>
+                    <entry>
+                      <image href="images/Crumboard_pcb_front.png" height="150" otherprops="clickable"/>
+                    </entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </table></p>
+          <p>You can also use Crumboard labels, to stick on the board, in order to get a nice board as shown on photos (TODO: link to labels howto tutorial).</p>
+          <p><fig>
+              <title>Crumboard labels</title>
+              <image href="images/label_for_crumboard.png" width="200" placement="break" otherprops="clickable"/>
+            </fig></p>
+        </fig></p>
+    </section>
+    <section>
+      <title>Building Crumboard</title>
+      <p>Crumboard is quite an easy to build. Since Jaluino is aimed to be cheap, we also give special attention in order to provide this prototyping shield with minimal cost.</p>
+      <p>Building PCB itself isn&apos;t explained here, the following step-by-step focuses on how to deal with integrating the breadboard. You can buy a small one that would fit within shield connectors, but it often the same as a  standard one. Some standard breadboards can be cut to fit shield size, for lower cost...</p>
+      <table frame="none" pgwide="1">
+        <tgroup cols="2">
+          <colspec colname="c1"/>
+          <colspec colname="c2"/>
+          <tbody>
+            <row>
+              <entry>
+                <image href="images/breadboard_conrad.JPG" width="200"/>
+              </entry>
+              <entry>
+                <p>As first step, you&apos;ll have to find a breadboard like the one shown on the photo. It&apos;s a very common model. Be sure it can be cut.</p>
+              </entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/cutting_line_on_breadboard.JPG" width="200"/>
+              </entry>
+              <entry>Start to draw a line with a black paper. This is where you&apos;ll cut the breadboard. You need to get a length of about 2,7&quot; (6,8cm), just measure what you need on the board itself.</entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/breadboard_sawing.JPG" width="200"/>
+              </entry>
+              <entry>Cut the breadboard, using a metal saw. Cutting is easy, just make sure it&apos;s straight.</entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/breadboard_sawing_closup.JPG" width="200"/>
+              </entry>
+              <entry>As shown on the photo (and as drawn with pen), cut on a holes row.</entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/breadboard_short.JPG" width="200"/>
+              </entry>
+              <entry>Once cut, you should have something like this.</entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/breadboard_remove_powerpart.JPG" width="200"/>
+              </entry>
+              <entry>Depending on your breadboard model, you may need to remove one power lines part. Usually, you have two of them, on the left and right. Keeping both may give a breadboard too large top fit within shield connectors. </entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/breadboard_removed_powerpart.JPG" width="200"/>
+              </entry>
+              <entry>With one power lines part removed, breadboard will fit perfectly... Make sure to also remove the small remaining plastic part to get a clean surface.</entry>
+            </row>
+            <row>
+              <entry>
+                <image href="images/two_crumboard_out_of_one_breadboard.JPG" width="200"/>
+              </entry>
+              <entry>
+                <p>You&apos;re done, just stick it between shield connectors. Some breadboards have a sticky surface, but it not, just use some strong glue.</p>
+                <p>Now the best for the end, you can build two crumboard with one standard breadboard ! Having multiple crumboards can be very useful when you work on multiple projects and design versions. Switching between them is easy: unplug a crumboard, plug another...</p>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    <section>
+      <title>Using Crumboard</title>
+      <p>Crumboard can be used like any breadboard, but also provide LEDs and push-buttons to experiment inputs and outputs easily (TODO: links to upcoming Jaluino tutorials). This is an essential shield when getting started with PICs.</p>
+      <p>Crumboard can also be used to test rather complex designs, like this one prototyping a bluetooth device...</p>
+      <table frame="none">
+        <tgroup cols="2">
+          <colspec colnum="1" colname="c0" colsep="0" rowsep="0"/>
+          <colspec colnum="2" colname="c1" colsep="0" rowsep="0"/>
+          <tbody>
+            <row>
+              <entry>
+                <image href="images/Jaluino_and_shield-side_view.JPG" width="200"/>
+              </entry>
+              <entry>
+                <image href="images/Square_hole_of_connector_visable.JPG" width="200"/>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+  </body>
+</topic>

@@ -33,7 +33,7 @@
     <topicref href="mainboard/jaluino_medium_hardware_setup.xml"/>
   </chapter>
   <chapter navtitle="Jaluino Shields" href="shields/jaluino_shields.xml">
-    <topicref navtitle="Crumboard"/>
+    <topicref navtitle="Crumboard" href="shields/crumboard/jaluino_crumboard.xml"/>
     <topicref navtitle="Styx" href="shields/styx/jaluino_styx.xml"/>
     <topicref href="shields/connectors/jaluino_connectors.xml"/>
     <topicref navtitle="Building your own shield"/>
