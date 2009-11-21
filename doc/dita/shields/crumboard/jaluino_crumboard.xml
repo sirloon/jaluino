@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_crumboard">
   <title>Crumboard shield</title>
   <prolog>
@@ -37,20 +36,21 @@
           <image href="images/crumboard_schematic.png" width="350" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>LEDs and push-buttons can be activated using jumpers JP1, JP2, JP3 and JP4.</p>
-      <p>PCB shouldn&apos;t be a problem to build. You can access 1:1 scale Crumboard <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/Crumboard_pcb.pdf" format="pdf">PCB</xref>  PDF format, on <xref href="http://code.google.com/p/jaluino/source/browse/trunk/shields/crumboard/" format="html">Jaluino SVN repository</xref>. You can also use Crumboard labels (as <xref>PDF</xref> version), to stick on the board, in order to get a nice board as shown on photos (TODO: link to labels howto tutorial).</p>
+      <p>PCB shouldn&apos;t be a problem to build. You can access 1:1 scale Crumboard <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/Crumboard_pcb.pdf" format="pdf">PCB</xref>  PDF format, on <xref href="http://code.google.com/p/jaluino/source/browse/trunk/shields/crumboard/" format="html">Jaluino SVN repository</xref>. You can also use Crumboard labels (as <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/label_for_crumboard.pdf" format="pdf">PDF</xref> version), to stick on the board, in order to get a nice board as shown on photos (TODO: link to labels howto tutorial).</p>
       <p><fig>
           <title>Crumboard PCB</title>
           <p><table frame="none" pgwide="1">
               <tgroup cols="2">
                 <colspec colnum="1" colname="c0" colsep="0" rowsep="0"/>
                 <colspec colnum="2" colname="c1" colsep="0" rowsep="0"/>
+                <colspec colnum="3" colname="c2" colsep="0" rowsep="0"/>
                 <tbody>
                   <row>
                     <entry>
-                      <image href="images/Crumboard_pcb.png" placement="break" otherprops="clickable" width="150"/>
+                      <image href="images/Crumboard_pcb.png" width="150" placement="break" otherprops="clickable"/>
                     </entry>
                     <entry>
-                      <image href="images/Crumboard_pcb_front.png" placement="break" otherprops="clickable" width="150"/>
+                      <image href="images/Crumboard_pcb_front.png" width="150" placement="break" otherprops="clickable"/>
                     </entry>
                     <entry>
                       <image href="images/label_for_crumboard.png" width="150" placement="break" otherprops="clickable"/>
