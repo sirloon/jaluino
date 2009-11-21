@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_styx">
   <title>Styx shield</title>
   <prolog>
@@ -27,7 +28,7 @@
           </tbody>
         </tgroup>
       </table>
-      <note>Shield name, Styx, comes from river Styx (or also his guardian) acting as a boundary between Earth and the Underworld. Reader may choose, from Microchip and Atmel, which is Earth and which is Underworld... See <xref href="http://en.wikipedia.org/wiki/Styx" format="html">http://en.wikipedia.org/wiki/Styx</xref> for more information.</note>
+      <note>Shield name, &quot;Styx&quot;, comes from river Styx (or sometime his guardian) acting as a boundary between Earth and the Underworld. Reader may choose, from Microchip and Atmel, which is Earth and which is Underworld... See <xref href="http://en.wikipedia.org/wiki/Styx" format="html">http://en.wikipedia.org/wiki/Styx</xref> for more information.</note>
     </section>
     <section>
       <title>Schematic and PCB</title>
@@ -69,7 +70,7 @@
                 <image href="images/styx.jpg" width="200"/>
               </entry>
               <entry>
-                <p>Since PCB looks more complex than one would think, Styx shield isn&apos;t actually easy to build. You&apos;ll have to be careful with thin tracks. Styx is about plugging shield together, so  give also attention while soldering pin headers: make sure they are as vertical with the board, and parallel between them, as possible. Else you&apos;ll get troubles while plugging Arduino shields.</p>
+                <p>Since PCB looks more complex than one would think, Styx shield isn&apos;t so easy to build. You&apos;ll have to be careful with thin tracks. Styx is about plugging shield together, so also give  attention while soldering pin headers: make sure they are as vertical with the board, and parallel between them, as possible. Else you&apos;ll get troubles while plugging Arduino shields.</p>
               </entry>
             </row>
           </tbody>

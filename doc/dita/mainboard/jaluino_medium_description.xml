@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_medium_description">
   <title>Description</title>
   <prolog>
@@ -18,19 +19,18 @@
       <p>Several <b>power sources options</b> are available, selectable using jumpers. Fuse protection (500mA) helps keeping board safe when handled by distracted users...</p>
       <p>PIC 18F4550 is clocked by a <b>20MHz crystal</b>, allowing speed up to <b>48MHz using PLL</b> (kind of black magic...). </p>
       <p>Most used communication protocols are available from the board: <b>USB</b>, <b>serial</b>, <b>I²C</b>, <b>ICSP</b>. Those connectors are right angle male connectors, so easily plug wires and buses.</p>
-      <p>Resetting PIC 18F4550 can be done manually, using <b>Reset push button</b>, or using special RTS serial line, without manual intervention. This <b>Reset-via-RTS</b> feature is enabled using jumper.</p>
+      <p>Resetting PIC 18F4550 can be done manually, using <b>Reset push button</b>, or using special RTS serial line, without manual intervention. This <b>Reset-via-RTS</b> feature is enabled using a jumper.</p>
       <p>Finally, female connectors on the center compose <b>shield connectors</b>, used to expose pins to daughter boards.</p>
-      <p>See (TODO: &quot;Setting up Jaluino Medium&quot;) for detailed instructions about using jumpers and enabling/disabling features.</p>
+      <p>See <xref href="jaluino_medium_hardware_setup.xml"/> for detailed instructions about using jumpers and enabling/disabling features.</p>
     </section>
     <section>
       <title>Board and shield sizes</title>
-      <p>Jaluino Medium board size is rather bigger than Arduino Duemilanove board. This is mainly because microntroller itself is bigger (it has more pins). Jaluino board is also single side, to be easier to build at home. Finally, Jaluino provides more features, like a serial connector<fn>Arduino only provides USB, or serial on older versions, but not both</fn> and an I²C connector.</p>
+      <p>Jaluino Medium board size is rather bigger than Arduino Duemilanove board. This is mainly because microntroller itself is bigger (it has more pins). Jaluino board is also single sided, to be easier to build at home. Finally, Jaluino provides more features, like a serial connector<fn>Arduino only provides USB, or serial only on older versions, but not both</fn> and an I²C connector.</p>
       <p><fig>
           <title>Jaluino Medium under construction, compared to Arduino Duemilanove.</title>
           <image href="images/jaluino_medium_arduino_comparison.jpg" width="300" placement="break"/>
         </fig></p>
       <p>Jaluino shield aera is smaller than the board itself, whereas Arduino&apos;s shield have quite the same size as the board.</p>
-      <p>Here are Jaluino board and shield sizes specifications:</p>
       <p><table frame="all">
           <title>Board size specifications</title>
           <tgroup cols="2">
@@ -66,7 +66,7 @@
         </table></p>
       <p><fig>
           <title>Jaluino Medium with Crumboard shield plugged, showing board and shield size differences</title>
-          <image href="images/jaluino_medium_crumboard_plugged.jpg" width="300" placement="break"/>
+          <image href="images/medium_+_crumboard_topview.JPG" width="300" placement="break"/>
         </fig></p>
     </section>
     <section>
@@ -79,15 +79,14 @@
     </section>
     <section>
       <title id="powersources">Power and voltages specifications</title>
-      <p>Jaluino medium comes with three power sources, and two voltages available on-board. Power sources can be either:<ul>
+      <p>Jaluino medium comes with three power sources, and two voltages available on-board. Depending on how much power you need, you&apos;ll  use one these options:<ul>
           <li><b>AC/DC adaptor</b>, usually delivering up to 12V. Input voltage must be at least 9V. This kind of adaptor can deliver lots of power (typical cheap ones deliver something like 1A).</li>
           <li><b>USB</b>, power is directly taken from USB connector. USB outputs 5V and usually can deliver up to 500mA.</li>
-          <li><b>serial module</b>, where such modules can also provide power (like a USB-to-serial module). Serial module needs to outputs 5V.</li>
+          <li><b>serial module</b>, where such modules can also provide power (like a USB-to-serial module). Like USB, serial module has to outputs 5V.</li>
         </ul></p>
-      <p>Depending on how much power you need, you may use one these options.</p>
       <p>Jaluino Medium provides two voltages available on-board, 5V and 3.3V:<ul>
-          <li><b>5V</b> : when using AC/DC adaptor, input voltage is regulated by 7805. This component outputs regulated 5V, which is a typical voltage used to power a microcontroller such a PIC 18F4550. When using USB or serial as power sources, no 5V regulation is done: this means there should be 5V as output (USB outputs 5V, if you use your serial module to power the board, make sure it outpus 5V).</li>
-          <li><b>3.3V</b> : whatever the power sources, another voltage regulator produces 3.3V from 5V. Jaluino Medium makes your life easier and provides this commonly used voltage, which is sometime used by specific components. </li>
+          <li><b>5V</b> : when using AC/DC adaptor, input voltage is regulated by 7805. This component outputs regulated 5V, which is a typical voltage used to power a microcontroller such as PIC 18F4550. When using USB or serial as power sources, no 5V regulation is done: this means there should be 5V as output (USB outputs 5V, if you use your serial module to power the board, make sure it outputs 5V).</li>
+          <li><b>3.3V</b> : whatever the power sources, another voltage regulator produces 3.3V from 5V. Jaluino Medium makes your life easier and provides this common voltage, which is sometime used by some specific components. </li>
         </ul></p>
     </section>
     <section id="jaluino_ab">

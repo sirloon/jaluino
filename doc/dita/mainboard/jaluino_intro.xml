@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_intro">
   <title>Jaluino Mainboard</title>
   <prolog>
@@ -12,9 +11,9 @@
     <section>
       <title>What is Jaluino and why ?</title>
       <p><b>Jaluino</b> is prototyping board, inspired by <xref href="http://arduino.cc" format="html">Arduino</xref>. Arduino is defined (from authors themselves) as &quot;<i>an open-source physical computing platform based on a simple microcontroller board, and a development environment for writing software for the board</i>&quot;. So Jaluino is aimed to provide the same kind of features<fn>For now, most energy is put on hardware design and libraries. Development environment will soon come.</fn>. </p>
-      <p>While Arduino is based on Atmel microncontrollers, Jaluino is based on Microchip PIC microcontrollers. This is one of the main reason why Jaluino exists. Another reason is Jaluino uses <xref href="http://www.casadeyork.com/jalv2/" format="html">jalv2</xref>, <xref href="http://code.google.com/p/jallib/" format="html">jallib</xref> and other Just Another Language related projects.</p>
-      <p>One important aspect  is <b>shields</b>. Arduino boards provide a common hardware base, the main board. On top of this board, daughter boards, named shields, can be plugged. This design allows to share hardware designs easily, focusing only on new features, not on microcontroller base (crystal speed, communication dedicated modules, etc...).</p>
-      <p>Jaluino claims to provide the same of shield functionality. That&apos;s why it&apos;s an <i>Arduino-like</i> board. But... shields aren&apos;t the same, size is different, pin number and layout is different, pin functionalities are different. That&apos;s why it may not be considered as an <i>Arduino clone</i>...</p>
+      <p>While Arduino is based on Atmel microncontrollers, Jaluino is based on Microchip PIC microcontrollers. This is one of the main reason why Jaluino exists. Another reason is Jaluino uses <xref href="http://www.casadeyork.com/jalv2/" format="html">jalv2</xref>, <xref href="http://code.google.com/p/jallib/" format="html">jallib</xref> and other <xref href="http://www.justanotherlanguage.org" format="html">Just Another Language</xref> related projects.</p>
+      <p>One important aspect  is <b>shields</b>. Arduino boards provide a common hardware base, the main board. On top of this board, daughter boards, named &quot;shields&quot;, can be plugged. This  allows to share hardware designs easily, focusing only on new features, not on microcontroller basic setup (crystal speed, communication dedicated modules, etc...).</p>
+      <p>Jaluino claims to provide the same shield functionality. That&apos;s why it&apos;s an <i>Arduino-like</i> board. But... shields aren&apos;t the same, size is different, pin number and layout are different, pin functionalities are different. That&apos;s why it may not be considered as an <i>Arduino clone</i>...</p>
     </section>
     <section>
       <title>What are the main goals for Jaluino</title>
@@ -23,21 +22,21 @@
           <li>Jaluino is easy and fun to use</li>
           <li>Jaluino is easy to build</li>
           <li>Jaluino should be as cheap as possible</li>
-          <li>Jaluino is (aimed to be) well documented, with lots of tutorials</li>
+          <li>Jaluino is (aimed to be) well documented, including lots of tutorials</li>
         </ul></p>
     </section>
     <section>
       <title>How Jaluino looks like ? How about specs ?</title>
-      <p>Enough talking, here&apos;s a photos showing how Jaluino looks like.</p>
+      <p>Enough talking, here&apos;s a photo showing how Jaluino looks like.</p>
       <fig>
         <title>Jaluino Medium v1.3b</title>
         <image href="images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>
       </fig>
-      <p>Jaluino comes in different flavors and sizes. That&apos;s at least our goal at Jaluino Group. For now, one version of Jaluino is available. This version, Jaluino medium, provides the following:<ul>
+      <p>Jaluino comes in different flavors and sizes. That&apos;s at least our goal at Jaluino Group. For now, one version of Jaluino is available. This version, Jaluino Medium, provides the following:<ul>
           <li>runs a <b>Microchip PIC 18F4550</b>, with a 20MHz crystal, allowing speeds up to <i>48MHz</i>. This PIC provides:<ul>
               <li>32KB Flash memory (~16K words for programming), 2KB SRAM, 256B EEPROM</li>
               <li>35 I/O pins</li>
-              <li>13 Analog-Digital channels, 10bits resolution</li>
+              <li>13 Analog-Digital channels, 10-bits resolution</li>
               <li>2 PWM channels</li>
               <li>4 Timers</li>
               <li>USART, SPI and I²C (master and slave)</li>
@@ -49,7 +48,7 @@
             <b>USB connector</b>
           </li>
           <li><b>Serial connector</b>, allowing user to plug his own serial module (MAX232 based, USB-to-serial converter, serial bluetooth module, ...)</li>
-          <li><b>Reset via RTS</b> serial option, allowing to upload program without having to act on board</li>
+          <li><b>Reset via RTS</b> serial option, allowing to upload program without having to manually act on board</li>
           <li>
             <b>ICSP connector</b>
           </li>

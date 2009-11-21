@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_shields">
   <title>Jaluino Shields</title>
   <body>
@@ -21,7 +22,7 @@
             <row>
               <entry>
                 <p><b>Crumboard</b> shield is a prototyping shield designed for Jaluino. It embeds a small breadboard (thus the name, crumb-board...), two LEDs and two Push-buttons.</p>
-                <p>This shield is useful to test new hardware designs. It&apos;s also a nice base to learn how to use Jaluino and get started with PIC microcontroller, experimenting very basic tutorials such as famous &quot;blink-a-led&quot; and read input from a push-button. Definitely a  <i>must-have</i>!</p>
+                <p>This shield is useful to test new hardware designs. It&apos;s also a nice base to learn how to use Jaluino and get started with PIC microcontrollers, experimenting very basic tutorials such as famous &quot;blink-a-led&quot;, and read input from a push-button. Definitely a  <i>must-have</i>!</p>
                 <p><i>Work-In-Progress, documentation soon available</i></p>
               </entry>
             </row>

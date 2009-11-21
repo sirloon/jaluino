@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_schematics">
   <title>Hardware setup</title>
   <prolog>
@@ -37,12 +38,12 @@
           <image href="images/jaluino_medium_serial_jumpers.jpg" width="300" placement="break"/>
         </fig></p>
       <p><ul>
-          <li><b>JP7</b>: if enabled (jumper plugged), then CTS line is connected to pin <i>RD5</i><p><fig>
+          <li><b>JP7</b>: if enabled (jumper plugged), then CTS line is connected to pin <i>RD5</i>. This feature is usually not needed for basic serial communications, but if you need to deal with CTS logic (hardware flow control), you can enable this and handle CTS line using this pin in your program.<p><fig>
                 <title>CTS jumper setup</title>
                 <image href="images/cts_jumpers_setup.png" placement="break"/>
-              </fig></p>. This feature is usually not needed for basic serial communications, but if you need to deal with CTS logic (hardware flow control), you can enable this and handle CTS line using this pin.</li>
+              </fig></p></li>
           <li><b>J7</b>: this jumper is a tri-state trigger. You can plug a jumper on the left side (segment 1-2), on the right side (segment 2-3), or no jumper at all.<ul>
-              <li><b>Reset-via-RTS</b> (segment 1-2): a jumper is plugged, covering the two left pins. In this configuration, <b>Reset-via-RTS</b> is active. This means acting on RTS, for example from a PC, will actually perform reset (PIC is restarting). This feature is mostly important when using a bootloader, and if you want to upload and control your board without having to manually push the Reset button.</li>
+              <li><b>Reset-via-RTS</b> (segment 1-2): a jumper is plugged, covering the two left pins. In this configuration, <b>Reset-via-RTS</b> is active. This means acting on RTS, for example from a PC, will actually perform a reset (PIC is restarted). This feature is mostly important when using a bootloader, and if you want to upload programs and control your board without having to manually push the Reset button.</li>
               <li><b>RTS line</b> (segment 2-3): in this configuration, RTS line gets connected to pin <i>RD4</i>, so you can have access to RTS logic from your program. Just like enabling CTS line, this configuration is rarely used in most serial communication, but might be useful if you need to perform some hardware flow control.</li>
               <li><b>no jumper</b>: this configuration disables any of the two configurations above. Neither Reset-via-RTS nor RTS line are enabled.</li>
             </ul><p><fig>
@@ -60,7 +61,7 @@
         </fig></p>
       <p><ul>
           <li>When jumpers are <b>plugged on JP5 and JP6</b>, Jaluino acts as an <i>I²C master</i>.</li>
-          <li>When <b>no jumpers at all</b> are plugged, Jaluino acts as an <i>I²C slave</i>. If you don&apos;t want to care about I²C, use this setup.</li>
+          <li>When <b>no jumper at all</b> is plugged, Jaluino acts as an <i>I²C slave</i>. If you don&apos;t want to care about I²C, use this setup.</li>
         </ul></p>
       <p><fig>
           <title>I²C jumpers setup</title>
