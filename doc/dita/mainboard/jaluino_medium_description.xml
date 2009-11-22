@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_medium_description">
   <title>Description</title>
   <prolog>
@@ -66,7 +65,7 @@
         </table></p>
       <p><fig>
           <title>Jaluino Medium with Crumboard shield plugged, showing board and shield size differences</title>
-          <image href="images/medium_+_crumboard_topview.JPG" width="300" placement="break"/>
+          <image href="images/medium_crumboard_topview.JPG" width="300" placement="break"/>
         </fig></p>
     </section>
     <section>
