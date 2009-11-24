@@ -38,27 +38,27 @@
             <tbody>
               <row>
                 <entry>Length</entry>
-                <entry>4.6&quot; (or 11.8cm)</entry>
+                <entry>4.53&quot; (or 11.5cm)</entry>
               </row>
               <row>
                 <entry>Width</entry>
-                <entry>3.4&quot; (or 8.6cm)</entry>
+                <entry>3.35&quot; (or 8.5cm)</entry>
               </row>
             </tbody>
           </tgroup>
         </table><table frame="all">
-          <title>Shield size specifications</title>
+          <title>Shield size specifications (minimum)</title>
           <tgroup cols="2">
             <colspec colname="c1"/>
             <colspec colname="c2"/>
             <tbody>
               <row>
                 <entry>Length</entry>
-                <entry>3.4&quot; (or 8.6cm)</entry>
+                <entry>3.35&quot; (or 8.5cm)</entry>
               </row>
               <row>
                 <entry>Width</entry>
-                <entry>3.1&quot; (or 8cm)</entry>
+                <entry>2.95&quot; (or 7.5cm)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -78,12 +78,16 @@
     </section>
     <section>
       <title id="powersources">Power and voltages specifications</title>
-      <p>Jaluino medium comes with three power sources, and two voltages available on-board. Depending on how much power you need, you&apos;ll  use one these options:<ul>
-          <li><b>AC/DC adaptor</b>, usually delivering up to 12V. Input voltage must be at least 9V. This kind of adaptor can deliver lots of power (typical cheap ones deliver something like 1A).</li>
-          <li><b>USB</b>, power is directly taken from USB connector. USB outputs 5V and usually can deliver up to 500mA.</li>
+      <p>Jaluino medium can be sourced in three diverend ways depending on which  source is available or which  source you want to use:<ul>
+          <li><b>AC/DC adaptor</b>, usually delivering up to 24V. Input voltage must be at least 7Vac or 9Vdc with a maximum of 18Vac or 24Vdc depending on power consumption in your 5V and thus also 3.3V circuit.<p>the maximum input current drawn by your 5V and 3.3V circuit depends on input voltage and if you cool your voltage regulator (MC7805C only necessary).</p><p>If you don&apos;t cool your voltage regulator you have to look  in the specs of your regulator at the <b>therminal resistance, junction to ambient</b> value. For the MC7805 this is 65 ۫C/Watt.</p><p>This means that the temperature of your regulator increases 65  ۫C with every 1Watt it consumes. If you add the ambiant temperature of aprox 25  ۫C, your regulator wil have an total temp of 90  ۫C after only consuming 1 Watt.</p><p>although 90  ۫C is not its limitation (The max temp is 125  ۫C) its warm enough to burn your fingers so lets stay below 1 watt consumption in your regulator</p><p>Power = current x voltage =&gt; W=IxU so with this formulair you can calculate your max current consumption in your 5V and 3.3V circuit.</p><p>For instance if you use a 9Vdc power supply voltage drop over the regulator is 9V-1V (drop over bridge) - 5V = 3V.</p><p>max current = W/U = 1/3 = 0.33A (total current in your 5V and thus also 3.3V circuit)</p><p>as a result of this you can understand that if you need match current,  it is always best to keep your input voltage as close as possible to the minimum input (9Vdc). If you only have a higher voltage power supply  you need to limmit your current or els power by USB</p><p>Be carefull when using Vin on your shield because this circuit is not protected by fuse.</p><p>The fuse value mentioned in the drawings and documentations is absolute max value (500mA) you are off course free to place a lighter one, for instance 100mA if you want.</p><p>If for any reason you need more power in your 5V and 3.3V circuit, you need to cool your 5V regulator.</p><p>in this case you need a very well stabilized 9Vdc  power Supply.</p><p>you can than remove C6 (470uF/35V) which is only necessary for unstabilized or AC voltage input.</p><p>Use thus space to place a heatsink on 5V regulator (U2)</p></li>
+          <li><b>USB</b>, power is directly taken from USB connector. USB outputs 5V and can deliver 100mA normaly or in special orcasions up to 500mA.</li>
           <li><b>serial module</b>, where such modules can also provide power (like a USB-to-serial module). Like USB, serial module has to outputs 5V.</li>
         </ul></p>
-      <p>Jaluino Medium provides two voltages available on-board, 5V and 3.3V:<ul>
+      <p>Jaluino Medium can provides three voltages  on-board, Vin (only when using AC/DC adaptor on jack), 5V and 3.3V:</p>
+    </section>
+    <section>
+      <p><ul>
+          <li><b>Vin</b> : voltage is voltage from DC adaptor minus 1V dropout voltage over bridge (DB1) or voltage from AC adapter multiplied with square root of 2 minus 1V dropout voltage over bridge (DB1). </li>
           <li><b>5V</b> : when using AC/DC adaptor, input voltage is regulated by 7805. This component outputs regulated 5V, which is a typical voltage used to power a microcontroller such as PIC 18F4550. When using USB or serial as power sources, no 5V regulation is done: this means there should be 5V as output (USB outputs 5V, if you use your serial module to power the board, make sure it outputs 5V).</li>
           <li><b>3.3V</b> : whatever the power sources, another voltage regulator produces 3.3V from 5V. Jaluino Medium makes your life easier and provides this common voltage, which is sometime used by some specific components. </li>
         </ul></p>
