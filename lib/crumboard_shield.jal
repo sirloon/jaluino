@@ -1,0 +1,49 @@
+-- ------------------------------------------------------
+-- Title: Crumboard shield library, for conveniency
+-- Author: Sebastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4l
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this library can be used with Crumboard shield, and declares some
+-- aliases for conveniency. It basically describe the shield with logical name.
+-- (crumboard_led1 instead of pin_A0)
+--
+-- Sources:
+--
+-- Notes:
+--
+-- URL: http://justanotherlanguage.org/search/node/crumboard
+--
+
+-- In order to use LEDs and push-buttons, you first have to
+-- put jumpers on appropriate location. See online Crumboard
+-- documentation for more.
+
+-- Requires jumper JP1
+alias crumboard_led1 is pin_A0
+alias crumboard_led1_direction is pin_A0_direction
+
+-- Requires jumper JP2
+alias crumboard_led2 is pin_C2
+alias crumboard_led2_direction is pin_C2_direction
+
+-- Requires jumper JP3
+alias crumboard_switch1 is pin_D6
+alias crumboard_switch1_direction is pin_D6_direction
+-- Requires jumper JP4
+alias crumboard_switch2 is pin_D7
+alias crumboard_switch2_direction is pin_D7_direction
+
+-- init procedure should be called in order to have
+-- a fully functional shield in one step.
+-- (it basically sets pin directions)
+procedure crumboard_init() is
+   crumboard_led1_direction = output
+   crumboard_led2_direction = output
+   crumboard_switch1_direction = input
+   crumboard_switch2_direction = input
+end procedure
+

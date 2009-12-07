@@ -1,0 +1,33 @@
+-- Title: Blink-Two-LED using Crumboard shield
+-- Author: Sébastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4l
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this program blinks the two LEDs available on Crumboard shield
+--
+-- Shield: crumboard
+--
+
+include jaluino_medium
+include crumboard_shield
+include delay
+
+crumboard_init()
+
+crumboard_led1 = off
+crumboard_led2 = off
+
+forever loop
+   crumboard_led1 = on
+   delay_1ms(250)
+   crumboard_led1 = off
+
+   crumboard_led2 = on
+   delay_1ms(250)
+   crumboard_led2 = off
+end loop
+
+--
