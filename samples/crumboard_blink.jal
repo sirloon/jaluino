@@ -6,17 +6,23 @@
 -- This file is part of jaluino  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
--- Description: this program blinks the two LEDs available on Crumboard shield
+-- Description: this program blinks the two LEDs available on Crumboard shield,
+-- one after the other
 --
 -- Shield: crumboard
 --
 
 include jaluino_medium
-include crumboard_shield
 include delay
 
+-- describe hardware setup by declaring plugged jumpers
+const bit CRUMBOARD_LED1_JP1 = on	-- we've put a jumper in JP1
+const bit CRUMBOARD_LED2_JP2 = on	-- and also on JP2
+-- now we can include crumboard library
+include crumboard_shield
 crumboard_init()
 
+-- everything is setup, ready to be used
 crumboard_led1 = off
 crumboard_led2 = off
 

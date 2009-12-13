@@ -39,11 +39,30 @@ alias crumboard_switch2_direction is pin_D7_direction
 
 -- init procedure should be called in order to have
 -- a fully functional shield in one step.
--- (it basically sets pin directions)
+-- (it basically sets pin directions according to jumpers declarations)
+
 procedure crumboard_init() is
-   crumboard_led1_direction = output
-   crumboard_led2_direction = output
-   crumboard_switch1_direction = input
-   crumboard_switch2_direction = input
+   -- LEDs: outputs
+   if defined(CRUMBOARD_LED1_JP1) == true then
+	  if CRUMBOARD_LED1_JP1 == on then
+		 crumboard_led1_direction = output
+	  end if
+   end if
+   if defined(CRUMBOARD_LED2_JP2) == true then
+	  if CRUMBOARD_LED2_JP2 == on then
+		 crumboard_led2_direction = output
+	  end if
+   end if
+   -- Push-buttons: inputs
+   if defined(CRUMBOARD_SW1_JP3) == true then
+	  if CRUMBOARD_SW1_JP3 == on then
+		 crumboard_switch1_direction = input
+	  end if
+   end if
+   if defined(CRUMBOARD_SW2_JP4) == true then
+	  if CRUMBOARD_SW2_JP4 == on then
+		 crumboard_switch2_direction = input
+	  end if
+   end if
 end procedure
 
