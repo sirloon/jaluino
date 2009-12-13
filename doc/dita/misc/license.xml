@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="template_id">
+  <title>Jaluino licensing</title>
+  <body>
+    <section>
+      <title>Jaluino boards and shields</title>
+      <p id="firstcontent">Following Arduino&apos;s original licensing, Jaluino reference designs for boards and shields, including schematics and PCBs, are released under <xref href="http://creativecommons.org/licenses/by-sa/3.0/" format="html">Creative Common Attribution-Share Alike 3.0 </xref> license.</p>
+      <p><image href="images/cc_by_sa.png" align="center" placement="break"/></p>
+      <p>Basically (and repeating what&apos;s on Creative Common website), you are free:<ul>
+          <li><b>to Share</b> - to copy, distribute, and transmit the work</li>
+          <li><b>to Remix</b> - to adapt the work</li>
+        </ul></p>
+      <p>Under the following conditions:<ul>
+          <li><b>Attribution</b> - You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).</li>
+          <li><b>Share Alike</b> - If you alter, transform, or build upon this work, you may distribute the resulting work only under the same, similar or a compatible license.</li>
+        </ul></p>
+      <p>Full license lecal code can be read at: <xref href="http://creativecommons.org/licenses/by-sa/3.0/legalcode" format="html">http://creativecommons.org/licenses/by-sa/3.0/legalcode</xref></p>
+      <p>Just like Arduino, you can build your own version of Jaluino derived from original reference designs. But we&apos;d like to keep the name &quot;<i>Jaluino</i>&quot; strictly related to original designs, those coming from Jaluino Team/Group, in order to maintain our own official standards.</p>
+    </section>
+    <section>
+      <title>Jaluino books and documentation</title>
+      <p>Jaluino user guide, tutorials and documentation in general is released under a more restrictive license related to commercial usage, the  <xref href="http://creativecommons.org/licenses/by-nc-sa/3.0/" format="html">Creative Common Attribution-Noncommercial-Share Alike 3.0 </xref>license.</p>
+      <p><image href="images/cc_by_nc_sa.png" align="center" placement="break"/></p>
+      <p>Basically (and repeating what&apos;s on Creative Common website), you are free:<ul>
+          <li><b>to Share</b> - to copy, distribute, and transmit the work</li>
+          <li><b>to Remix</b> - to adapt the work</li>
+        </ul></p>
+      <p>Under the following conditions:<ul>
+          <li><b>Attribution</b> - You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).</li>
+          <li><b>Noncommercial</b> - You may not use this work for commercial purposes.</li>
+          <li><b>Share Alike</b> - If you alter, transform, or build upon this work, you may distribute the resulting work only under the same, similar or a compatible license.</li>
+        </ul></p>
+    </section>
+    <p>If any questions, suggestions or doubts, please reach Jaluino Group at <xref href="http://groups.google.com/group/jaluino" format="html">http://groups.google.com/group/jaluino</xref>.</p>
+  </body>
+</topic>
