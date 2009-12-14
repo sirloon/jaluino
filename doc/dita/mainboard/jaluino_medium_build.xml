@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<topic id="jaluino_medium_description">
+  <title>Building Jaluino Medium board</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <author>Richard Zengerink</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <section>
+      <title>&quot;Where can I get Jaluino Medium ?&quot;</title>
+      <p>Before explaining how to build Jaluino Medium board, one may say: &quot;I don&apos;t want to build it, where can I get it ?&quot;. Good question ! There&apos;s currently no way to get Jaluino Medium other than building it.</p>
+      <p>In other words, you can&apos;t buy a PCB, nor a kit, nor a ready-to-use board, there&apos;s no such things to sell... Why ? Because most of this is still very new. In order to buy such a board, a big enough user base is needed. So ? Well, if you&apos;re interested in buying a PCB, kit or board, please share your interest with Jaluino Group<fn>Jaluino Group can be reached at <xref href="http://groups.google.com/group/jaluino" format="html">http://groups.google.com/group/jaluino</xref></fn> ! By collecting such message, we, Jaluino Team, will be able to have a realistic overview of the need, and may then providing PCB, kit or even the board itself, for a decent price.</p>
+      <p>Until that time comes, you&apos;ll have to build the board. This kind of means it would better if you&apos;ve already experienced PCB creation, not a pre-requisite, but almost to be honest. Fortunately, Jaluino Medium is designed to be easily built, at home, by average user. Nothing difficult here, it&apos;s mostly about having the right tools.</p>
+    </section>
+    <section>
+      <title>Building the PCB</title>
+      <p>Building the PCB can be done in different ways, depending on available tools, time, budget, easiness,... One easy way, and probably the cheapest one related to good results it provides, is to create PCB using toner transfert technique. The idea is to print the mirrored PCB on a paper, then tranferring it a copper board, most of the time using an iron (the same used for your shirts... well... maybe not the same !). PCB tracks are thus sticked to the copper board. Put it in  echant, and you&apos;ll get your PCB. Most variations come from the different papers used.</p>
+      <p><fig>
+          <title>Jaluino Medium PCB and component view</title>
+          <image href="images/jaluino_medium_v13a_pcb.png" width="250" otherprops="clickable"/>
+          <image href="images/jaluino_medium_v13a_front.png" width="250" placement="inline" otherprops="clickable"/>
+        </fig></p>
+      <p><note type="important">don&apos;t use these images to build your PCB, as they may not be scaled appropriately. 1:1 scale PDF files are available on <xref href="http://code.google.com/p/jaluino/source/browse/#svn/trunk/mainboard" format="html">Jaluino repository</xref>, for <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13a_pcb.pdf" format="pdf">version A</xref> and <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13b_pcb.pdf" format="pdf">version B</xref>.</note></p>
+      <p>We can&apos;t explain this in details, but here are few links showing this technique:<ul>
+          <li>
+            <xref href="http://electrons.psychogenic.com/modules/arms/art/10/pcb_howto.php" format="html">http://electrons.psychogenic.com/modules/arms/art/10/pcb_howto.php</xref>
+          </li>
+          <li>
+            <xref href="http://www.riccibitti.com/pcb/pcb.htm" format="html">http://www.riccibitti.com/pcb/pcb.htm</xref>
+          </li>
+          <li><xref href="http://sirloon.net/loonaweb/sirblog/experimenting-pcb-board-creation-using-a-laser-printer" format="html">http://sirloon.net/loonaweb/sirblog/experimenting-pcb-board-creation-using-a-laser-printer</xref>, <xref href="http://sirloon.net/loonaweb/sirblog/pcb-using-toner-transfer-method-comparison" format="html">http://sirloon.net/loonaweb/sirblog/pcb-using-toner-transfer-method-comparison</xref> (these ones comes from my website...)</li>
+        </ul></p>
+    </section>
+    <section>
+      <title>Labels (bonus)</title>
+      <p>When building Jaluino Medium board, you want it to be as beautiful as possible. That&apos;s normal. In order to add a nice finished and polished look, you can add labels on the component side. Before soldering components, think about it, after it&apos;ll be too late... or you&apos;ll have to unsolder all components and possibly damage them.</p>
+      <p><fig>
+          <title>Jaluino Medium labels</title>
+          <image href="images/jaluino_medium_v13a_labels.png" width="300" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>Labels can be printed on paper, and sticked onto the component side. If you decide to go this way (which I strongly suggest if you want to impress your wife, friends, co-workers, dog, cat, yourself), follow the guideline here. (TODO: link to &quot;Put labels on your board to make it awesome&quot; tutorial).</p>
+      <p><fig>
+          <title>Awesome results :)</title>
+          <image href="images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="400" placement="break"/>
+        </fig></p>
+    </section>
+    <section>
+      <title>Soldering components</title>
+      <p>Once your PCB is ready, use your faithful solder iron, and start soldering components. The following list shows all required components:</p>
+      <p><table frame="all" pgwide="1">
+          <tgroup cols="2">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <thead>
+              <row>
+                <entry>Component name</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>R1</entry>
+                <entry>1.2K resistor 1/4W</entry>
+              </row>
+              <row>
+                <entry>R2, R3</entry>
+                <entry>4.7K resistors 1/4W</entry>
+              </row>
+              <row>
+                <entry>R4</entry>
+                <entry>1.5K resistor 1/4W</entry>
+              </row>
+              <row>
+                <entry>C1, C4, C7, C8, C11</entry>
+                <entry>100nF capacitors</entry>
+              </row>
+              <row>
+                <entry>C2, C3</entry>
+                <entry>15pF capacitors</entry>
+              </row>
+              <row>
+                <entry>C5</entry>
+                <entry>220nF ceramic capacitor<fn>This is a <b>ceramic</b> capacitor, dedicated to USB</fn></entry>
+              </row>
+              <row>
+                <entry>C6</entry>
+                <entry>470µF/35V capacitor</entry>
+              </row>
+              <row>
+                <entry>C9, C12</entry>
+                <entry>47µF/35V capacitor</entry>
+              </row>
+              <row>
+                <entry>C10</entry>
+                <entry>220nF capacitor</entry>
+              </row>
+              <row>
+                <entry>DB1</entry>
+                <entry>DF04M diode rectifier</entry>
+              </row>
+              <row>
+                <entry>U1</entry>
+                <entry>Microchip PIC 18F4550, with 40pins large tulipe support</entry>
+              </row>
+              <row>
+                <entry>U2</entry>
+                <entry>7805 voltage regulator</entry>
+              </row>
+              <row>
+                <entry>U3</entry>
+                <entry>3.3V regulator, see <xref href="jaluino_medium_description.xml#jaluino_medium_description/33V_voltage_regulator">this section</xref> for more about this component</entry>
+              </row>
+              <row>
+                <entry>X1</entry>
+                <entry>20MHz crystal</entry>
+              </row>
+              <row>
+                <entry>J1, J2, J3, J4</entry>
+                <entry>1x8 female pin headers</entry>
+              </row>
+              <row>
+                <entry>J5</entry>
+                <entry>1x6 female pin header</entry>
+              </row>
+              <row>
+                <entry>J6, J8</entry>
+                <entry>1x6 male pin headers</entry>
+              </row>
+              <row>
+                <entry>J7</entry>
+                <entry>1x3 male pin headers</entry>
+              </row>
+              <row>
+                <entry>J9</entry>
+                <entry>Power supply connector</entry>
+              </row>
+              <row>
+                <entry>J10</entry>
+                <entry>1x4 male pin headers</entry>
+              </row>
+              <row>
+                <entry>D1</entry>
+                <entry>1N4148 diode</entry>
+              </row>
+              <row>
+                <entry>D3</entry>
+                <entry>1N4001 diode</entry>
+              </row>
+              <row>
+                <entry>D4</entry>
+                <entry>3&quot; green LED</entry>
+              </row>
+              <row>
+                <entry>F1</entry>
+                <entry>500mA fuse and support</entry>
+              </row>
+              <row>
+                <entry>CON1</entry>
+                <entry>B-Type USB connector</entry>
+              </row>
+              <row>
+                <entry>SW2</entry>
+                <entry>Push-button (switch)</entry>
+              </row>
+              <row>
+                <entry>JP1, JP2, JP3, JP4, JP5, JP6</entry>
+                <entry>Jumper connectors (1x2 male pin headers)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></p>
+      <p>Almost all components look like this, to give a rough idea (some are missing, like 3.3V regulator)</p>
+      <p><fig>
+          <title>Rough overview of Jaluino Medium components</title>
+          <image href="images/jaluino_medium_components.jpg" width="300" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>Finally, you may find these links interesting when building Jaluino Medium. They come from <xref href="http://www.justanotherlanguage.org/content/jaluino-v11-enhanced-arduino-board" format="html">Jaluino blog</xref> and show some kind of step-by-step building of old (first) Jaluino Medium boards:<ul>
+          <li>
+            <xref href="http://www.justanotherlanguage.org/content/building-jaluino-v1" format="html">http://www.justanotherlanguage.org/content/building-jaluino-v1</xref>
+          </li>
+          <li>
+            <xref href="http://www.justanotherlanguage.org/content/jaluino-v11-enhanced-arduino-board" format="html">http://www.justanotherlanguage.org/content/jaluino-v11-enhanced-arduino-board</xref>
+          </li>
+        </ul></p>
+    </section>
+  </body>
+</topic>

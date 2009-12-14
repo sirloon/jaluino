@@ -93,7 +93,7 @@
         </ul></p>
     </section>
     <section id="jaluino_ab">
-      <title>Jaluino Medium version <i>a</i> and version <i>b</i></title>
+      <title id="33V_voltage_regulator">Jaluino Medium version <i>a</i> and version <i>b</i></title>
       <p>3.3V voltage regulator is kind of a special component: there are different regulators, not that easily available, quite expensive and not using the same pin layout. That&apos;s why Jaluino Medium comes in two flavors, depending on the pin layout<fn>Having two versions actually adds complexity to maintenance and designs. We, at Jaluino Group, wanted to provide both options at the beginning, until we can make a final decision... Which one would you prefer ?</fn>:<ul>
           <li>
             <p><b>Version a</b>: this version uses pin layout <i>Ground/Output/Input</i>. </p>

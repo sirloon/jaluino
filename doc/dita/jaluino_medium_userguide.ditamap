@@ -31,6 +31,7 @@
     <topicref href="mainboard/jaluino_medium_description.xml"/>
     <topicref href="mainboard/jaluino_medium_schematics.xml"/>
     <topicref href="mainboard/jaluino_medium_hardware_setup.xml"/>
+    <topicref href="mainboard/jaluino_medium_build.xml"/>
   </chapter>
   <chapter navtitle="Jaluino Shields" href="shields/jaluino_shields.xml">
     <topicref navtitle="Crumboard" href="shields/crumboard/jaluino_crumboard.xml"/>
