@@ -28,9 +28,9 @@ include 18f4550
 -- To keep it simple: remeber, Jaluino Medium runs at 48MHz
 pragma target clock 48_000_000     -- oscillator frequency
 -- magical statements
-pragma target PLLDIV	   DIVIDE_BY_5__20MHZ_INPUT_
-pragma target CPUDIV	   _OSC1_OSC2_SRC___1__96MHZ_PLL_SRC___2_
-pragma target USBPLL	   CLOCK_SRC_FROM_96MHZ_PLL_2
+pragma target PLLDIV	   P5
+pragma target CPUDIV	   P2
+pragma target USBPLL	   F48MHZ
 pragma target OSC		   HS_PLL
 
 pragma target WDT  disabled        -- no watchdog
