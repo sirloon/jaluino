@@ -34,7 +34,7 @@ bootloaders/tinybl/tinybld18F4550usb_Xtal20MHz_clock48MHz.asm
 bootloaders/tinybl/tinybld18F4550usb_Xtal20MHz_clock48MHz.hex
 
 # Misc
-3RDPARTY
+3RD_PARTY
 CHANGELOG
 README
 LICENSE.cc
