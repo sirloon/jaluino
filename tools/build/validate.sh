@@ -1,5 +1,7 @@
 #!/bin/bash
 
+start_time=`date +%s`
+
 export JALUINO_ROOT=`pwd`	# correct when set by buildbot
 ##export JALUINO_ROOT=`pwd`/../..	# run manually here
 export JALUINO_LIB=$JALUINO_ROOT/lib
@@ -56,6 +58,10 @@ echo JALUINO_LIB=$JALUINO_LIB
 echo JALUINO_SAMPLEDIR=$JALUINO_SAMPLEDIR
 echo JALLIB_JALV2=$JALLIB_JALV2
 echo JALLIB_PYTHON=$JALLIB_PYTHON
+echo
+end_time=`date +%s`
+seconds=`expr $end_time - $start_time`
+echo "Time duration: $seconds secs"
 
 
 
