@@ -1,0 +1,41 @@
+# Mainboard
+mainboard/jaluino_medium_v13a_pcb.pdf
+mainboard/jaluino_medium_v13a_schematic.pdf
+mainboard/jaluino_medium_v13b_pcb.pdf
+mainboard/jaluino_medium_v13b_schematic.pdf
+mainboard/label_for_jaluino_medium.pdf
+
+# Shields
+shields/crumboard/Crumboard_pcb.pdf
+shields/crumboard/Crumboard_schematic.pdf
+shields/crumboard/label_for_crumboard.pdf
+shields/styx/jaluino_shield_styx_pcb_front.pdf
+shields/styx/jaluino_shield_styx_pcb.pdf
+shields/styx/jaluino_shield_styx.pdf
+shields/template/jaluino_shield_template_eagle.zip
+shields/template/jaluino_shield_template_orcad.zip
+shields/template/jaluino_shield_template_layo1_pcb.zip
+shields/template/jaluino_shield_template_pcb.pdf
+
+# Libraries
+lib/crumboard_shield.jal
+lib/jaluino_medium.jal
+
+# Samples
+samples/crumboard_blink.jal
+samples/jaluino_medium_blink.jal
+
+# 3rd party
+3rdparty/README
+3rdparty/tinybld2036.zip
+
+# Bootloaders
+bootloaders/tinybl/tinybld18F4550usb_Xtal20MHz_clock48MHz.asm
+bootloaders/tinybl/tinybld18F4550usb_Xtal20MHz_clock48MHz.hex
+
+# Misc
+3RDPARTY
+CHANGELOG
+README
+LICENSE.cc
+LICENSE.bsd

@@ -1,0 +1,26 @@
+Jaluino project, http://jaluino.org and http://jaluino.googlecode.com
+
+This project is about building an Arduino-like boards, some may even say a clone,
+based on Microchip PIC microcontrollers and powered by jalv2 and jallib.
+
+If you want to help us, by reporting issues, contributing with new jaluino libraries or shields,
+you're very welcome ! Join us to the jaluino group 
+(http://groups.google.com/group/jaluino). 
+
+Jaluino project has two licenses:
+  - Creative Common Attribution-Share Alike: license used for schematics and PCBs. See LICENSE.cc
+  - BSD: license used for Jaluino libraries and samples. See LICENCE.bsd
+
+
+Have fun !
+
+The jaluino team.
+
+--
+
+ * Jalv2 is a high-level language for a number of Microchip PIC microcontrollers
+        http://casadeyork.com/jalv2
+
+ * Jallib is a set of jalv2 libraries
+        http://jallib.googlecode.com
+

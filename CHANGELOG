@@ -1,0 +1,27 @@
+jaluino-next:
+-----------
+
+Released YYYY-MM-DD
+
+Initial release
+
+mainboard:
+ - initial release of Jaluino Medium board, based on 18F4550, version v1.3
+
+documentation:
+ - first draft of "Jaluino Medium User Guide"
+
+shields:
+ - Styx shield: intermediate layer between Jaluino board and Arduino shields
+ - Crumboard: development shield, integrating a small breadboard, LEDs and push-buttons
+
+libraries: /!\ careful, API subject to changes, unstable !
+ - jaluino_medium.jal: abstracting library build on top on 18f4550 device files with
+                       several configuration done
+ - crumboard_shield.jal: crumboard library
+
+samples
+ - simple blink-a-LED sample (no shield required) and crumboard blink-a-LED (using
+   crumboard shield)
+
+

@@ -1,0 +1,15 @@
+Jaluino project could not exist without using 3rd party programs and libraries. Jaluino
+has its own licensing scheme, and these 3rd parties have their own licenses too.
+"3rdparty" directory contains original distribution packages, containing licensing 
+information. If needed, please refer to them directly.
+
+This file describes currently 3rd parties used in Jaluino project. If you think we
+missed one, please keep us informed at http://http://groups.google.com/group/jaluino,
+we'll update this file !
+
+  - jalv2 : jalv2 compiler, the corner stone... 
+            http://casadeyork.com/jalv2   
+  - jallib: a set a JAL libraries. Jaluino is completely based on jallib.
+            http://jallib.googlecode.com
+  - tinybld2: a CLI version of famous Tinybootloader.
+            http://casadeyork.com/jalv2
