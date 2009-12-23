@@ -6,7 +6,8 @@
 -- This file is part of jaluino  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
--- Description: this program blinks a LED for ever... LED is connected to RA0.
+-- Description: this program blinks a LED for ever... LED is connected to RA0, through a 1K 
+-- resistor
 --
 
 include jaluino_medium
@@ -22,4 +23,3 @@ forever loop
    delay_1ms(250)
 end loop
 
---
