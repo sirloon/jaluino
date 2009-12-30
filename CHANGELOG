@@ -1,7 +1,27 @@
 jaluino-next:
+------------
+
+mainboard:
+ - 
+
+documentation:
+ - 
+
+shields:
+ - 
+
+libraries:
+ - 
+
+samples
+ - 
+
+
+
+jaluino-0.1:
 -----------
 
-Released YYYY-MM-DD
+Released 2009-12-29
 
 Initial release
 
