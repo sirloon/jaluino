@@ -1,3 +1,8 @@
+# List of files or directory to include in release
+# Used as input to "tar" program, so directories can be 
+# specified here (in which case all content and sub-directories
+# will be included).
+
 # Mainboard
 mainboard/jaluino_medium_v13a_pcb.pdf
 mainboard/jaluino_medium_v13a_schematic.pdf
@@ -30,8 +35,7 @@ samples/jaluino_medium_blink.jal
 3rdparty/tinybld2036.zip
 
 # Bootloaders
-bootloaders/tinybl/tinybld18F4550usb_Xtal20MHz_clock48MHz.asm
-bootloaders/tinybl/tinybld18F4550usb_Xtal20MHz_clock48MHz.hex
+bootloaders/tinybl
 
 # Misc
 3RD_PARTY

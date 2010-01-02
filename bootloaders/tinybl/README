@@ -1,0 +1,11 @@
+Tiny Bootloader is a widely used bootloader for Microchip PICs. It is very small, efficient, reliable.
+You can check for more at http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm, where you'll 
+find detailed usage instructions and a GUI you can download to upload your program to your board.
+
+Alternatively, you can use a command line version available in "3rdparty" directory, named "tinbybld2".
+
+Depending on your Jaluino board, you'll have to select the appropriate bootloader PIC file to program.
+Other parameters like clock speed, PLL, serial baudrate may also come in consideration, but using
+defaults should give you a working bootloader-ready board:
+
+ - Jaluino Medium: 18f4550/tinybld18f4550_20mhz_external_48mhz_pll_115k.hex
