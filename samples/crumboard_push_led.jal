@@ -1,0 +1,58 @@
+-- Title: Control LEDs with push buttons
+-- Author: Sébastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4l
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this program show how to read push button inputs and
+-- activate/deactivate LEDs. Both LEDs don't react the same:
+--  - when switch SW1 is pushed, LED1 shines, when released, LED1 is shutdown
+--  - when switch SW2 is pushed, LED2 change its state: if it was lit, it's shutdown
+--    if it was shutdown, it shines
+--
+-- Shield: crumboard
+--
+
+include jaluino_medium
+include delay
+
+-- describe hardware setup by declaring plugged jumpers
+const bit CRUMBOARD_LED1_JP1 = on	-- we've put a jumper in JP1 (use LED D1)
+const bit CRUMBOARD_LED2_JP2 = on	-- and also on JP2 (use LED D2)
+const bit CRUMBOARD_SW1_JP3  = on	-- we've put a jumper in JP3 (use switch SW1)
+const bit CRUMBOARD_SW2_JP4  = on	-- and also on JP2 (use switch SW2)
+-- now we can include crumboard library
+include crumboard_shield
+crumboard_init()
+
+-- everything is setup, ready to be used
+crumboard_led1 = off
+crumboard_led2 = off
+
+-- blink a little at first
+for 5 loop
+   crumboard_led1 = on
+   crumboard_led2 = on
+   delay_1ms(200)
+
+   crumboard_led1 = off
+   crumboard_led2 = off
+   delay_1ms(200)
+end loop
+
+forever loop
+   -- "read" switch SW1
+   crumboard_led1 = crumboard_switch1
+
+   -- same for SW2
+   if crumboard_switch2 == high then
+	  crumboard_led2 = ! crumboard_led2
+   end if
+
+   -- debounce push buttons
+   delay_1ms(200)
+end loop
+
+--
