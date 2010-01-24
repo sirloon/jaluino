@@ -29,6 +29,8 @@ lib/jaluino_medium.jal
 # Samples
 samples/crumboard_blink.jal
 samples/jaluino_medium_blink.jal
+samples/crumboard_push_led.jal
+samples/crumboard_pintools.jal
 
 # 3rd party
 3rdparty/README
