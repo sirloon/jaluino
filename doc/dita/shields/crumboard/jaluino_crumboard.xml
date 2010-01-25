@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_crumboard">
   <title>Crumboard shield</title>
   <prolog>
@@ -17,7 +18,7 @@
           <tbody>
             <row>
               <entry>
-                <image href="images/medium_crumboard_side_view.JPG" width="200" align="left" placement="break"/>
+                <image href="images/jaluino_with_crumboard_all_connectors.JPG" width="200" align="left" placement="break"/>
               </entry>
               <entry id="global_desc">
                 <p><b>Crumboard</b> shield is a prototyping shield designed for Jaluino. It embeds a small breadboard (thus the name, crumb-board...), two LEDs and two Push-buttons.</p>
