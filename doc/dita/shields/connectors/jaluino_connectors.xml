@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_connectors">
   <title>About shield connectors...</title>
   <prolog>
@@ -20,6 +21,7 @@
           <image href="images/stackable_header.jpg" width="250" placement="break"/>
         </fig></p>
       <p><i>Pros</i> are obvious: this is the simplest way to get your shield built. <i>Cons</i> are also obvious: it may not be the cheapest solution. No, not the cheapest... Also, by plugging/unplugging shields, such connectors will eventually get &quot;tired&quot;, won&apos;t perform their job anymore and you may soon have to completely replace it...</p>
+      <p><note type="attention">another issue with this ready-to-use connectors, which may definitely discard them... Some (the one I bought) have rectangular pins, not squared. This means they don&apos;t properly connect on all sides when plugged into female connectors, producing unreliable electric contacts... Be careful, if you can, check these properly fit to female headers, or you&apos;ll get lots of troubles when playing with shields. Also check for the following option 2.</note></p>
     </section>
     <section>
       <title>Option 2: build your own specific connectors</title>
