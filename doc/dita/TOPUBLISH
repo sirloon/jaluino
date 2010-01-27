@@ -1,0 +1,35 @@
+# this files is used to declare which DITA files should be published to the website.
+# it works as following:
+#  - empty lines or lines starting with "#" are ignored (comments)
+#  - other lines are composed by (fields separated by spaces, whatever the number):
+#      1. the relative path to the DITA xml file
+#      2. a python configutation file, remaining in "tools/japp" (just the filename, not the whole path)
+#         (because this file contains passwords, it's not in the repos, only the template is, so don't worry
+#         if you can't find it)
+#      3. a timestamp field: in order to know which lines have changed within this files, a timestamp
+#         field is used, by convention, it looks like "YYYYMMDDNN", something like DNS config files
+#         Ex: 2010012501, 2010012502, etc...
+#
+# If you modified a DITA xml file, in order to publish it, you need to edit this file, add a new line if 
+# it doesn't exist (alphabetical order please), or update timestamp
+#
+# A special DITA is the "ditamap". From this file a Table Of Content (TOC) is extracted and generated. If
+# a new line has been added (a new page to publish), then also update ditamap's timestamp so the TOC
+# is generated.
+
+# ditamap
+jaluino_medium_userguide.ditamap                japp_userguide_config.py      2010012701
+
+# DITA xml (userguide)
+mainboard/jaluino_intro.xml                     japp_userguide_config.py      2010012701
+mainboard/jaluino_medium_build.xml              japp_userguide_config.py      2010012701
+mainboard/jaluino_medium_description.xml        japp_userguide_config.py      2010012701
+mainboard/jaluino_medium_hardware_setup.xml     japp_userguide_config.py      2010012701
+mainboard/jaluino_medium_schematics.xml         japp_userguide_config.py      2010012701
+
+# DITA xml (shields)
+shields/connectors/jaluino_connectors.xml       japp_shields_config.py        2010012701
+shields/crumboard/jaluino_crumboard.xml         japp_shields_config.py        2010012701
+shields/styx/jaluino_styx.xml                   japp_shields_config.py        2010012701
+shields/jaluino_shields.xml                     japp_shields_config.py        2010012701
+
