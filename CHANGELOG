@@ -2,19 +2,23 @@ jaluino-next:
 ------------
 
 mainboard:
- - 
+ - added pin numbers, updated labels
 
 documentation:
- - 
+ - updated to include pin numbers
 
 shields:
- - 
+ - jallib shield: experiment most PIC features with this shield, and
+   learn to use jallib with: push buttons, PWM with power output, ADC,
+   I2C with RTC, LCD, 7-segment displays, ...
+ - stepper shield: drive a stepper motor
 
 libraries:
- - 
+ - jaluino_medium_pinmap.jal: mapping between PIC pins and numbers
+ - firmata.jal: first implementation of Firmata protocol for Jaluino
 
 samples
- - 
+ - firmata demo, crumboard samples, ...
 
 
 
