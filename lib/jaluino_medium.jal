@@ -40,6 +40,12 @@ pragma target MCLR external        -- reset externally
 -- by default, we'll set all pins as digital pins
 enable_digital_io()
 
+-- Include official pin mapping. Since it's arbitrary, one may want to bypass it
+-- and provides his own mapping, defining the following constant.
+if defined(JALUINO_SKIP_PINMAP) == false then
+   include jaluino_medium_pinmap
+end if
+
 -- that's all, PIC is ready !
 
 

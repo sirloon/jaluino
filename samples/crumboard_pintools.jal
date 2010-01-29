@@ -1,14 +1,19 @@
--- Title: Show how to access pins by number, controlling their direction and levels, using pintools.jal library
+-- Title: Show how to bypass jaluino pin mapping, and use pintools.jal library to control pin direction and levels
 -- Author: Sébastien Lelong, Copyright (c) 2008..2010, all rights reserved.
 -- Adapted-by:
--- Compiler: 2.4l
+-- Compiler: 2.4m
 --
 -- This file is part of jaluino  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
--- Description: this sample show how to use pintools.jal library. pintools.jal allows to
--- access pins using a number. This number is first defined in kind of associative array.
--- Using pintools.jal, you don't have to use pin's name.
+-- Description: this sample show how to bypass jaluino medium pin mapping and use pintools.jal library.
+-- pintools.jal allows to access pins using a number. By default, jaluino provides an arbitrary mapping
+-- between PIC pins and numbers. Bypassing this "official" mapping, we can define our own, using a kind 
+-- of associative array.
+-- --
+-- Please be aware that it's usually not recommanded, this sample is here as an learning example, to
+-- understand how pin mapping works "behind the scene"...
+-- --
 -- This sample uses LEDs and push-buttons:
 --  - when switch SW1 is pushed, pin_A0 (LED1) switches between high and low level
 --  - when switch SW2 is pushed, pin_C2 (LED2) switches between output and input direction
@@ -18,7 +23,11 @@
 -- Shield: crumboard
 --
 
+-- here we bypass original jaluino pin mapping
+-- before even including main jaluino library !!!
+const bit JALUINO_SKIP_PINMAP = 1
 include jaluino_medium
+
 include delay
 
 -- describe hardware setup by declaring plugged jumpers

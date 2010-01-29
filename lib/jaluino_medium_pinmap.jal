@@ -1,0 +1,104 @@
+-- Title: Jaluino Medium pin mapping
+-- Author: Sebastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4l
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this library provides a mapping between Microchip pins naming
+-- (RA0, RB2, RE3, ...) and an arbitrary pin numbering (0, 1, 2, ...). Pin number
+-- can then be used to access pins using integer (byte), instead of their original names.
+-- (this allows programmatic construction, like sequentially accessing pins in a loop...)
+--
+-- Sources:
+--
+-- Notes:
+--
+
+-- 18F4550 has 40 pins, 31 pins being exported through shield connector.
+-- Pin mapping follows counter-clock: J1, J3, J4 and J2
+
+-- since there are 31 pins to map, we need 62 elements (port + pin)
+--                                 0      1      2      3      4      5      6      7
+const byte pintools_map [64] = {"A",0, "A",1, "A",2, "A",3, "A",4, "A",5, "E",0, "E",1, -- J1
+--                                 8      9     10     11     12     13     14     15
+                                "C",0, "C",1, "C",2, "D",0, "D",1, "D",2, "D",3, "E",2, -- J3
+--                                16     17     18     19     20     21     22     23
+                                "C",4, "C",5, "C",6, "C",7, "D",4, "D",5, "D",6, "D",7, -- J4
+--                                24     25     26     27     28     29     30     31
+                                "B",0, "B",1, "B",2, "B",3, "B",4, "B",5, "B",6, "B",7  -- J2
+                                  }
+-- mapping is defined, we can now use the library to handle it
+include pintools
+
+-- also provide aliases. Because there are specific to jaluino board, they
+-- are prefixed with "j"...
+--    J1 connector
+alias jpin_0 is pin_A0
+alias jpin_0_direction is pin_A0_direction
+alias jpin_1 is pin_A1
+alias jpin_1_direction is pin_A1_direction
+alias jpin_2 is pin_A2
+alias jpin_2_direction is pin_A2_direction
+alias jpin_3 is pin_A3
+alias jpin_3_direction is pin_A3_direction
+alias jpin_4 is pin_A4
+alias jpin_4_direction is pin_A4_direction
+alias jpin_5 is pin_A5
+alias jpin_5_direction is pin_A5_direction
+alias jpin_6 is pin_E0
+alias jpin_6_direction is pin_E0_direction
+alias jpin_7 is pin_E1
+alias jpin_7_direction is pin_E1_direction
+--    J3 connector
+alias jpin_8 is pin_C0
+alias jpin_8_direction is pin_C0_direction
+alias jpin_9 is pin_C1
+alias jpin_9_direction is pin_C1_direction
+alias jpin_10 is pin_C2
+alias jpin_10_direction is pin_C2_direction
+alias jpin_11 is pin_D0
+alias jpin_11_direction is pin_D0_direction
+alias jpin_12 is pin_D1
+alias jpin_12_direction is pin_D1_direction
+alias jpin_13 is pin_D2
+alias jpin_13_direction is pin_D2_direction
+alias jpin_14 is pin_D3
+alias jpin_14_direction is pin_D3_direction
+alias jpin_15 is pin_E2
+alias jpin_15_direction is pin_E2_direction
+--    J4 connector
+alias jpin_16 is pin_C4
+-- pin C4 & C5 are digital input only
+alias jpin_17 is pin_C5
+alias jpin_18 is pin_C6
+alias jpin_18_direction is pin_C6_direction
+alias jpin_19 is pin_C7
+alias jpin_19_direction is pin_C7_direction
+alias jpin_20 is pin_D4
+alias jpin_20_direction is pin_D4_direction
+alias jpin_21 is pin_D5
+alias jpin_21_direction is pin_D5_direction
+alias jpin_22 is pin_D6
+alias jpin_22_direction is pin_D6_direction
+alias jpin_23 is pin_D7
+alias jpin_23_direction is pin_D7_direction
+--    J2 connector
+alias jpin_24 is pin_B0
+alias jpin_24_direction is pin_B0_direction
+alias jpin_25 is pin_B1
+alias jpin_25_direction is pin_B1_direction
+alias jpin_26 is pin_B2
+alias jpin_26_direction is pin_B2_direction
+alias jpin_27 is pin_B3
+alias jpin_27_direction is pin_B3_direction
+alias jpin_28 is pin_B4
+alias jpin_28_direction is pin_B4_direction
+alias jpin_29 is pin_B5
+alias jpin_29_direction is pin_B5_direction
+alias jpin_30 is pin_B6
+alias jpin_30_direction is pin_B6_direction
+alias jpin_31 is pin_B7
+alias jpin_31_direction is pin_B7_direction
+
