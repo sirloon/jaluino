@@ -1,0 +1,45 @@
+-- Title: Firmata demo with Jaluino Medium board
+-- Author: Sébastien Lelong, Copyright (c) 2008..2010, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4m
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this program shows how to setup and use Firmata protocol
+--
+include jaluino_medium
+
+include delay
+
+const bit CRUMBOARD_LED1_JP1 = on	-- we've put a jumper in JP1
+const bit CRUMBOARD_LED2_JP2 = on	-- and also on JP2
+-- now we can include crumboard library
+include crumboard_shield
+crumboard_init()
+
+-- setup a serial comm. used for carrier
+const serial_hw_baudrate = 115200
+include serial_hardware
+serial_hw_init()
+
+-- specify which transport will be used to transmit/receive Firmata message
+alias firmata_carrier is serial_hw_data
+-- this LED will blink some Firmata information. Specify pin number
+-- (led1 is on pin_A0 => pin #0 according to jaluino_medium_pinmap.jal
+var byte firmata_version_blink_pinnum = 0
+include firmata
+firmata_begin()
+
+
+forever loop
+
+   firmata_version_blink_pinnum = 0	   -- LED1
+   firmata_blink_version()
+   delay_1ms(1000)
+
+   firmata_version_blink_pinnum = 10   -- LED2
+   firmata_blink_version()
+   delay_1ms(1000)
+end loop
+

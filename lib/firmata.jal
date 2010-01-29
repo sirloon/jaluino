@@ -1,0 +1,143 @@
+-- Title: Firmata v2 library, jalv2/jallib implementation
+-- Author: Sebastien Lelong, Copyright (c) 2008..2010, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4m
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this library is a jalv2/jallib implementation of Firmata v2.1 protocol.
+-- Firmata is a protocol aimed to provide a universal interface to interact with a microcontroller.
+-- With Firmata, microcontroller can dynamically controlled from a PC host, using tools like Pure Data,
+-- Processing, python libraries, etc...
+-- 
+-- Sources: 
+--   * http://firmata.org
+--   * Arduino's Firmata implementation, see http://code.google.com/p/arduino/
+--     (lots of code from author Hans-Christoph Steiner, re-implemented the jalv2 way)
+--
+-- Notes:
+--
+
+-- Version numbers for the protocol.  The protocol is still changing, so these
+-- version numbers are important.  This number can be queried so that host
+-- software can test whether it will be compatible with the currently
+-- installed firmware.
+const byte FIRMATA_MAJOR_VERSION = 2
+const byte FIRMATA_MINOR_VERSION = 1
+
+-- max number of data bytes in non-Sysex messages
+const byte FIRMATA_MAX_DATA_BYTES = 32
+
+-- message command bytes (128-255/0x80-0xFF)
+--	  send data for a digital pin
+const byte FIRMATA_DIGITAL_MESSAGE = 0x90
+--	  send data for an analog pin (or PWM)
+const byte FIRMATA_ANALOG_MESSAGE = 0xE0
+--	  enable analog input by pin #
+const byte FIRMATA_REPORT_ANALOG = 0xC0
+--	  enable digital input by port pair
+const byte FIRMATA_REPORT_DIGITAL = 0xD0
+--	  set a pin to INPUT/OUTPUT/PWM/etc
+const byte FIRMATA_SET_PIN_MODE = 0xF4
+--	  report protocol version
+const byte FIRMATA_REPORT_VERSION = 0xF9
+--	  reset 
+const byte FIRMATA_SYSTEM_RESET = 0xFF
+--	  start a MIDI Sysex message
+const byte FIRMATA_START_SYSEX = 0xF0
+--	  end a MIDI Sysex message
+const byte FIRMATA_END_SYSEX = 0xF7
+
+-- extended command set using sysex (0-127/0x00-0x7F)
+-- (0x00-0x0F reserved for user-defined command)
+--	  set max angle, minPulse, maxPulse, freq
+const byte FIRMATA_SERVO_CONFIG = 0x70
+--	  a string message with 14-bits per char
+const byte FIRMATA_STRING_DATA = 0x71
+--	  a bitstream to/from a shift register
+const byte FIRMATA_SHIFT_DATA = 0x75
+--	  send an I2C read/write request
+const byte FIRMATA_I2C_REQUEST = 0x76
+--	  config I2C settings such as delay times and power pins
+const byte FIRMATA_I2C_CONFIG = 0x78
+--	  report name and version of the firmware
+const byte FIRMATA_REPORT_FIRMWARE = 0x79
+--	  set the poll rate of the main loop
+const byte FIRMATA_SAMPLING_INTERVAL = 0x7A
+--	  MIDI Reserved for non-realtime messages
+const byte FIRMATA_SYSEX_NON_REALTIME = 0x7E
+--	  MIDI Reserved for realtime messages
+const byte FIRMATA_SYSEX_REALTIME = 0x7F
+
+-- pin modes
+--	  input
+const byte FIRMATA_INPUT = 0x00
+--	  output
+const byte FIRMATA_OUTPUT = 0x01
+--	  analog pin in analogInput mode
+const byte FIRMATA_ANALOG = 0x02
+--	  digital pin in PWM output mode
+const byte FIRMATA_PWM = 0x03
+--	  digital pin in Servo output mode (seb: why since we have PWM ?)
+const byte FIRMATA_SERVO = 0x04
+--	  shiftIn/shiftOut mode
+const byte FIRMATA_SHIFT = 0x05
+--	  pin included in I2C setup
+const byte FIRMATA_I2C = 0x06
+
+
+-- Sanity check
+if defined(firmata_carrier) == false then
+   _error "You have to specicy 'firmata_carrier' alias, pointing to a pseudo-variable linked to a communication devide (for instance, 'serial_hw_data')"
+end if
+
+
+-- Firmata API
+
+procedure firmata_print_version() is
+   firmata_carrier = FIRMATA_REPORT_VERSION
+   firmata_carrier = FIRMATA_MAJOR_VERSION
+   firmata_carrier = FIRMATA_MINOR_VERSION
+end procedure
+
+procedure firmata_pin_mode(byte in pinnum, byte in mode) is
+   pragma inline  -- too greedy ?
+   if mode == FIRMATA_OUTPUT then
+      pintools_set_direction(pinnum,output)
+   else
+      pintools_set_direction(pinnum,input)
+   end if
+end procedure
+
+procedure firmata_pin_strobe(byte in pinnum, byte in howmany, word in on_interval, word in off_interval) is
+   var byte i
+   pintools_set_direction(pinnum,output)
+   for howmany loop
+	  delay_1ms(off_interval)
+      pintools_set_level(pinnum,high)
+	  delay_1ms(on_interval)
+      pintools_set_level(pinnum,low)
+   end loop
+end procedure
+
+procedure firmata_blink_version() is
+   -- blinking version isn't mandatory if no pin has been assigned
+   -- for this purpose
+   if defined(firmata_version_blink_pinnum) == true then
+      pintools_set_direction(firmata_version_blink_pinnum,output)
+	  firmata_pin_strobe(firmata_version_blink_pinnum,FIRMATA_MAJOR_VERSION,200,400)
+	  delay_1ms(300)
+	  firmata_pin_strobe(firmata_version_blink_pinnum,2,1,4)	 -- separator, a quick burst
+	  delay_1ms(300)
+	  firmata_pin_strobe(firmata_version_blink_pinnum,FIRMATA_MINOR_VERSION,200,400)
+   end if
+end procedure
+
+procedure firmata_begin() is
+   firmata_blink_version()
+   delay_1ms(300)
+   firmata_print_version()
+   ;;-- firmata_print_firmware_version()
+end procedure
+
