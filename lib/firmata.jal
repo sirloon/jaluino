@@ -10,6 +10,9 @@
 -- Firmata is a protocol aimed to provide a universal interface to interact with a microcontroller.
 -- With Firmata, microcontroller can dynamically controlled from a PC host, using tools like Pure Data,
 -- Processing, python libraries, etc...
+-- --
+-- By defininf special firmata procedure, you can "attach callbacks" to plug your own code reacting
+-- on some firmata events. See "firmata_callback_*" procedures.
 -- 
 -- Sources: 
 --   * http://firmata.org
@@ -18,6 +21,7 @@
 --
 -- Notes:
 --
+
 
 -- Version numbers for the protocol.  The protocol is still changing, so these
 -- version numbers are important.  This number can be queried so that host
@@ -86,6 +90,19 @@ const byte FIRMATA_SHIFT = 0x05
 --	  pin included in I2C setup
 const byte FIRMATA_I2C = 0x06
 
+-- Global vars
+-- store a multi-byte message
+var byte firmata_stored_input_data[FIRMATA_MAX_DATA_BYTES]
+-- stores number of bytes in current SysEx message
+var byte firmata_sysex_bytes_read = 0
+-- store the number of expected data bytes
+var byte firmata_wait_for_data = 0
+-- store the command to execute after getting multi-byte data
+var byte firmata_execute_multi_byte_command = 0
+--  channel data for multiByteCommands (is it the pin number ???)
+var byte firmata_multi_byte_channel = 0
+
+
 
 -- Sanity check
 if defined(firmata_carrier) == false then
@@ -93,6 +110,7 @@ if defined(firmata_carrier) == false then
 end if
 
 
+-- -- -- GENERIC -- -- --
 -- Firmata API
 
 procedure firmata_print_version() is
@@ -103,11 +121,15 @@ end procedure
 
 procedure firmata_pin_mode(byte in pinnum, byte in mode) is
    pragma inline  -- too greedy ?
+   firmata_carrier = pinnum
+   firmata_carrier = mode
+   -- only "input" and "output" mode are currently supported
    if mode == FIRMATA_OUTPUT then
       pintools_set_direction(pinnum,output)
    else
       pintools_set_direction(pinnum,input)
    end if
+   firmata_carrier = TRISA
 end procedure
 
 procedure firmata_pin_strobe(byte in pinnum, byte in howmany, word in on_interval, word in off_interval) is
@@ -139,5 +161,132 @@ procedure firmata_begin() is
    delay_1ms(300)
    firmata_print_version()
    ;;-- firmata_print_firmware_version()
+end procedure
+
+procedure firmata_process_sysex_message() is
+   -- TODO
+   asm nop
+end procedure
+
+-- -- -- SPECIFIC -- -- --
+-- Following procedures are specific to 18f4550 and jaluino
+-- (I say that, because in case firmata.jal becomes generic, some work
+-- will have to done
+
+-- define our own callback to deal with digital callback
+procedure firmata_callback_digital_message(byte in port, word in value) is
+   -- TODO: some pins should be protected, for instance pins involved in serial
+   -- or USB, etc...
+   case port of
+	  0: PORTA = byte(value)
+	  1: PORTB = byte(value)
+	  2: PORTC = byte(value)
+	  3: PORTD = byte(value)
+	  4: PORTE = byte(value)
+   end case
+end procedure
+
+-- set pin mode
+alias firmata_callback_set_pin_mode is firmata_pin_mode
+
+
+
+-- -- -- EVAL LOOP -- -- --
+-- main procedure to read and eval Firmata frames
+procedure firmata_process_input() is
+   var byte input_data
+   var bit parsing_sysex = false
+   var byte command
+
+   -- read one char from carrier (serial, usb, ...)
+   input_data = firmata_carrier
+
+   if parsing_sysex == true then
+      -- SysEx message
+	  if input_data == FIRMATA_END_SYSEX then
+		 -- reach end of sysex message, now process it
+		 parsing_sysex = false
+		 firmata_process_sysex_message()
+	  else
+	     -- append sysex content
+		 firmata_stored_input_data[firmata_sysex_bytes_read] = input_data
+		 firmata_sysex_bytes_read = firmata_sysex_bytes_read + 1
+	  end if
+   elsif firmata_wait_for_data > 0 & input_data < 128 then
+	  -- expecting several bytes, fill the buffer
+	  firmata_wait_for_data = firmata_wait_for_data - 1
+	  firmata_stored_input_data[firmata_wait_for_data] = input_data
+	  if firmata_wait_for_data == 0 & firmata_execute_multi_byte_command != 0 then
+		 -- got whole message, execute registered command
+		 case firmata_execute_multi_byte_command of
+			-- firmata being based on MIDI protocol, it uses 7-bits payload (almost a byte)
+			-- sending 2 * 7-bits payload is done by casting to a word where 14-bits are used
+			FIRMATA_ANALOG_MESSAGE: 
+			   if defined(firmata_callback_analog_message) == true then
+				  -- channel here is a pin number
+				  var word first = word(firmata_stored_input_data[0] << 7)
+				  var word second = word(firmata_stored_input_data[1])
+				  firmata_callback_analog_message(firmata_multi_byte_channel,word(first+second))
+			   end if 
+			FIRMATA_DIGITAL_MESSAGE:
+			   if defined(firmata_callback_digital_message) == true then
+				  -- channel here is a port
+				  -- (Seb: I think digital message for one pin does not exist due to 
+				  -- optimization concern: sending one byte representing one pin (0/1)
+				  -- or one byte representing one port (0b........) costs the same
+				  var word first = word(firmata_stored_input_data[0] << 7)
+				  var word second = word(firmata_stored_input_data[1])
+				  firmata_callback_digital_message(firmata_multi_byte_channel,word(first+second))
+			   else
+				  _debug "No firmata_callback_digital_message defined, can't react on FIRMATA_DIGITAL_MESSAGE"
+			   end if 
+			FIRMATA_SET_PIN_MODE:
+			   if defined(firmata_callback_set_pin_mode) == true then
+				  firmata_callback_set_pin_mode(firmata_stored_input_data[0],firmata_stored_input_data[1])
+			   else
+				  debug "No firmata_callback_set_pin_mode defined, can't react on FIRMATA_SET_PIN_MODE"
+			   end if
+			FIRMATA_REPORT_ANALOG:
+			   if defined(firmata_callback_report_analog) == true then
+				  -- channel hare is a pin number
+				  firmata_callback_report_analog(firmata_multi_byte_channel,firmata_stored_input_data[0])
+			   end if
+			FIRMATA_REPORT_DIGITAL:
+			   if defined(firmata_callback_report_digital) == true then
+				  -- channel here is a port
+				  firmata_callback_report_digital(firmata_multi_byte_channel,firmata_stored_input_data[0])
+			   end if
+		 end case
+		 firmata_execute_multi_byte_command = 0	-- reset action
+	  end if
+   else
+	  -- remove channel info from command byte if less than 0xF0
+	  -- commands >= 0xF0 don't have a multichannel byte
+	  if input_data < 0xF0 then
+		 command = input_data & 0xF0
+		 firmata_multi_byte_channel = input_data & 0x0F
+	  else
+		 -- commands in the 0xF* range don't use channel data
+		 command = input_data
+	  end if
+
+	  -- eval command
+	  if command == FIRMATA_ANALOG_MESSAGE | command == FIRMATA_DIGITAL_MESSAGE |
+											 command == FIRMATA_SET_PIN_MODE then
+		 firmata_wait_for_data = 2
+		 firmata_execute_multi_byte_command = command
+	  elsif command == FIRMATA_REPORT_ANALOG | command == FIRMATA_REPORT_DIGITAL then
+		 firmata_wait_for_data = 1
+		 firmata_execute_multi_byte_command = command
+	  elsif command == FIRMATA_START_SYSEX then
+		 parsing_sysex = true
+		 firmata_sysex_bytes_read = 0
+	  elsif command == FIRMATA_SYSTEM_RESET then
+	     firmata_system_reset()
+	  elsif command == FIRMATA_REPORT_VERSION then
+		 firmata_print_version()
+	  end if
+   end if
+
 end procedure
 

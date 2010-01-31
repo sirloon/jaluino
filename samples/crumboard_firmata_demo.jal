@@ -28,18 +28,12 @@ alias firmata_carrier is serial_hw_data
 -- this LED will blink some Firmata information. Specify pin number
 -- (led1 is on pin_A0 => pin #0 according to jaluino_medium_pinmap.jal
 var byte firmata_version_blink_pinnum = 0
+
+
 include firmata
 firmata_begin()
 
-
 forever loop
-
-   firmata_version_blink_pinnum = 0	   -- LED1
-   firmata_blink_version()
-   delay_1ms(1000)
-
-   firmata_version_blink_pinnum = 10   -- LED2
-   firmata_blink_version()
-   delay_1ms(1000)
+   firmata_process_input()
 end loop
 
