@@ -242,7 +242,7 @@ procedure firmata_process_input() is
 			   end if 
 			FIRMATA_SET_PIN_MODE:
 			   if defined(firmata_callback_set_pin_mode) == true then
-				  firmata_callback_set_pin_mode(firmata_stored_input_data[0],firmata_stored_input_data[1])
+				  firmata_callback_set_pin_mode(firmata_stored_input_data[1],firmata_stored_input_data[0])
 			   else
 				  debug "No firmata_callback_set_pin_mode defined, can't react on FIRMATA_SET_PIN_MODE"
 			   end if
