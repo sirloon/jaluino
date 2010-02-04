@@ -34,6 +34,9 @@ include firmata
 firmata_begin()
 
 forever loop
+   -- deal with input...
    firmata_process_input()
+   -- then output :)
+   firmata_process_output()
 end loop
 

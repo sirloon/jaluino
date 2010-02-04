@@ -121,15 +121,13 @@ end procedure
 
 procedure firmata_pin_mode(byte in pinnum, byte in mode) is
    pragma inline  -- too greedy ?
-   firmata_carrier = pinnum
-   firmata_carrier = mode
    -- only "input" and "output" mode are currently supported
    if mode == FIRMATA_OUTPUT then
       pintools_set_direction(pinnum,output)
    else
       pintools_set_direction(pinnum,input)
    end if
-   firmata_carrier = TRISA
+   -- TODO: update firmata_port_status
 end procedure
 
 procedure firmata_pin_strobe(byte in pinnum, byte in howmany, word in on_interval, word in off_interval) is
@@ -168,10 +166,30 @@ procedure firmata_process_sysex_message() is
    asm nop
 end procedure
 
+-- Report all
+procedure firmata_report() is
+end procedure
+
 -- -- -- SPECIFIC -- -- --
 -- Following procedures are specific to 18f4550 and jaluino
 -- (I say that, because in case firmata.jal becomes generic, some work
 -- will have to done
+
+-- TODO: describe the board, but maybe should be in device files
+const byte FIRMATA_NUM_PORTS = 5
+
+-- stores whether a given port should be included in reporting
+-- /!\ bit arrays not supported, so used "byte", but this really is
+-- just about true/false values
+var byte firmata_report_ports [FIRMATA_NUM_PORTS] = {0,0,0,0,0}
+-- stores port status
+var byte firmata_port_status [FIRMATA_NUM_PORTS] = {PORTA,PORTB,PORTC,PORTD,PORTE}
+-- stores previously sent status, to optimize comm. (if unchanged, no 
+-- need to send it again
+-- init to impossible value for a PORT, so when first compared, send value
+-- TODO: init isn't working properly
+var byte firmata_previous_port_status [FIRMATA_NUM_PORTS] = {0xFF,0xFF,0xFF,0xFF,0xFF}
+
 
 -- define our own callback to deal with digital callback
 procedure firmata_callback_digital_message(byte in port, word in value) is
@@ -184,10 +202,58 @@ procedure firmata_callback_digital_message(byte in port, word in value) is
 	  3: PORTD = byte(value)
 	  4: PORTE = byte(value)
    end case
+   firmata_port_status[port] = byte(value)
 end procedure
 
 -- set pin mode
 alias firmata_callback_set_pin_mode is firmata_pin_mode
+
+-- set a message to be sent, with information about digital pin status
+-- doesn't send the message itself, just prepare it (see firmata_report())
+procedure firmata_callback_report_digital(byte in port, byte in report) is
+   -- register this port to be included in reporting
+   ;;-- DEBUG
+   ;;firmata_carrier = "R"
+   ;;firmata_carrier = port
+   ;;firmata_carrier = report
+   firmata_report_ports[port] = report
+end procedure
+
+procedure firmata_send_digital_port(byte in port, word in data) is
+   -- it's a multichannel byte
+   firmata_carrier = FIRMATA_DIGITAL_MESSAGE | (port & 0x0F)
+   -- send bits 0-6
+   firmata_carrier = byte(data % 128)
+   firmata_carrier = byte(data >> 7)
+end procedure
+
+procedure firmata_output_port(byte in port, byte in mask) is
+   var byte portval = mask & firmata_port_status[port]
+   ;;-- did status changed ?
+   if firmata_previous_port_status[port] != portval then
+	  ;;-- DEBUG
+	  ;;firmata_carrier = "!"
+	  firmata_send_digital_port(port,portval)
+	  -- cache sent value
+	  firmata_previous_port_status[port] = portval
+   end if
+end procedure
+
+-- check all the active digital inputs for change of state, then add any events
+-- to be sent through firmata_carrier
+-- this procedure typically should be called regularly in a forever loop
+procedure firmata_check_digital_inputs() is
+   var byte i
+   for FIRMATA_NUM_PORTS using i loop
+	  if firmata_report_ports[i] != 0 then
+		 -- TODO: protect some pins ? careful, this should
+		 -- be centralized, see board description
+		 var byte mask = 0b1111_1111   -- no filter
+		 firmata_output_port(i,mask)
+	  end if
+   end loop
+
+end procedure
 
 
 
@@ -199,7 +265,9 @@ procedure firmata_process_input() is
    var byte command
 
    -- read one char from carrier (serial, usb, ...)
-   input_data = firmata_carrier
+   if serial_hw_read(input_data) then
+	  ;;-- DEBUG
+	  ;;input_data = firmata_carrier
 
    if parsing_sysex == true then
       -- SysEx message
@@ -223,6 +291,8 @@ procedure firmata_process_input() is
 			-- sending 2 * 7-bits payload is done by casting to a word where 14-bits are used
 			FIRMATA_ANALOG_MESSAGE: 
 			   if defined(firmata_callback_analog_message) == true then
+			      _error "Needs dynamic ADC library version to modify ADC channels on-the-fly..."
+				  -- TODO: deal with ADC channels
 				  -- channel here is a pin number
 				  var word first = word(firmata_stored_input_data[0] << 7)
 				  var word second = word(firmata_stored_input_data[1])
@@ -248,6 +318,7 @@ procedure firmata_process_input() is
 			   end if
 			FIRMATA_REPORT_ANALOG:
 			   if defined(firmata_callback_report_analog) == true then
+				  -- TODO
 				  -- channel hare is a pin number
 				  firmata_callback_report_analog(firmata_multi_byte_channel,firmata_stored_input_data[0])
 			   end if
@@ -288,5 +359,12 @@ procedure firmata_process_input() is
 	  end if
    end if
 
+   end if
+
 end procedure
 
+
+procedure firmata_process_output() is
+   pragma inline
+   firmata_check_digital_inputs()
+end procedure
