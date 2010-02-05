@@ -1,0 +1,141 @@
+<!-- Editra XML Interface Specification -->
+<!-- Editra Xml can be used to customize or add new syntax highlighting -->
+ 
+<!-- Opening tag
+version attribute used to tell Editra the file has changed since last load
+-->
+<editra version="1">
+ 
+   <!-- Specifies a syntax module and lexer
+   lang attribute specifies the filetypes name
+   lexer attribute specifies the scintilla lexer to use
+   -->
+   <syntax language="Jalv2" lexer="STC_LEX_SQL" id="ID_LANG_JAL">
+      <!-- File Extension Associations. Value is just a space separated
+             list of file extensions. No Dots.
+      -->
+      <associations value="jal"/>
+      <!-- KeywordList must be a child of syntax it specifies the keywords
+      used by the language.
+      -->
+      <keywordlist>
+         <!-- from _sql.py, we got the following keyword indexes:
+                - WordList &keywords1  = *keywordlists[0];  : SQL_KW   (SQL Keywords)
+                - WordList &keywords2  = *keywordlists[1];  : SQL_DBO  (Data Types)
+                - WordList &kw_pldoc   = *keywordlists[2];  : SQL_PLD  (epydoc field tags)
+                - WordList &kw_sqlplus = *keywordlists[3];  : SQL_PLUS or SQL_PKG
+                - WordList &kw_user1   = *keywordlists[4];  : SQL_UKW1 (standard functions)
+                - WordList &kw_user2   = *keywordlists[5];  : SQL_UKW2 (exceptions)
+                - WordList &kw_user3   = *keywordlists[6];  : SQL_UKW3 (special variables)
+                - WordList &kw_user4   = *keywordlists[7];  : SQL_UKW4 (PL/SQL Keywords)
+         -->
+
+         <!-- std keywords -->
+         <keywords value="0">
+             if then else elsif forever for loop case of end block using
+             function procedure is
+         </keywords>
+
+         <!-- types -->
+         <keywords value="1">
+             var const bit byte word dword sbyte sword sdword
+         </keywords>
+
+         <!-- special comment tags ? -->
+         <keywords value="2">
+            Title: Author: Adapted-by: Compiler: Description: Notes: Sources: Shield:
+         </keywords>
+
+         <keywords value="3">
+             pragma target clock interrupt
+         </keywords>
+
+         <!-- built-in compiler functions -->
+         <keywords value="4">
+             _usec_delay _debug _warn _error count
+         </keywords>
+
+         <!-- directives -->
+         <keywords value="5">
+             include defined
+         </keywords>
+
+         <!-- special values -->
+         <keywords value="6">
+             off on high low input output true false enabled disabled all_input all_output
+         </keywords>
+
+         <!-- operators -->
+         <keywords value="9">
+            * / ||
+         </keywords>
+
+
+      </keywordlist>
+ 
+      <!-- SyntaxSpecList must be a child of syntax and it specifies how the
+      text is to be styled. For built in lexers the value attribute should be
+      a constant used for the set lexer. For custom lexers it should be an
+      integer that specifies the custom style id. The tag attribute specifies
+      the style used by Editra's internal styling system to highlight the text
+      -->
+      <syntaxspeclist>
+
+         <syntaxspec value="STC_SQL_DEFAULT" tag="default_style"/>
+         <syntaxspec value="STC_SQL_CHARACTER" tag="default_style"/>
+         <syntaxspec value="STC_SQL_COMMENT" tag="comment_style"/>
+         <syntaxspec value="STC_SQL_COMMENTDOC" tag="comment_style"/>
+         <syntaxspec value="STC_SQL_COMMENTDOCKEYWORD" tag="dockey_style"/>
+         <syntaxspec value="STC_SQL_COMMENTDOCKEYWORDERROR" tag="error_style"/>
+         <syntaxspec value="STC_SQL_COMMENTLINE" tag="comment_style"/>
+         <syntaxspec value="STC_SQL_COMMENTLINEDOC" tag="comment_style"/>
+         <syntaxspec value="STC_SQL_IDENTIFIER" tag="default_style"/>
+         <syntaxspec value="STC_SQL_NUMBER" tag="number_style"/>
+         <syntaxspec value="STC_SQL_OPERATOR" tag="operator_style"/>
+         <syntaxspec value="STC_SQL_QUOTEDIDENTIFIER" tag="default_style"/>
+         <syntaxspec value="STC_SQL_SQLPLUS" tag="scalar_style"/>
+         <syntaxspec value="STC_SQL_SQLPLUS_COMMENT" tag="dockey_style"/>
+         <syntaxspec value="STC_SQL_SQLPLUS_PROMPT" tag="default_style"/>
+         <syntaxspec value="STC_SQL_STRING" tag="string_style"/>
+         <syntaxspec value="STC_SQL_USER1" tag="funct_style"/>
+         <syntaxspec value="STC_SQL_USER2" tag="directive_style"/>
+         <syntaxspec value="STC_SQL_USER3" tag="keyword3_style"/>
+         <syntaxspec value="STC_SQL_USER4" tag="keyword_style"/>
+         <syntaxspec value="STC_SQL_WORD" tag="keyword_style"/>
+         <syntaxspec value="STC_SQL_WORD2" tag="keyword2_style"/>
+
+      </syntaxspeclist>
+ 
+      <!-- PropertyList specifies additional properties for folding --> 
+      <propertylist>
+          <!--property value="fold" enable="1"/-->
+          <!--property value="tab.timmy.whinge.level" enable="1"/-->
+      </propertylist>
+
+ 
+      <!-- Specifies the comment pattern
+      value attribute should be a space separated list of characters that make
+      up the pattern for the comment.
+      -->
+      <commentpattern value="--"/>
+ 
+      <!-- FeatureList is used to specify extension features to override
+      builtin functionality.
+      method attribute is used to specify the name of the method that has
+      an implementation available.
+      source attribute specifies the relative path to where the implementation
+      can be found
+ 
+      Current Method features that can be implemented
+      AutoIndenter: AutoIndenter(stc, pos, ichar)
+      StyleText: StyleText(stc, start, end)
+ 
+      -->
+      <!--
+      <featurelist>
+         <feature method="AutoIndenter" source="myextension.py"/>
+      </featurelist>
+      -->
+ 
+   </syntax>
+</editra>
