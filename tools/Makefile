@@ -111,6 +111,8 @@ dita:
 	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/distrib/jaluino-export/doc/dita/jaluino_medium_userguide.ditamap -Dprompt.output.type=web -Dprompt.output.directory=`pwd`/distrib/tmp/jaluino_dita_${VERSION}/html/ -Dprompt.output.confirm=y
 	cd distrib/tmp/jaluino_dita_${VERSION}/html && tar cf - . | tar xf - -C ../../../jaluino-${VERSION}/doc/html
 
+ide:
+	cd ../ide/plugins/Jaluino && python setup.py bdist_egg --dist-dir ../
 
 release: export prepare dita archive check
 
