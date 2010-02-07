@@ -19,10 +19,6 @@ import wx
 import jaluino
 import cfgdlg
 
-# Plugins deps
-import launch.launchxml as launchxml
-import launch.handlers as handlers
-
 # Editra imports
 import ed_glob
 import iface
@@ -114,6 +110,16 @@ class Jaluino(plugin.Plugin):
         return True
 
     def RegisterJaluinoCommands(self):
+        # Plugins deps
+        try:
+            import launch.handlers as handlers
+            import launch.launchxml as launchxml
+        except ImportError,e:
+            msg = _("Launch plugin is missing and is required for Jaluino IDE\nPlease first install Launch plugin.")
+            util.Log("[Jaluino][info] %s" % msg)
+            wx.MessageBox(msg)
+            return
+
         loaded = False
         xmlcmds = {}
         path = ed_glob.CONFIG['CACHE_DIR']

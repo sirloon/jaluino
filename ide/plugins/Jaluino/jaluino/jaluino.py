@@ -30,8 +30,6 @@ import wx.stc
 
 # Local Imports
 import cfgdlg
-# depends on Launch
-import launch.handlers as handlers
 
 # Editra Libraries
 import ed_glob
@@ -40,6 +38,9 @@ from profiler import Profile_Get, Profile_Set
 import ed_msg
 import eclib
 import syntax.synglob as synglob
+
+# import placeholder...
+handlers = None
 
 #-----------------------------------------------------------------------------#
 # Globals
@@ -79,10 +80,21 @@ ed_msg.Subscribe(OnStoreConfig, cfgdlg.EDMSG_JALUINO_CFG_EXIT)
 class JaluinoWindow(eclib.ControlBox):
     """Control window for showing and running scripts"""
     def __init__(self, parent):
+        self._log = wx.GetApp().GetLog()
         eclib.ControlBox.__init__(self, parent)
+        # depends on Launch
+        try:
+            import launch.handlers as handlersmod
+            global handlers
+            handlers = handlersmod
+        except ImportError:
+            msg = _("Launch plugin is missing and is required for Jaluino IDE\nPlease first install Launch plugin.")
+            self._log(msg)
+            return
+            
+
 
         # Attributes
-        self._log = wx.GetApp().GetLog()
         self._mw = self.__FindMainWindow()
         self._buffer = OutputDisplay(self)
         self._fnames = list()

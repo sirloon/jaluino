@@ -18,15 +18,15 @@ import wx.lib.mixins.listctrl as listmix
 import cStringIO
 import zlib
 
-# Local Imports
-# Depends on Launch
-import launch.handlers as handlers
 
 # Editra Libraries
 import eclib
 import util
 import ed_msg
 from profiler import Profile_Get, Profile_Set
+
+# placeholder for import
+handlers = None
 
 #-----------------------------------------------------------------------------#
 # Globals
@@ -106,6 +106,12 @@ class ConfigDialog(wx.Frame):
         @keyword: The filetype to set
 
         """
+        # Local Imports
+        # Depends on Launch
+        import launch.handlers as handlersmod
+        global handlers
+        handlers = handlersmod
+
         wx.Frame.__init__(self, parent, title=_("Jaluino Configuration"))
 
         # Layout
