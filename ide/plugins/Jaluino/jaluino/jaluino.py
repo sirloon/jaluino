@@ -835,9 +835,13 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
         if code == eclib.OPB_ERROR_INVALID_COMMAND:
             self.AppendUpdate(_("The requested command could not be executed.") + u"\n")
 
-        # Log the raw exception data to the log as well
-        if excdata is not None:
-            util.Log(u"[jaluino][err] %s" % excdata)
+        # Seb: deactivate due to encoding error under windows
+        # (editra-plugins issue 138)
+        #### Log the raw exception data to the log as well
+        ###if excdata is not None:
+        ###    self.AppendUpdate(str(excdata) + u"\n")
+        ###    print str(excdata)
+        ###    util.Log(u"[jaluino][err] %s" % excdata)
 
     def DoProcessExit(self, code=0):
         """Do all that is needed to be done after a process has exited"""
