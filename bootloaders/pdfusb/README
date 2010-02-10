@@ -1,0 +1,8 @@
+This section provides PDFUSB bootloader, implemented by Guru Albert Faber !
+In order to use PDFUSB, you may need to install the following libraries:
+
+ * Linux:
+   - python-pyusb
+
+ * Windows:
+   - ?
