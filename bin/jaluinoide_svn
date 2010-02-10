@@ -25,7 +25,8 @@ fi
 
 
 # Set binary/exec paths
-export JALLIB_ROOT="$RUNFROM/.."
+export JALUINO_ROOT="$RUNFROM/.."
+export JALLIB_ROOT="$RUNFROM/../3rdparty/jallib_svn"
 export JALUINO_JALV2_DIR="$JALUINO_ROOT/3rdparty/jallib_svn/compiler"
 export JALUINO_JALV2_EXEC="$JALUINO_JALV2_DIR/jalv2"
 export JALUINO_TINYBL_DIR="$JALUINO_ROOT/bootloaders/tinybl/bin"
@@ -34,7 +35,7 @@ export JALUINO_PDFUSB_DIR="$JALUINO_ROOT/bootloaders/pdfusb/bin"
 export JALUINO_PDFUSB_EXEC="$JALUINO_PDFUSB_DIR/pdfusb"
 
 # config
-export JALUINO_LAUNCH_FILE="jaluino_launch.noxml"
+export JALUINO_LAUNCH_FILE="jaluino_svn_launch.xml"
 
 echo "Running Jaluino IDE with:"
 echo "    JALUINO_ROOT=$JALUINO_ROOT"
