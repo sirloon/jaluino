@@ -33,7 +33,7 @@
 
    <handler name="Hex" id="ID_LANG_HEX">
       <commandlist default="Tiny Bootloader">
-         <command name="Tiny Bootloader" execute="tinybld2"/>
+         <command name="Tiny Bootloader ***" execute="tinybld2 -s 115200"/>
          <command name="PDFUSB Bootloader" execute="pdfusb"/>
       </commandlist>
    </handler>

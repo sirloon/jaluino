@@ -1,0 +1,14 @@
+This directory contains several Editra configuration files,
+used to provide Jalv2 Lexer, executable handlers and other 
+specific launch commands.
+
+These files should be deployed in Editra's cache directory:
+
+  - Macintosh OSX
+        ~/Library/Application Support/Editra/cache/
+  
+  - Linux/Unix
+        ~/.Editra/cache/
+  
+  - Windows
+        C:\Documents and Settings\%USERNAME%\Application Data\Editra\cache\

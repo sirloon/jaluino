@@ -123,7 +123,8 @@ class Jaluino(plugin.Plugin):
         loaded = False
         xmlcmds = {}
         path = ed_glob.CONFIG['CACHE_DIR']
-        path = os.path.join(path, u'jaluino_launch.xml')
+        xmlfile = os.environ.get("JALUINO_LAUNCH_FILE","jaluino_launch.xml")
+        path = os.path.join(path, unicode(xmlfile))
         if os.path.exists(path):
             lxml = launchxml.LaunchXml()
             lxml.SetPath(path)
