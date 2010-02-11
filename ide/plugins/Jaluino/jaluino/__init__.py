@@ -128,7 +128,10 @@ class Jaluino(plugin.Plugin):
         if os.path.exists(path):
             lxml = launchxml.LaunchXml()
             lxml.SetPath(path)
-            loaded = lxml.LoadFromDisk()
+            try:
+                loaded = lxml.LoadFromDisk()
+            except Exception,e:
+                util.Log(u"[Jaluino][err] Unable to load default commands because: %s" % e)
 
             if loaded:
                 for hndlr in lxml.GetHandlers().values():
@@ -144,6 +147,9 @@ class Jaluino(plugin.Plugin):
         if hstate is not None:
             for langid,cmds in xmlcmds.items():
                 langname = handlers.GetHandlerById(langid).GetName()
+                if not hstate.get(langname):
+                    util.Log(u"[Jaluino][warn] Can't find previous declared commands for language '%s', no merge needed" % langname)
+                    continue
                 default,prevcmds = hstate[langname]
                 util.Log(u"[Jaluino][info] Merging %s and %s" % (cmds,prevcmds))
                 hstate[langname] = (default,list(set(cmds + prevcmds)))

@@ -26,6 +26,7 @@ fi
 
 # Set binary/exec paths
 export JALUINO_ROOT="$RUNFROM/.."
+export JALUINO_BIN="$JALUINO_ROOT/bin"
 export JALLIB_ROOT="$RUNFROM/../3rdparty/jallib_svn"
 export JALUINO_JALV2_DIR="$JALUINO_ROOT/3rdparty/jallib_svn/compiler"
 export JALUINO_JALV2_EXEC="$JALUINO_JALV2_DIR/jalv2"
@@ -42,7 +43,7 @@ echo "    JALUINO_ROOT=$JALUINO_ROOT"
 echo "    JALUINO_TINYBL_EXEC=$JALUINO_TINYBL_EXEC"
 echo
 echo "Adjusting PATH..."
-export PATH="$JALUINO_TINYBL_DIR":"$JALUINO_JALV2_DIR":$PATH
+export PATH="$JALUINO_TINYBL_DIR":"$JALUINO_JALV2_DIR":"$JALUINO_BIN":$PATH
 
 
 

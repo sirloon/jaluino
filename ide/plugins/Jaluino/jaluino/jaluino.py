@@ -566,11 +566,13 @@ class JaluinoWindow(eclib.ControlBox):
         """
         path,fname = self._PreProcess(fname)
         handler = handlers.GetHandlerById(ftype)
+        self._log("[jaluino][info] Running with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
         self._compile_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fname,
                                            args, path,
                                            handler.GetEnvironment())
         self._compile_worker.start()
+
 
     def Upload(self, fname, cmd, args, ftype):
         path,fname = self._PreProcess(fname)
@@ -839,6 +841,7 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
         # (editra-plugins issue 138)
         #### Log the raw exception data to the log as well
         ###if excdata is not None:
+        ###    print excdata
         ###    self.AppendUpdate(str(excdata) + u"\n")
         ###    print str(excdata)
         ###    util.Log(u"[jaluino][err] %s" % excdata)
