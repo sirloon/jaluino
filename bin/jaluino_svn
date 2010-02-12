@@ -35,37 +35,21 @@ fi
 #########################
 # Path to the jallib root's repository (containing "tools", "samples", "lib", "3rdparty", ...)
 
-export JALLIB_ROOT="$RUNFROM/.."
-export JALLIB_3RDPARTY=$JALLIB_ROOT/3rdparty/jallib_svn
+export JALLIB_ROOT="$RUNFROM/../3rdparty/jallib_svn"
+export JALUINO_ROOT="$RUNFROM/.."
 # path to jallib root's libraries.
-export JALLIB_REPOS=$JALLIB_3RDPARTY/include:$JALLIB_ROOT/../jaluino/lib
+export JALLIB_REPOS=$JALLIB_ROOT/include:$JALUINO_ROOT/lib
 # path to jallib root's samples.
-export JALLIB_SAMPLEDIR=$JALLIB_ROOT/sample
+export JALLIB_SAMPLEDIR=$JALUINO_ROOT/samples
 # path to "jalv2" executable. If not in your PATH, set an absolute path to the exec
-export JALLIB_JALV2="$JALLIB_3RDPARTY/compiler/jalv2"
+export JALLIB_JALV2="$JALLIB_ROOT/compiler/jalv2"
 
-
-
-# Either:
-#  - run the "jallib" standalone executable
-#    (no dependencies, recommended)
-#  - run the jallib.py python script 
-#    (advanced user, you'll need to install dependencies first)
-
-##############
-# Standalone #
-##############
-# (recommended)
-##$JALLIB_ROOT/tools/jallib $*
 
 
 ####################
 # python script    #
 ####################
-# (advanced users)
-# uncomment the two last line, and comment the standalone call.
-## path to "python" executable, if needed
 export JALLIB_PYTHON=python
-$JALLIB_PYTHON $JALLIB_ROOT/3rdparty/jallib_svn/tools/jallib.py $*
+$JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py $*
 
 

@@ -13,7 +13,7 @@
          name attribute is the alias that will be shown in the dropdown list
          execute attribute is the actual command that will be run
          -->
-         <command name="Jaluino with PDFUSB" execute="jalv2 -no-fuse -loader18"/>
+         <command name="Jaluino with PDFUSB" execute="jalv2 -no-fuse -loader18 2048"/>
          <command name="Jaluino with Tiny" execute="jalv2 -loader18 4"/>
       </commandlist>
  
