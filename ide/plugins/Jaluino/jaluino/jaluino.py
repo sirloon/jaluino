@@ -187,25 +187,16 @@ class JaluinoWindow(eclib.ControlBox):
         # Compile exe
         ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Compile") + ":"),
                            wx.ALIGN_LEFT)
-        exe = wx.Choice(ctrlbar, ID_COMPILE_EXE)
-        exe.SetToolTipString(_("Program Executable Command"))
-        ctrlbar.AddControl(exe, wx.ALIGN_LEFT)
-
-        # Args
-        # TODO: for now, deactivate extra args
-        ##ctrlbar.AddControl((5, 5), wx.ALIGN_LEFT)
-        ##ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Args") + ":"),
-        ##                   wx.ALIGN_LEFT)
-        ##args = wx.TextCtrl(ctrlbar, ID_COMPILE_ARGS)
-        ##args.SetToolTipString(_("Script Arguments"))
-        ##ctrlbar.AddControl(args, wx.ALIGN_LEFT)
+        self._exe_ch = wx.Choice(ctrlbar, ID_COMPILE_EXE)
+        self._exe_ch.SetToolTipString(_("Program Executable Command"))
+        ctrlbar.AddControl(self._exe_ch, wx.ALIGN_LEFT)
 
         # Upload exe
         ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Upload") + ":"),
                            wx.ALIGN_LEFT)
-        exe = wx.Choice(ctrlbar, ID_UPLOAD_EXE)
-        exe.SetToolTipString(_("Program Executable Command"))
-        ctrlbar.AddControl(exe, wx.ALIGN_LEFT)
+        self._up_ch = wx.Choice(ctrlbar, ID_UPLOAD_EXE)
+        self._up_ch.SetToolTipString(_("Program Executable Command"))
+        ctrlbar.AddControl(self._up_ch, wx.ALIGN_LEFT)
 
         # Upload Args
         # TODO: for now, deactivate extra args
@@ -229,25 +220,25 @@ class JaluinoWindow(eclib.ControlBox):
         rbmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_BIN_FILE), wx.ART_MENU)
         if rbmp.IsNull() or not rbmp.IsOk():
             rbmp = None
-        compile = eclib.PlateButton(ctrlbar, ID_COMPILE, _("Compile"), rbmp,
+        self._exe_btn = eclib.PlateButton(ctrlbar, ID_COMPILE, _("Compile"), rbmp,
                                 style=eclib.PB_STYLE_NOBG)
-        ctrlbar.AddControl(compile, wx.ALIGN_RIGHT)
+        ctrlbar.AddControl(self._exe_btn, wx.ALIGN_RIGHT)
 
         # Upload Button
         ubmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_UP), wx.ART_MENU)
         if ubmp.IsNull() or not ubmp.IsOk():
             ubmp = None
-        upload = eclib.PlateButton(ctrlbar, ID_UPLOAD, _("Upload"), ubmp,
+        self._up_btn = eclib.PlateButton(ctrlbar, ID_UPLOAD, _("Upload"), ubmp,
                                 style=eclib.PB_STYLE_NOBG)
-        ctrlbar.AddControl(upload, wx.ALIGN_RIGHT)
+        ctrlbar.AddControl(self._up_btn, wx.ALIGN_RIGHT)
 
         # Clear Button
         cbmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_DELETE), wx.ART_MENU)
         if cbmp.IsNull() or not cbmp.IsOk():
             cbmp = None
-        clear = eclib.PlateButton(ctrlbar, wx.ID_CLEAR, _("Clear"),
+        self._clr_btn = eclib.PlateButton(ctrlbar, wx.ID_CLEAR, _("Clear"),
                                   cbmp, style=eclib.PB_STYLE_NOBG)
-        ctrlbar.AddControl(clear, wx.ALIGN_RIGHT)
+        ctrlbar.AddControl(self._clr_btn, wx.ALIGN_RIGHT)
         ctrlbar.SetVMargin(1, 1)
         self.SetControlBar(ctrlbar)
 
@@ -475,68 +466,104 @@ class JaluinoWindow(eclib.ControlBox):
 
     def RefreshControlBar(self):
         """Refresh the state of the control bar based on the current config"""
+        # TODO this piece of code really needs some serious refactoring, to split and
+        # generalize compile and upload actions
+        # sanity check
+        if not hasattr(synglob,'ID_LANG_JAL') or not hasattr(synglob,'ID_LANG_HEX'):
+            util.Log("[jaluino][err] Something is wrong, ID languae JAL and HEX can't be found")
+            self._DisableToolbar()
+            return
+
         handler = handlers.GetHandlerById(self._config['lang'])
-        cmds = handler.GetAliases()
-        util.Log("[jaluino][info] Found %s commands: %s" % (handler.GetName(),cmds))
-
-        # Get the controls
-        exe_ch = self.FindWindowById(ID_COMPILE_EXE)
-        # TODO: no args for now
-        ##args_txt = self.FindWindowById(ID_COMPILE_ARGS)
-        run_btn = self.FindWindowById(ID_COMPILE)
-
-        # Set control states
-        csel = exe_ch.GetStringSelection()
-        exe_ch.SetItems(cmds)
-        if len(cmds):
-            exe_ch.SetToolTipString(handler.GetCommand(cmds[0]))
-
-        # Get the controls
-        up_ch = self.FindWindowById(ID_UPLOAD_EXE)
-        # TODO: no args for now
-        ##args_txt = self.FindWindowById(ID_UPLOAD_ARGS)
-        up_btn = self.FindWindowById(ID_UPLOAD)
-
-        # Set control states
         uhandler = handlers.GetHandlerByName("hex")
-        ucmds = uhandler.GetAliases()
-        util.Log("[jaluino][info] Found %s commands: %s" % (uhandler.GetName(),ucmds))
-        ucsel = up_ch.GetStringSelection()
-        up_ch.SetItems(ucmds)
-        if len(ucmds):
-            up_ch.SetToolTipString(uhandler.GetCommand(ucmds[0]))
+        csel = self._exe_ch.GetStringSelection()
+        ucsel = self._up_ch.GetStringSelection()
+
+        compile_enabled = False
+        upload_enabled = False
+        # if jalv2 relared, enable compile + upload
+        if handler.GetName() != "Jalv2":
+            util.Log("[jaluino][debug] Not jalv2 related, skip it")
+            self._DisableCompileToolbar()
+        else:
+            compile_enabled = True
+            upload_enabled = True
+            cmds = handler.GetAliases()
+            util.Log("[jaluino][info] Found %s commands: %s" % (handler.GetName(),cmds))
+            # Set control states
+            self._exe_ch.SetItems(cmds)
+            if len(cmds):
+                self._exe_ch.SetToolTipString(handler.GetCommand(cmds[0]))
+            # auto enable upload stuff
+            ucmds = uhandler.GetAliases()
+            util.Log("[jaluino][info] Found %s commands: %s" % (uhandler.GetName(),ucmds))
+            self._up_ch.SetItems(ucmds)
+            if len(ucmds):
+                self._up_ch.SetToolTipString(uhandler.GetCommand(ucmds[0]))
+
+
+        # else if it's just hex related, enable only upload
+        if not compile_enabled:
+            if handler.GetName() != "Hex":
+                util.Log("[jaluino][debug] Not HEX related, skip it")
+                self._DisableUploadToolbar()
+            else:
+                upload_enabled = True
+                cmds = handler.GetAliases()
+                util.Log("[jaluino][info] Found %s commands: %s" % (handler.GetName(),cmds))
+                # Set control states
+                self._up_ch.SetItems(cmds)
+                if len(cmds):
+                    self._up_ch.SetToolTipString(handler.GetCommand(cmds[0]))
+
 
         if handler.GetName() != handlers.DEFAULT_HANDLER and len(self.GetFile()):
-            # TODO: no args for now
-            ##for ctrl in (exe_ch, args_txt, run_btn, self._chFiles):
-            for ctrl in (exe_ch, up_ch, run_btn, up_btn, self._chFiles):
-                ctrl.Enable()
-            self._isready = True
-
+            self._EnableToolbar(compile_enabled,upload_enabled)
             if self._config['lang'] == self._config['prelang'] and len(csel):
-                exe_ch.SetStringSelection(csel)
+                self._exe_ch.SetStringSelection(csel)
             else:
                 csel = handler.GetDefault()
-                exe_ch.SetStringSelection(csel)
-
+                self._exe_ch.SetStringSelection(csel)
             # deal with upload exec
             if len(ucsel):
-                up_ch.SetStringSelection(ucsel)
+                self._up_ch.SetStringSelection(ucsel)
             else:
                 ucsel = uhandler.GetDefault()
-                up_ch.SetStringSelection(ucsel)
-
-            up_ch.SetToolTipString(uhandler.GetCommand(ucsel))
-            exe_ch.SetToolTipString(handler.GetCommand(csel))
-
+                self._up_ch.SetStringSelection(ucsel)
+            self._up_ch.SetToolTipString(uhandler.GetCommand(ucsel))
+            self._exe_ch.SetToolTipString(handler.GetCommand(csel))
             self.GetControlBar().Layout()
         else:
-            self._isready = False
-            # TODO: no args for now
-            ##for ctrl in (exe_ch, args_txt, run_btn, self._chFiles):
-            for ctrl in (exe_ch, up_ch, run_btn, up_btn, self._chFiles):
-                ctrl.Disable()
-            self._chFiles.Clear()
+            self._DisableToolbar()
+
+    def _DisableCompileToolbar(self):
+        for ctrl in (self._exe_ch,self._exe_btn):
+            ctrl.Disable()
+
+    def _DisableUploadToolbar(self):
+        for ctrl in (self._up_ch,self._up_btn):
+            ctrl.Disable()
+
+    def _DisableToolbar(self):
+        self._isready = False
+        self._DisableCompileToolbar()
+        self._DisableUploadToolbar()
+        self._chFiles.Disable()
+        self._chFiles.Clear()
+
+    def _EnableCompileToolbar(self):
+        for ctrl in (self._exe_ch,self._exe_btn):
+            ctrl.Enable()
+
+    def _EnableUploadToolbar(self):
+        for ctrl in (self._up_ch,self._up_btn):
+            ctrl.Enable()
+
+    def _EnableToolbar(self,compile_enabled,upload_enabled):
+        compile_enabled and self._EnableCompileToolbar()
+        upload_enabled and self._EnableUploadToolbar()
+        self._chFiles.Enable()
+        self._isready = True
 
     def _PreProcess(self,fname):
         # Find and save the file if it is modified
@@ -608,8 +635,6 @@ class JaluinoWindow(eclib.ControlBox):
             cmd = self.FindWindowById(ID_COMPILE_EXE).GetStringSelection()
             self._config['lcmd'] = cmd
             cmd = handler.GetCommand(cmd)
-            # TODO: no args for now
-            ##args = self.FindWindowById(ID_COMPILE_ARGS).GetValue().split()
             args = []
             self._config['largs'] = args
             self.Compile(self._config['file'], cmd, args, self._config['lang'])
@@ -674,19 +699,16 @@ class JaluinoWindow(eclib.ControlBox):
             actionID = ID_COMPILE
             origLabel = _("Compile")
             origIcon = ed_glob.ID_BIN_FILE
-            print "lastactionid: compile"
         else:
             actionID = ID_UPLOAD
             origLabel = _("Upload")
             origIcon = ed_glob.ID_UP
-            print "lastactionid: upload"
             
         self._SetProcessRunning(actionID,origLabel,origIcon,running)
 
     def _SetProcessRunning(self,actionID,origLabel,origIcon,running):
         btn = self.FindWindowById(actionID)
         self._busy = running
-        print "running ? %s" % running
         if running:
             self._config['last'] = self._config['file']
             self._config['lastlang'] = self._config['lang']
@@ -728,6 +750,7 @@ class JaluinoWindow(eclib.ControlBox):
         if self._buffer.IsRunning():
             self._config['cfile'] = fname
             self._config['clang'] = lang_id
+        # only react if this is about jal
         else:
             self.SetFile(fname)
             self.SetLangId(lang_id)
@@ -837,20 +860,23 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
         if code == eclib.OPB_ERROR_INVALID_COMMAND:
             self.AppendUpdate(_("The requested command could not be executed.") + u"\n")
 
-        # Seb: deactivate due to encoding error under windows
-        # (editra-plugins issue 138)
-        #### Log the raw exception data to the log as well
-        ###if excdata is not None:
-        ###    print excdata
-        ###    self.AppendUpdate(str(excdata) + u"\n")
-        ###    print str(excdata)
-        ###    util.Log(u"[jaluino][err] %s" % excdata)
+        # Log the raw exception data to the log as well
+        #   2010-02-08: deactivate due to encoding error under windows
+        #               (editra-plugins issue 138)
+        #   2010-02-13: Guru Cody fixed this in Launch plugin, backport his fix
+        if excdata is not None:
+            try:
+                excstr = str(excdata)
+                if not ebmlib.IsUnicode(excstr):
+                    excstr = ed_txt.DecodeString(excstr)
+                util.Log(u"[jaluino][err] %s" % excdata)
+            except UnicodeDecodeError:
+                util.Log(u"[jaluino][err] error decoding log message string")
 
     def DoProcessExit(self, code=0):
         """Do all that is needed to be done after a process has exited"""
         self.AppendUpdate(">>> %s: %d%s" % (_("Exit Code"), code, os.linesep))
         self.Stop()
-        print "done DoProcessExit .SetProcessRunning false"
         self.GetParent().SetProcessRunning(False)
 
     def DoProcessStart(self, cmd=''):
