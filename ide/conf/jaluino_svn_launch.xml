@@ -13,7 +13,7 @@
          name attribute is the alias that will be shown in the dropdown list
          execute attribute is the actual command that will be run
          -->
-         <command name="Jaluino SVN with PDFUSB" execute="jaluino_svn compile -loader18 2048"/>
+         <command name="Jaluino SVN with PDFUSB" execute="jaluino_svn compile -loader18 2048 -no-fuse"/>
          <command name="Jaluino SVN with Tiny" execute="jaluino_svn compile -loader18 4"/>
       </commandlist>
  

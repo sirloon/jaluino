@@ -32,42 +32,42 @@ version attribute used to tell Editra the file has changed since last load
 
          <!-- std keywords -->
          <keywords value="0">
-             if then else elsif forever for loop case of end block using
-             function procedure is
+             if then else elsif forever for loop case of end block using 
+             function procedure is 
          </keywords>
 
          <!-- types -->
          <keywords value="1">
-             var const bit byte word dword sbyte sword sdword
+             var const bit byte word dword sbyte sword sdword 
          </keywords>
 
          <!-- special comment tags ? -->
          <keywords value="2">
-            Title: Author: Adapted-by: Compiler: Description: Notes: Sources: Shield:
+            Title: Author: Adapted-by: Compiler: Description: Notes: Sources: Shield: 
          </keywords>
 
          <keywords value="3">
-             pragma target clock interrupt
+             pragma target clock interrupt 
          </keywords>
 
          <!-- built-in compiler functions -->
          <keywords value="4">
-             _usec_delay _debug _warn _error count
+             _usec_delay _debug _warn _error count 
          </keywords>
 
          <!-- directives -->
          <keywords value="5">
-             include defined
+             include defined 
          </keywords>
 
          <!-- special values -->
          <keywords value="6">
-             off on high low input output true false enabled disabled all_input all_output
+             off on high low input output true false enabled disabled all_input all_output 
          </keywords>
 
          <!-- operators -->
          <keywords value="9">
-            * / ||
+            * / || 
          </keywords>
 
 

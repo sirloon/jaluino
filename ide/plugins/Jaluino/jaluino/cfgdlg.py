@@ -173,6 +173,7 @@ class ConfigNotebook(wx.Notebook):
 
         # Setup
         self.AddPage(ConfigPanel(self), _("General"))
+        self.AddPage(SerialUSBPanel(self), _("Serial/USB"))
         self.AddPage(MiscPanel(self), _("Misc"))
 
     def __del__(self):
@@ -497,6 +498,72 @@ class MiscPanel(wx.Panel):
         else:
             evt.Skip()
 
+
+#-----------------------------------------------------------------------------#
+
+class SerialUSBPanel(wx.Panel):
+    """Serial settings panel"""
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        # Layout
+        self.__DoLayout()
+        # Event Handlers
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
+        self.Bind(eclib.EVT_COLORSETTER, self.OnColor)
+
+    def __DoLayout(self):
+        """Layout the controls"""
+        msizer = wx.BoxSizer(wx.VERTICAL)
+        serialbox = wx.StaticBox(self, label=_("Serial Configuration"))
+        usbbox = wx.StaticBox(self, label=_("USB Configuration"))
+        serialboxsz = wx.StaticBoxSizer(serialbox, wx.VERTICAL)
+        usbboxsz = wx.StaticBoxSizer(usbbox, wx.VERTICAL)
+        # Jaluino Config
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+
+        ### Actions Configuration
+        ##clear_cb = wx.CheckBox(self, ID_AUTOCLEAR,
+        ##                       _("Automatically clear buffer between runs"))
+        ##clear_cb.SetValue(cfg.get('autoclear', False))
+        ##error_cb = wx.CheckBox(self, ID_ERROR_BEEP,
+        ##                       _("Audible feedback when errors are detected"))
+        ##error_cb.SetValue(cfg.get('errorbeep', False))
+
+        ### Layout
+        ##msizer.AddMany([((5, 5), 0),
+        ##                (wx.StaticText(self, label=("Actions") + u":"), 0),
+        ##                ((5, 5), 0), (clear_cb, 0),
+        ##                ((5, 5), 0), (error_cb, 0),
+        ##                ((10, 10), 0), (wx.StaticLine(self), 0, wx.EXPAND),
+        ##                ((10, 10), 0),
+        ##                (serialboxsz, 1, wx.EXPAND)])
+        msizer.AddMany([(serialboxsz, 1, wx.EXPAND),
+                        (usbboxsz, 1, wx.EXPAND)])
+        hsizer = wx.BoxSizer(wx.HORIZONTAL)
+        hsizer.AddMany([(msizer, 1, wx.EXPAND)])
+        self.SetSizer(hsizer)
+
+    def OnCheck(self, evt):
+        """Handle checkbox events"""
+        e_id = evt.GetId()
+        e_val = evt.GetEventObject().GetValue()
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+        if e_id == ID_AUTOCLEAR:
+            cfg['autoclear'] = e_val
+        elif e_id == ID_ERROR_BEEP:
+            cfg['errorbeep'] = e_val
+        else:
+            evt.Skip()
+
+    def OnColor(self, evt):
+        """Handle color change events"""
+        e_id = evt.GetId()
+        color = COLOR_MAP.get(e_id, None)
+        if color is not None:
+            Profile_Get(JALUINO_PREFS)[color] = evt.GetValue().Get()
+        else:
+            evt.Skip()
+
 #-----------------------------------------------------------------------------#
 ID_BROWSE = wx.NewId()
 
@@ -555,11 +622,6 @@ class CommandListCtrl(listmix.ListCtrlAutoWidthMixin,
                     self.SetStringItem(self._cindex, 1, path)
                     levt = wx.ListEvent(wx.wxEVT_COMMAND_LIST_END_LABEL_EDIT,
                                         self.GetId())
-# TODO: ERR ><! there are no setters for index, column, and label...
-#                    levt.Index = self._cindex
-#                    levt.SetInt(self._cindex)
-#                    levt.Column = 1
-#                    levt.Label = path
                     # HACK set the member variables directly...
                     levt.m_itemIndex = self._cindex
                     levt.m_col = 1
@@ -568,50 +630,11 @@ class CommandListCtrl(listmix.ListCtrlAutoWidthMixin,
         else:
             evt.Skip()
 
-#    def Append(self, entry):
-#        """Append a row to the list. Overrides ListCtrl.Append to allow
-#        for setting a bool on the first object to check or uncheck the
-#        checkbox on the first column.
-#        @param entry: tuple (bool, string, string)
-
-#        """
-#        check, alias, cmd = entry
-#        wx.ListCtrl.Append(self, ('', alias, cmd))
-#        self.CheckItem(self.GetItemCount() - 1, check)
-
-#    def OpenEditor(self, col, row):
-#        """Disable the editor for the first column
-#        @param col: Column to edit
-#        @param row: Row to edit
-
-#        """
-#        if col != 0:
-#            listmix.TextEditMixin.OpenEditor(self, col, row)
-#        else:
-#            # Handle the checkbox click
-#            self.CheckItem(row, not self.IsChecked(row))
-
-#    def OnCheckItem(self, index, flag):
-#        """Override CheckListMixin to update handlers
-#        @param index: list index
-#        @param flag: check or uncheck
-
-#        """
-#        parent = self.GetParent()
-#        parent.UpdateCurrentHandler(index)
-
-#-----------------------------------------------------------------------------#
 
 def GetHandlerTypes():
-    """Get the language type handlers for each language that
-    has a handler defined.
-    @return: list of handler names
-
-    """
-    keys = handlers.HANDLERS.keys()
-    keys.remove(0)
+    jalh = handlers.GetHandlerByName("Jalv2")
+    hexh = handlers.GetHandlerByName("Hex")
     rlist = list()
-    for key in keys:
-        handle = handlers.HANDLERS[key]
-        rlist.append(handle.GetName().title())
+    for h in (jalh,hexh):
+        rlist.append(h.GetName().title())
     return sorted(rlist)

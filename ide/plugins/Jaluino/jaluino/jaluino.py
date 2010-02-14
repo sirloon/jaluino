@@ -9,7 +9,7 @@
 # Note: this code is an horrible copy/paste from Launch plugin, which         #
 # couldn't been adapted by inheritance or something like this (or this would  #
 # have resulted in unreadble/unmaintainable code). So, most part is from      #
-# Launch plugin, so credit goes to origiral author Cody Precord. I've just    #
+# Launch plugin, so credit goes to original author Cody Precord. I've just    #
 # glued the whole...                                                          #
 # Main things I've changed are:                                               #
 #  - provide two workers for compile & upload step                            #

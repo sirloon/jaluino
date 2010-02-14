@@ -18,6 +18,7 @@ import wx
 # Local modules
 import jaluino
 import cfgdlg
+import jalcomp
 
 # Editra imports
 import ed_glob
@@ -25,11 +26,11 @@ import iface
 import plugin
 import ed_msg
 import util
+import autocomp
 from profiler import Profile_Get
 import syntax
 import syntax.synglob as synglob
 from ed_menu import EdMenuBar
-
 #-----------------------------------------------------------------------------#
 # Globals
 _ = wx.GetTranslation
@@ -38,10 +39,12 @@ _ = wx.GetTranslation
 # Interface Implementation
 class Jaluino(plugin.Plugin):
     plugin.Implements(iface.ShelfI)
+    plugin.Implements(iface.AutoCompI)
     ID_JALUINO = wx.NewId()
     INSTALLED = False
     SHELF = None
 
+    #-- Shelf API --#
     @property
     def __name__(self):
         return u'Jaluino'
@@ -98,6 +101,8 @@ class Jaluino(plugin.Plugin):
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
         self.RegisterJaluinoCommands()
 
+        ###autocomp.AutoCompService.RegisterCompleter(synglob.ID_LANG_JAL,jalcomp.Completer)
+
     def IsInstalled(self):
         """Check whether jaluino has been installed yet or not
         @note: overridden from Plugin
@@ -109,6 +114,16 @@ class Jaluino(plugin.Plugin):
     def IsStockable(self):
         return True
 
+    #-- AutoComp API --#
+
+    def GetCompleter(self, buff):
+        return jalcomp.Completer(buff)
+
+    def GetFileTypeId(self):
+        return synglob.ID_LANG_JAL
+
+
+    # Jaluino API
     def RegisterJaluinoCommands(self):
         # Plugins deps
         try:
@@ -151,8 +166,12 @@ class Jaluino(plugin.Plugin):
                     util.Log(u"[Jaluino][warn] Can't find previous declared commands for language '%s', no merge needed" % langname)
                     continue
                 default,prevcmds = hstate[langname]
+                # default commands have precedence
                 util.Log(u"[Jaluino][info] Merging %s and %s" % (cmds,prevcmds))
-                hstate[langname] = (default,list(set(cmds + prevcmds)))
+                dcmds = dict(cmds)
+                dprevcmds = dict(prevcmds)
+                dprevcmds.update(dcmds)
+                hstate[langname] = (default,dprevcmds.items())
                 util.Log(u"[Jaluino][info] For language %s, available commands are: %s" % (langname,hstate[langname]))
                 handlers.SetState(hstate)
 
