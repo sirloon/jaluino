@@ -89,8 +89,9 @@ class Completer(completer.BaseCompleter):
             return list()
 
         # return available symbols according to previously entered command
-        # remove spaces to keep only the command
-        if self._api_symbols.has_key(command.strip()):
+        # remove spaces to keep only the command. But a space should exist
+        # after the command !
+        if command.strip() != command and self._api_symbols.has_key(command.strip()):
             return self._api_symbols[command.strip()]
         elif len(command) >= self.min_char_before_cmpl:
             # something has been entered, we try to complete
