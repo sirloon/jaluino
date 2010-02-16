@@ -38,6 +38,16 @@ JALUINO_PREFS = 'Jaluino.Prefs'
 ID_LANGUAGE = wx.NewId()
 ID_EXECUTABLES = wx.NewId()
 
+# Serial/USB Panel
+ID_AVAIL_PORTS_CHOICE = wx.NewId()
+ID_AVAIL_PORTS = wx.NewId()
+ID_CUSTOM_PORT_CHOICE = wx.NewId()
+ID_CUSTOM_PORT = wx.NewId()
+ID_AVAIL_SPEEDS_CHOICE = wx.NewId()
+ID_AVAIL_SPEEDS = wx.NewId()
+ID_CUSTOM_SPEED_CHOICE = wx.NewId()
+ID_CUSTOM_SPEED = wx.NewId()
+
 # Misc Panel
 ID_AUTOCLEAR = wx.NewId()
 ID_ERROR_BEEP = wx.NewId()
@@ -185,6 +195,11 @@ class ConfigPanel(wx.Panel):
     """Configuration panel that holds the controls for configuration"""
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+
+        # Depends on Launch
+        import launch.handlers as handlersmod
+        global handlers
+        handlers = handlersmod
 
         # Layout
         self.__DoLayout()
@@ -509,36 +524,97 @@ class SerialUSBPanel(wx.Panel):
         self.__DoLayout()
         # Event Handlers
         self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
+        self.Bind(wx.EVT_COMBOBOX, self.OnCombo)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadio)
+        self.Bind(wx.EVT_TEXT, self.OnText)
         self.Bind(eclib.EVT_COLORSETTER, self.OnColor)
+
+    def GetAvailablePorts(self):
+        # Actions Configuration
+        import serial
+        serports = {}
+        for i in range(20): # more than 20 serial ports ? C'mon...
+            try:
+                s = serial.Serial(i)
+                serports[s.portstr] = s.port
+            except serial.SerialException:
+                continue
+        return serports
+
+    def GetAvailableBaudrates(self):    
+        # can we detect this ?
+        bds = [110,300,600,1200,2400,4800,9600,14400,19200,38400,
+               56000,57600,115200,128000,256000]
+        return bds
 
     def __DoLayout(self):
         """Layout the controls"""
-        msizer = wx.BoxSizer(wx.VERTICAL)
-        serialbox = wx.StaticBox(self, label=_("Serial Configuration"))
-        usbbox = wx.StaticBox(self, label=_("USB Configuration"))
-        serialboxsz = wx.StaticBoxSizer(serialbox, wx.VERTICAL)
-        usbboxsz = wx.StaticBoxSizer(usbbox, wx.VERTICAL)
-        # Jaluino Config
+
+        ##usbbox = wx.StaticBox(self, label=_("USB Configuration"))
+        ##usbboxsz = wx.StaticBoxSizer(usbbox, wx.VERTICAL)
         cfg = Profile_Get(JALUINO_PREFS, default=dict())
 
-        ### Actions Configuration
-        ##clear_cb = wx.CheckBox(self, ID_AUTOCLEAR,
-        ##                       _("Automatically clear buffer between runs"))
-        ##clear_cb.SetValue(cfg.get('autoclear', False))
-        ##error_cb = wx.CheckBox(self, ID_ERROR_BEEP,
-        ##                       _("Audible feedback when errors are detected"))
-        ##error_cb.SetValue(cfg.get('errorbeep', False))
+        msizer = wx.BoxSizer(wx.VERTICAL)
 
-        ### Layout
-        ##msizer.AddMany([((5, 5), 0),
-        ##                (wx.StaticText(self, label=("Actions") + u":"), 0),
-        ##                ((5, 5), 0), (clear_cb, 0),
-        ##                ((5, 5), 0), (error_cb, 0),
-        ##                ((10, 10), 0), (wx.StaticLine(self), 0, wx.EXPAND),
-        ##                ((10, 10), 0),
-        ##                (serialboxsz, 1, wx.EXPAND)])
-        msizer.AddMany([(serialboxsz, 1, wx.EXPAND),
-                        (usbboxsz, 1, wx.EXPAND)])
+        # Serial port configuration
+        try:
+            import serial
+
+            serialportbox = wx.StaticBox(self, label=_("Serial Port"))
+            serialportboxsz = wx.StaticBoxSizer(serialportbox, wx.VERTICAL)
+            serports = self.GetAvailablePorts()
+            portbox = wx.ComboBox(self,ID_AVAIL_PORTS,_("Choose a port"),
+                                  (0, 0), (150, -1),choices=sorted(serports.keys()))
+            cfg.get('availport') and portbox.SetValue(cfg['availport'])
+            avail_ports = wx.RadioButton(self,ID_AVAIL_PORTS_CHOICE,style=wx.RB_GROUP)
+            # defaulting for radios is tricky, as event (thus config storage) is only triggered
+            # when first radio is 
+            avail_ports.SetValue(cfg.get('choose_availport',True))
+            availsizer = wx.BoxSizer(wx.HORIZONTAL)
+            availsizer.Add(avail_ports)
+            availsizer.Add(portbox)
+            serialportboxsz.Add(availsizer)
+            custsizer = wx.BoxSizer(wx.HORIZONTAL)
+            custom_port = wx.RadioButton(self,ID_CUSTOM_PORT_CHOICE)
+            custom_port.SetValue(cfg.get('choose_custport',False))
+            custom = wx.TextCtrl(self, ID_CUSTOM_PORT,u"",(0,0),(200,-1))
+            custom.SetValue(cfg.get('custport',_("Enter your own port")))
+            custsizer.Add(custom_port)
+            custsizer.Add(custom)
+            serialportboxsz.Add(custsizer)
+
+            # Serial baudrate configuration
+            serialspeedbox = wx.StaticBox(self, label=_("Serial Speed"))
+            serialspeedboxsz = wx.StaticBoxSizer(serialspeedbox, wx.VERTICAL)
+            serbds = self.GetAvailableBaudrates()
+            speedbox = wx.ComboBox(self,ID_AVAIL_SPEEDS,_("Choose a baudrate"),
+                                  (0, 0), (150, -1),choices=map(unicode,serbds))
+            cfg.get('availspeed') and speedbox.SetValue(cfg['availspeed'])
+            avail_speeds = wx.RadioButton(self,ID_AVAIL_SPEEDS_CHOICE,style=wx.RB_GROUP)
+            avail_speeds.SetValue(cfg.get('choose_availspeed',True))
+            availsizer = wx.BoxSizer(wx.HORIZONTAL)
+            availsizer.Add(avail_speeds)
+            availsizer.Add(speedbox)
+            serialspeedboxsz.Add(availsizer)
+            custsizer = wx.BoxSizer(wx.HORIZONTAL)
+            custom_speed = wx.RadioButton(self,ID_CUSTOM_SPEED_CHOICE)
+            custom_speed.SetValue(cfg.get('choose_custspeed',False))
+            custom = wx.TextCtrl(self, ID_CUSTOM_SPEED,u"",(0,0),(200,-1))
+            custom.SetValue(cfg.get('custspeed',_("Enter your own baudrate")))
+            custsizer.Add(custom_speed)
+            custsizer.Add(custom)
+            serialspeedboxsz.Add(custsizer)
+
+            msizer.AddMany([(serialportboxsz, 1, wx.EXPAND),(serialspeedboxsz, 1, wx.EXPAND)])
+
+        except ImportError,e:
+            noserial = wx.StaticText(self,-1,_("Python serial module is not installed, you can download it from:\n\nhttp://pyserial.sourceforge.net\n\n"))
+            noserial.SetForegroundColour(wx.RED)
+            noserial2 = wx.StaticText(self,-1,_("Error was:\n%s" % e))
+            msizer.Add(noserial)
+            msizer.Add(noserial2)
+            
+            
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.AddMany([(msizer, 1, wx.EXPAND)])
         self.SetSizer(hsizer)
@@ -552,6 +628,50 @@ class SerialUSBPanel(wx.Panel):
             cfg['autoclear'] = e_val
         elif e_id == ID_ERROR_BEEP:
             cfg['errorbeep'] = e_val
+        else:
+            evt.Skip()
+
+    def OnCombo(self, evt):
+        e_id = evt.GetId()
+        e_val = evt.GetEventObject().GetValue()
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+        if e_id == ID_AVAIL_PORTS:
+            cfg['availport'] = e_val
+        elif e_id == ID_AVAIL_SPEEDS:
+            cfg['availspeed'] = e_val
+        else:
+            evt.Skip()
+
+    def OnRadio(self, evt):
+        e_id = evt.GetId()
+        e_val = evt.GetEventObject().GetValue()
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+
+        if e_id == ID_AVAIL_PORTS_CHOICE:
+            cfg['choose_availport'] = e_val
+            cfg['choose_custport'] = not e_val
+        if e_id == ID_CUSTOM_PORT_CHOICE:
+            cfg['choose_availport'] = not e_val
+            cfg['choose_custport'] = e_val
+
+        elif e_id == ID_AVAIL_SPEEDS_CHOICE:
+            cfg['choose_availspeed'] = e_val
+            cfg['choose_custspeed'] = not e_val
+        elif e_id == ID_CUSTOM_SPEED_CHOICE:
+            cfg['choose_availspeed'] = not e_val
+            cfg['choose_custspeed'] = e_val
+
+        else:
+            evt.Skip()
+
+    def OnText(self, evt):
+        e_id = evt.GetId()
+        e_val = evt.GetEventObject().GetValue()
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+        if e_id == ID_CUSTOM_PORT:
+            cfg['custport'] = e_val
+        elif e_id == ID_CUSTOM_SPEED:
+            cfg['custspeed'] = e_val
         else:
             evt.Skip()
 

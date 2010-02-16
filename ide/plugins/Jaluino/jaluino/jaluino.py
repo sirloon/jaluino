@@ -33,6 +33,8 @@ import cfgdlg
 
 # Editra Libraries
 import ed_glob
+import ebmlib
+import ed_txt
 import util
 from profiler import Profile_Get, Profile_Set
 import ed_msg
@@ -114,7 +116,6 @@ class JaluinoWindow(eclib.ControlBox):
         # Setup
         self.__DoLayout()
         if not handlers.InitCustomHandlers(ed_glob.CONFIG['CACHE_DIR']):
-            util.Log(u"ed_glob.CONFIG: %s" % ed_glob.CONFIG)
             util.Log(u"[jaluino][warn] failed to load jaluino extensions")
 
         hstate = Profile_Get(JALUINO_KEY)

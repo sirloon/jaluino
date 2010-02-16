@@ -101,8 +101,6 @@ class Jaluino(plugin.Plugin):
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
         self.RegisterJaluinoCommands()
 
-        ###autocomp.AutoCompService.RegisterCompleter(synglob.ID_LANG_JAL,jalcomp.Completer)
-
     def IsInstalled(self):
         """Check whether jaluino has been installed yet or not
         @note: overridden from Plugin
@@ -138,8 +136,8 @@ class Jaluino(plugin.Plugin):
         loaded = False
         xmlcmds = {}
         path = ed_glob.CONFIG['CACHE_DIR']
-        xmlfile = os.environ.get("JALUINO_LAUNCH_FILE","jaluino_launch.xml")
-        path = os.path.join(path, unicode(xmlfile))
+        xmlfile = unicode(os.environ.get("JALUINO_LAUNCH_FILE","jaluino_launch.xml"))
+        path = os.path.join(path,xmlfile)
         if os.path.exists(path):
             lxml = launchxml.LaunchXml()
             lxml.SetPath(path)
