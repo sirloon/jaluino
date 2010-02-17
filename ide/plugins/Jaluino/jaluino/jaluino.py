@@ -639,7 +639,7 @@ class JaluinoWindow(eclib.ControlBox):
         try:
             cfg = Profile_Get(cfgdlg.JALUINO_PREFS, default={})
             cmd = cmd % cfg
-        except TypeError,e:
+        except (KeyError,TypeError),e:
             self._log("[jaluino][err] Unable to format command because: %s" % e)
 
         self._log("[jaluino][info] Uploading with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
