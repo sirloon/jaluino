@@ -25,6 +25,7 @@
 #-----------------------------------------------------------------------------#
 # Imports
 import os
+import re
 import wx
 import wx.stc
 
@@ -112,6 +113,7 @@ class JaluinoWindow(eclib.ControlBox):
                             lastactionid = 0,
                             lcmd='')
         self._prefs = Profile_Get(cfgdlg.JALUINO_PREFS, default=None)
+        self._hexfinder = re.compile('^("?)(.*)\.hex("?)$',re.IGNORECASE)   # on win, " encloses filename
 
         # Setup
         self.__DoLayout()
@@ -359,6 +361,17 @@ class JaluinoWindow(eclib.ControlBox):
         self.RefreshControlBar()
         Profile_Set(JALUINO_KEY, handlers.GetState())
         self.UpdateBufferColors()
+        # normalize serial/usb values
+        cfg = Profile_Get(cfgdlg.JALUINO_PREFS, default={})
+        if cfg.get("serial.port.choice","available") == "available":
+            cfg['serial.port'] = cfg.get("serial.port.available")
+        else:
+            cfg['serial.port'] = cfg.get("serial.port.custom")
+        if cfg.get("serial.baudrate.choice","available") == "available":
+            cfg['serial.baudrate'] = cfg.get("serial.baudrate.available")
+        else:
+            cfg['serial.baudrate'] = cfg.get("serial.baudrate.custom")
+        Profile_Set(cfgdlg.JALUINO_PREFS,cfg)
 
     @ed_msg.mwcontext
     def OnFileOpened(self, msg):
@@ -594,7 +607,7 @@ class JaluinoWindow(eclib.ControlBox):
         """
         path,fname = self._PreProcess(fname)
         handler = handlers.GetHandlerById(ftype)
-        self._log("[jaluino][info] Running with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
+        self._log("[jaluino][info] Compiling with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
         self._compile_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fname,
                                            args, path,
@@ -603,22 +616,33 @@ class JaluinoWindow(eclib.ControlBox):
 
 
     def Upload(self, fname, cmd, args, ftype):
-        path,fname = self._PreProcess(fname)
         # if we got a .jal file, we need to check corresponding HEX file exists
-        if not fname.endswith(".hex"):
+        if not self._hexfinder.match(fname):
             # first, lowercase
             for ext in (".hex",".HEX"):
                 fhex = fname.replace(".jal",ext)
-                if os.path.isfile(os.path.join(path,fhex)):
+                if os.path.isfile(fhex):
                     break
             else:
-                self._buffer.AppendUpdate(_("Can't find generated HEX file from") + " '%s'\n" % fname)
+                self._buffer.AppendUpdate("Can't find generated HEX file from '%s'\n" % fname)
                 self._buffer.DoProcessExit(-9)
                 return
         else:
             # user selected explicitly a HEX file ?
             fhex = fname
+
         handler = handlers.GetHandlerById(ftype)
+
+        path,fhex = self._PreProcess(fhex)
+
+        # Potentially enrich/format registered command with configuration values
+        try:
+            cfg = Profile_Get(cfgdlg.JALUINO_PREFS, default={})
+            cmd = cmd % cfg
+        except TypeError,e:
+            self._log("[jaluino][err] Unable to format command because: %s" % e)
+
+        self._log("[jaluino][info] Uploading with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
         self._upload_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fhex,
                                            args, path,

@@ -12,6 +12,8 @@ Uses an API file to get all available symbols.
 """
 
 import os
+import xml
+import xml.dom
 import xml.dom.minidom as minidom
 
 #--------------------------------------------------------------------------#
@@ -96,7 +98,7 @@ class Completer(completer.BaseCompleter):
         elif len(command) >= self.min_char_before_cmpl:
             # something has been entered, we try to complete
             # keep spaces, as in this case, space can be used to stop autocompl.
-            return [symbol for symbol in self._api_symbols["__all__"] if symbol.Name.startswith(command)]
+            return [symbol for symbol in self._api_symbols.get("__all__",[]) if symbol.Name.startswith(command)]
         else:
             return list()
 

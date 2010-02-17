@@ -562,48 +562,64 @@ class SerialUSBPanel(wx.Panel):
 
             serialportbox = wx.StaticBox(self, label=_("Serial Port"))
             serialportboxsz = wx.StaticBoxSizer(serialportbox, wx.VERTICAL)
+            txt = wx.StaticText(self, label=_("Select an available serial port or, if not detected,\nenter your own serial port:"),style=wx.ALIGN_LEFT)
+            txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+            serialportboxsz.Add(txt)
             serports = self.GetAvailablePorts()
             portbox = wx.ComboBox(self,ID_AVAIL_PORTS,_("Choose a port"),
                                   (0, 0), (150, -1),choices=sorted(serports.keys()))
-            cfg.get('availport') and portbox.SetValue(cfg['availport'])
+            cfg.get("serial.port.available") and portbox.SetValue(cfg["serial.port.available"])
             avail_ports = wx.RadioButton(self,ID_AVAIL_PORTS_CHOICE,style=wx.RB_GROUP)
             # defaulting for radios is tricky, as event (thus config storage) is only triggered
             # when first radio is 
-            avail_ports.SetValue(cfg.get('choose_availport',True))
             availsizer = wx.BoxSizer(wx.HORIZONTAL)
             availsizer.Add(avail_ports)
             availsizer.Add(portbox)
             serialportboxsz.Add(availsizer)
             custsizer = wx.BoxSizer(wx.HORIZONTAL)
             custom_port = wx.RadioButton(self,ID_CUSTOM_PORT_CHOICE)
-            custom_port.SetValue(cfg.get('choose_custport',False))
             custom = wx.TextCtrl(self, ID_CUSTOM_PORT,u"",(0,0),(200,-1))
-            custom.SetValue(cfg.get('custport',_("Enter your own port")))
+            cfg.get('serial.port.custom') and custom.SetValue(cfg['serial.port.custom']) or  custom.SetValue(_("Enter your own port"))
             custsizer.Add(custom_port)
             custsizer.Add(custom)
             serialportboxsz.Add(custsizer)
+            # restore config
+            if cfg.get("serial.port.choice","available") == "available":
+                avail_ports.SetValue(True)
+                custom_port.SetValue(False)
+            else:
+                avail_ports.SetValue(False)
+                custom_port.SetValue(True)
 
             # Serial baudrate configuration
             serialspeedbox = wx.StaticBox(self, label=_("Serial Speed"))
             serialspeedboxsz = wx.StaticBoxSizer(serialspeedbox, wx.VERTICAL)
+            txt = wx.StaticText(self, label=_("Select an available serial baudrate (speed) or\nenter your own baudrate value:"),style=wx.ALIGN_LEFT)
+            txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+            serialspeedboxsz.Add(txt)
             serbds = self.GetAvailableBaudrates()
             speedbox = wx.ComboBox(self,ID_AVAIL_SPEEDS,_("Choose a baudrate"),
                                   (0, 0), (150, -1),choices=map(unicode,serbds))
-            cfg.get('availspeed') and speedbox.SetValue(cfg['availspeed'])
+            cfg.get('serial.baudrate.available') and speedbox.SetValue(cfg['serial.baudrate.available'])
             avail_speeds = wx.RadioButton(self,ID_AVAIL_SPEEDS_CHOICE,style=wx.RB_GROUP)
-            avail_speeds.SetValue(cfg.get('choose_availspeed',True))
             availsizer = wx.BoxSizer(wx.HORIZONTAL)
             availsizer.Add(avail_speeds)
             availsizer.Add(speedbox)
             serialspeedboxsz.Add(availsizer)
             custsizer = wx.BoxSizer(wx.HORIZONTAL)
             custom_speed = wx.RadioButton(self,ID_CUSTOM_SPEED_CHOICE)
-            custom_speed.SetValue(cfg.get('choose_custspeed',False))
             custom = wx.TextCtrl(self, ID_CUSTOM_SPEED,u"",(0,0),(200,-1))
-            custom.SetValue(cfg.get('custspeed',_("Enter your own baudrate")))
+            cfg.get('serial.baudrate.custom') and custom.SetValue(cfg['serial.baudrate.custom']) or  custom.SetValue(_("Enter your own baudrate"))
             custsizer.Add(custom_speed)
             custsizer.Add(custom)
             serialspeedboxsz.Add(custsizer)
+            # restore config
+            if cfg.get("serial.baudrate.choice","available") == "available":
+                avail_speeds.SetValue(True)
+                custom_speed.SetValue(False)
+            else:
+                avail_speeds.SetValue(False)
+                custom_speed.SetValue(True)
 
             msizer.AddMany([(serialportboxsz, 1, wx.EXPAND),(serialspeedboxsz, 1, wx.EXPAND)])
 
@@ -636,9 +652,9 @@ class SerialUSBPanel(wx.Panel):
         e_val = evt.GetEventObject().GetValue()
         cfg = Profile_Get(JALUINO_PREFS, default=dict())
         if e_id == ID_AVAIL_PORTS:
-            cfg['availport'] = e_val
+            cfg['serial.port.available'] = e_val
         elif e_id == ID_AVAIL_SPEEDS:
-            cfg['availspeed'] = e_val
+            cfg['serial.baudrate.available'] = e_val
         else:
             evt.Skip()
 
@@ -648,18 +664,14 @@ class SerialUSBPanel(wx.Panel):
         cfg = Profile_Get(JALUINO_PREFS, default=dict())
 
         if e_id == ID_AVAIL_PORTS_CHOICE:
-            cfg['choose_availport'] = e_val
-            cfg['choose_custport'] = not e_val
+            cfg['serial.port.choice'] = "available"
         if e_id == ID_CUSTOM_PORT_CHOICE:
-            cfg['choose_availport'] = not e_val
-            cfg['choose_custport'] = e_val
+            cfg['serial.port.choice'] = "custom"
 
         elif e_id == ID_AVAIL_SPEEDS_CHOICE:
-            cfg['choose_availspeed'] = e_val
-            cfg['choose_custspeed'] = not e_val
+            cfg['serial.baudrate.choice'] = "available"
         elif e_id == ID_CUSTOM_SPEED_CHOICE:
-            cfg['choose_availspeed'] = not e_val
-            cfg['choose_custspeed'] = e_val
+            cfg['serial.baudrate.choice'] = "custom"
 
         else:
             evt.Skip()
@@ -669,9 +681,9 @@ class SerialUSBPanel(wx.Panel):
         e_val = evt.GetEventObject().GetValue()
         cfg = Profile_Get(JALUINO_PREFS, default=dict())
         if e_id == ID_CUSTOM_PORT:
-            cfg['custport'] = e_val
+            cfg['serial.port.custom'] = e_val
         elif e_id == ID_CUSTOM_SPEED:
-            cfg['custspeed'] = e_val
+            cfg['serial.baudrate.custom'] = e_val
         else:
             evt.Skip()
 
@@ -683,6 +695,7 @@ class SerialUSBPanel(wx.Panel):
             Profile_Get(JALUINO_PREFS)[color] = evt.GetValue().Get()
         else:
             evt.Skip()
+
 
 #-----------------------------------------------------------------------------#
 ID_BROWSE = wx.NewId()
