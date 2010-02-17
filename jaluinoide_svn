@@ -1,0 +1,135 @@
+#!/usr/bin/env python
+
+import os, sys
+import subprocess
+import time
+
+def common():
+    runfrom = os.path.abspath(os.curdir)
+    jaluino_root = runfrom
+    jallib_root = os.path.join(jaluino_root,"3rdparty","jallib_svn")
+    jaluino_bin = os.path.join(jaluino_root,"bin")
+    return {'RUNFROM'       : runfrom,
+            'JALUINO_ROOT'  : jaluino_root,
+            'JALLIB_ROOT'   : jallib_root,
+            'JALUINO_BIN'   : jaluino_bin,
+           }
+
+def nix():
+    common_env = common()
+    # Determine where python is installed
+    try:
+        p = subprocess.Popen(["which","python"],stdout=subprocess.PIPE,
+                                                stderr=subprocess.STDOUT,
+                                                shell=False)
+        out = p.stdout.read()
+        p.communicate()
+        python_exec = out.strip()
+    except OSError,e:
+        print >> sys.stderr, "Unable to find python, not installed...\nError: %s" % e
+        time.sleep(3)
+        sys.exit(255)
+
+    # Determine where Editra is installed
+    # env > 3rdparty > winreg
+    # let a chance to be defined in env
+    editra_src = "0"
+    if os.environ.get("EDITRA_EXEC"):
+        editra_exec = os.environ['EDITRA_EXEC']
+    else:
+        editra_exec = os.path.join(common_env['JALUINO_ROOT'],"3rdparty","Editra","Editra")
+        if not os.path.exists(editra_exec):
+            try:
+                p = subprocess.Popen(["which","Editra"],stdout=subprocess.PIPE,
+                                                        stderr=subprocess.STDOUT,
+                                                        shell=False)
+                out = p.stdout.read()
+                p.communicate()
+                editra_exec = out.strip()
+
+            except OSError,e:
+                # not installed, maybe in 3rdparty ?
+                    print >> sys.stderr, "Unable to find Editra, neither installed, nor found in \"3rdparty/Editra\"\nError: %s" % e
+                    time.sleep(3)
+                    sys.exit(255)
+
+    nix_env = {'EDITRA_EXEC' : editra_exec,
+               'PYTHON_EXEC' : python_exec,
+               'EDITRA_SRC'  : editra_src,
+               'PATH'        : common_env['JALUINO_BIN'] + ":" + os.environ.get("PATH",""),
+               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch.xml"
+              }
+
+    nix_env.update(common_env)
+    return nix_env
+
+
+def win():
+    common_env = common()
+    # Determine where python is installed
+    try:
+        python_exec = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Python.exe")
+    except OSError,e:
+        print >> sys.stderr, "Unable to find python, not installed...\nError: %s" % e
+        time.sleep(3)
+        sys.exit(255)
+
+    # Determine where Editra is installed
+    # env > 3rdparty > winreg
+    # let a chance to be defined in env
+    editra_src = "0"
+    if os.environ.get("EDITRA_EXEC"):
+        editra_exec = os.environ['EDITRA_EXEC']
+    else:
+        editra_exec = os.path.join(common_env['JALUINO_ROOT'],"3rdparty","Editra","Editra.pyw")
+        print "rortot %s" % common_env['JALUINO_ROOT']
+        print "inninn %s" % editra_exec
+        if not os.path.exists(editra_exec):
+            try:
+                editra_exec = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Editra.exe")
+            except OSError,e:
+                # not installed, maybe in 3rdparty ?
+                    print >> sys.stderr, "Unable to find Editra, neither installed, nor found in \"3rdparty/Editra\"...\nError: %s" % e
+                    time.sleep(3)
+                    sys.exit(255)
+        else:
+            editra_src = "1"
+
+
+    win_env = {'EDITRA_EXEC' : editra_exec,
+               'PYTHON_EXEC' : python_exec,
+               'EDITRA_SRC'  : editra_src,
+               'PATH'        : common_env['JALUINO_BIN'] + ";" + os.environ.get("PATH",""),
+               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch_win.xml"
+              }
+
+    win_env.update(common_env)
+    return win_env
+
+if __name__ == "__main__":
+
+    try:
+        import _winreg as winreg
+        env = win()
+    except ImportError:
+        env = nix()
+
+    globalenv = dict(os.environ)
+    globalenv.update(env)
+    use_shell = True
+    if subprocess.mswindows:
+        use_shell = True
+    print "Jaluinoide env:" % env
+    for k,v in env.items():
+        print "    %s : %s" % (k,v)
+    # since we're using sources, we need to specify interpreter
+    cmd = [env["EDITRA_EXEC"]]
+    if int(env['EDITRA_SRC']):
+        cmd = [env["PYTHON_EXEC"],env["EDITRA_EXEC"]]
+    else:
+        cmd = [env["EDITRA_EXEC"]]
+
+    print "Running %s" % cmd
+    p = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=globalenv,shell=use_shell)
+    p.communicate()
+
