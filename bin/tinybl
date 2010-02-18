@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# wrapper around tinybld2 to call it with absolute path
+# so tinybld2 can find its configuration file
+
+$JALUINO_BIN/tinybld2 $*
