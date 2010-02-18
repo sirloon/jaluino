@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys
+import os, sys, glob
 import subprocess
 import time
 
@@ -60,11 +60,22 @@ def nix():
                'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch.xml"
               }
 
+    # Editra configuration directories
+    nix_env['EDITRA_CACHE'] = os.path.join(os.environ['HOME'],".Editra","cache")
+    nix_env['EDITRA_PLUGINS'] = os.path.join(os.environ['HOME'],".Editra","plugins")
+
     nix_env.update(common_env)
     return nix_env
 
+def osx():
+    nix_env = nix()
+    # override some values specific to OSX
+    nix_env['EDITRA_CACHE'] = os.path.join(os.environ['HOME'],"Library","Application Support","Editra","cache")
+    nix_env['EDITRA_PLUGINS'] = os.path.join(os.environ['HOME'],"Library","Application Support","Editra","plugins")
+    return nix_env
 
 def win():
+    import _winreg as winreg
     common_env = common()
     # Determine where python is installed
     try:
@@ -103,17 +114,24 @@ def win():
                'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch_win.xml"
               }
 
+    # Editra configuration directories
+    win_env['EDITRA_CACHE'] = os.path.join(os.environ['APPDATA'],"Editra","cache")
+    win_env['EDITRA_PLUGINS'] = os.path.join(os.environ['APPDATA'],"Editra","plugins")
+
     win_env.update(common_env)
     return win_env
 
-if __name__ == "__main__":
+def get_env():
+    if sys.platform.startswith("win"):
+        return win()
+    elif sys.platform.startswith("darwin"):
+        return osx()
+    else:
+        return nix()
+        
 
-    try:
-        import _winreg as winreg
-        env = win()
-    except ImportError:
-        env = nix()
-
+def launch():
+    env = get_env()
     globalenv = dict(os.environ)
     globalenv.update(env)
     use_shell = True
@@ -132,4 +150,39 @@ if __name__ == "__main__":
     print "Running %s" % cmd
     p = subprocess.Popen(cmd,env=globalenv,shell=use_shell)
     p.communicate()
+
+def install():
+    # TODO: check if already installed
+    #  - check dates
+    #  - and/or put a hidden ".installed" directory
+    # For now, not a big deal, as files are small and not numerous
+
+    env = get_env()
+    # check one Editra directory, to see if it already ran
+    if not os.path.exists(env['EDITRA_CACHE']): 
+        print "It seems Editra has never run before, can't install"
+        return
+
+    cachefiles = glob.glob(os.path.join("ide","conf","*"))
+    pluginfiles = glob.glob(os.path.join("ide","plugins","*.egg"))
+    
+    for cfilen in cachefiles:
+        print "Installing conf '%s'" % cfilen
+        destn = os.path.join(env['EDITRA_CACHE'],os.path.basename(cfilen))
+        content = file(cfilen,"rb").read()
+        file(destn,"wb").write(content)
+
+    for pfilen in pluginfiles:
+        print "Installing plugin '%s'" % pfilen
+        destn = os.path.join(env['EDITRA_PLUGINS'],os.path.basename(pfilen))
+        content = file(pfilen,"rb").read()
+        file(destn,"wb").write(content)
+    
+    
+
+
+if __name__ == "__main__":
+    install()
+    launch()
+
 
