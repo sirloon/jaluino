@@ -130,6 +130,6 @@ if __name__ == "__main__":
         cmd = [env["EDITRA_EXEC"]]
 
     print "Running %s" % cmd
-    p = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=globalenv,shell=use_shell)
+    p = subprocess.Popen(cmd,env=globalenv,shell=use_shell)
     p.communicate()
 
