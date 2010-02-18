@@ -579,7 +579,10 @@ class SerialUSBPanel(wx.Panel):
             custsizer = wx.BoxSizer(wx.HORIZONTAL)
             custom_port = wx.RadioButton(self,ID_CUSTOM_PORT_CHOICE)
             custom = wx.TextCtrl(self, ID_CUSTOM_PORT,u"",(0,0),(200,-1))
-            cfg.get('serial.port.custom') and custom.SetValue(cfg['serial.port.custom']) or  custom.SetValue(_("Enter your own port"))
+            if cfg.get('serial.port.custom'):
+                custom.SetValue(cfg['serial.port.custom'])
+            else:
+                custom.SetValue(_("Enter your own port"))
             custsizer.Add(custom_port)
             custsizer.Add(custom)
             serialportboxsz.Add(custsizer)
@@ -609,7 +612,10 @@ class SerialUSBPanel(wx.Panel):
             custsizer = wx.BoxSizer(wx.HORIZONTAL)
             custom_speed = wx.RadioButton(self,ID_CUSTOM_SPEED_CHOICE)
             custom = wx.TextCtrl(self, ID_CUSTOM_SPEED,u"",(0,0),(200,-1))
-            cfg.get('serial.baudrate.custom') and custom.SetValue(cfg['serial.baudrate.custom']) or  custom.SetValue(_("Enter your own baudrate"))
+            if cfg.get('serial.baudrate.custom'):
+                custom.SetValue(cfg['serial.baudrate.custom'])
+            else:
+                custom.SetValue(_("Enter your own baudrate"))
             custsizer.Add(custom_speed)
             custsizer.Add(custom)
             serialspeedboxsz.Add(custsizer)
