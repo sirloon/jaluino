@@ -53,11 +53,13 @@ def nix():
                     time.sleep(3)
                     sys.exit(255)
 
-    nix_env = {'EDITRA_EXEC' : editra_exec,
-               'PYTHON_EXEC' : python_exec,
-               'EDITRA_SRC'  : editra_src,
-               'PATH'        : common_env['JALUINO_BIN'] + ":" + os.environ.get("PATH",""),
-               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch.xml"
+    nix_env = {'EDITRA_EXEC'         : editra_exec,
+               'PYTHON_EXEC'         : python_exec,
+               'EDITRA_SRC'          : editra_src,
+               'PATH'                : common_env['JALUINO_BIN'] + ":" + os.environ.get("PATH",""),
+               'JALLIB_REPOS'        : os.path.join(common_env['JALUINO_ROOT'],"lib") + ":" + os.path.join(common_env['JALLIB_ROOT'],"include"),
+               'PYTHONPATH'          : os.path.join(common_env['JALLIB_ROOT'],"tools") + ":" + os.environ.get("PYTHONPATH",""),
+               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch.xml",
               }
 
     # Editra configuration directories
@@ -107,11 +109,13 @@ def win():
             editra_src = "1"
 
 
-    win_env = {'EDITRA_EXEC' : editra_exec,
-               'PYTHON_EXEC' : python_exec,
-               'EDITRA_SRC'  : editra_src,
-               'PATH'        : common_env['JALUINO_BIN'] + ";" + os.environ.get("PATH",""),
-               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch_win.xml"
+    win_env = {'EDITRA_EXEC'         : editra_exec,
+               'PYTHON_EXEC'         : python_exec,
+               'EDITRA_SRC'          : editra_src,
+               'PATH'                : common_env['JALUINO_BIN'] + ";" + os.environ.get("PATH",""),
+               'JALLIB_REPOS'        : os.path.join(common_env['JALUINO_ROOT'],"lib") + ":" + os.path.join(common_env['JALLIB_ROOT'],"include"),
+               'PYTHONPATH'          : os.path.join(common_env['JALLIB_ROOT'],"tools") + ";" + os.environ.get("PYTHONPATH",""),
+               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch_win.xml",
               }
 
     # Editra configuration directories
