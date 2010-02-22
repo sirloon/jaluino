@@ -49,7 +49,12 @@ export JALLIB_JALV2="$JALLIB_ROOT/compiler/jalv2"
 ####################
 # python script    #
 ####################
+
 export JALLIB_PYTHON=python
+if [ "$PYTHON_EXEC" != "" ]
+then
+   export JALLIB_PYTHON=$PYTHON_EXEC
+fi
 $JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py $*
 
 

@@ -34,7 +34,7 @@
    <handler name="Hex" id="ID_LANG_HEX">
       <commandlist default="Tiny Bootloader">
          <command name="Tiny Bootloader" execute="tinybl.bat -s %(serial.baudrate)s -p %(serial.port)s"/>
-         <command name="PDFUSB Bootloader" execute="pdfusb"/>
+         <command name="PDFUSB Bootloader" execute="pdfusb.bat write"/>
          <command name="Wisp Programmer" execute="xwisp2.bat port %(serial.port)s go"/>
       </commandlist>
    </handler>

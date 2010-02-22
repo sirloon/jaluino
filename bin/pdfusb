@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Wrapper script to run Albert Fabert's PDFUSB bootloader
+
+# launch location
+ABSRELPATH=`dirname $0`
+
+if echo $ABSRELPATH | grep -q ^/
+then
+    RUNFROM=$ABSRELPATH
+else
+    RUNFROM="`pwd`/`dirname $0`"
+fi
+
+export JALUINO_ROOT="$RUNFROM/.."
+
+export JALLIB_PYTHON=python
+if [ "$PYTHON_EXEC" != "" ]
+then
+   export JALLIB_PYTHON=$PYTHON_EXEC
+fi
+
+echo "Press reset button..."
+$JALLIB_PYTHON $JALUINO_ROOT/bootloaders/pdfusb/hostapp/UsbBootLoader.py $*
+
