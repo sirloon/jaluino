@@ -12,7 +12,7 @@
 
 #-----------------------------------------------------------------------------#
 # Imports
-import sys
+import sys, os
 import wx
 import wx.lib.mixins.listctrl as listmix
 import cStringIO
@@ -27,6 +27,9 @@ from profiler import Profile_Get, Profile_Set
 
 # placeholder for import
 handlers = None
+
+# Locals
+import jalcomp
 
 #-----------------------------------------------------------------------------#
 # Globals
@@ -51,6 +54,7 @@ ID_CUSTOM_SPEED = wx.NewId()
 # Misc Panel
 ID_AUTOCLEAR = wx.NewId()
 ID_ERROR_BEEP = wx.NewId()
+ID_GENERATE_API = wx.NewId()
 
 # Color Buttons
 ID_DEF_BACK = wx.NewId()
@@ -415,6 +419,7 @@ class MiscPanel(wx.Panel):
 
         # Event Handlers
         self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
+        self.Bind(wx.EVT_BUTTON, self.OnButton)
         self.Bind(eclib.EVT_COLORSETTER, self.OnColor)
 
     def __DoLayout(self):
@@ -433,6 +438,7 @@ class MiscPanel(wx.Panel):
         error_cb = wx.CheckBox(self, ID_ERROR_BEEP,
                                _("Audible feedback when errors are detected"))
         error_cb.SetValue(cfg.get('errorbeep', False))
+        gen_api_btn = wx.Button(self,ID_GENERATE_API,_("Re-generate jalv2 API"))
 
         # Colors
         colors = dict()
@@ -485,6 +491,7 @@ class MiscPanel(wx.Panel):
                         (wx.StaticText(self, label=("Actions") + u":"), 0),
                         ((5, 5), 0), (clear_cb, 0),
                         ((5, 5), 0), (error_cb, 0),
+                        ((5, 5), 0), (gen_api_btn, 0),
                         ((10, 10), 0), (wx.StaticLine(self), 0, wx.EXPAND),
                         ((10, 10), 0),
                         (boxsz, 1, wx.EXPAND)])
@@ -512,6 +519,19 @@ class MiscPanel(wx.Panel):
             Profile_Get(JALUINO_PREFS)[color] = evt.GetValue().Get()
         else:
             evt.Skip()
+
+    def OnButton(self, evt):
+        fullapi = jalcomp.GetFullAPIFile()
+        incapi = jalcomp.GetIncludeAPIFile()
+        for api in [fullapi,incapi]:
+            try:
+                os.unlink(api)
+            except OSError,e:
+                util.Log("[jaluino][warn] Unable to delete file '%s': %s" % (api,e))
+
+        mb = wx.MessageBox(_("You need to restart editor in order re-generate API"),
+                           _("Restart needed"))
+        
 
 
 #-----------------------------------------------------------------------------#

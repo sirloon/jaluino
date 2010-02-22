@@ -554,6 +554,12 @@ class JaluinoWindow(eclib.ControlBox):
         for ctrl in (self._exe_ch,self._exe_btn):
             ctrl.Disable()
 
+        # restore indentation from default (because not jalv2 related, since
+        # compile is disabled)
+        cbuffer = self._mw.GetNotebook().GetCurrentCtrl()
+        cbuffer.SetIndent(Profile_Get('INDENTWIDTH', 'int'))
+        cbuffer.SetUseTabs(Profile_Get('USETABS'))
+
     def _DisableUploadToolbar(self):
         for ctrl in (self._up_ch,self._up_btn):
             ctrl.Disable()
@@ -568,6 +574,12 @@ class JaluinoWindow(eclib.ControlBox):
     def _EnableCompileToolbar(self):
         for ctrl in (self._exe_ch,self._exe_btn):
             ctrl.Enable()
+
+        # force indentation to 3 spaces (since compile is enable, 
+        # this means it's jalv2 related...)
+        cbuffer = self._mw.GetNotebook().GetCurrentCtrl()
+        cbuffer.SetIndent(3)
+        cbuffer.SetUseTabs(False)
 
     def _EnableUploadToolbar(self):
         for ctrl in (self._up_ch,self._up_btn):

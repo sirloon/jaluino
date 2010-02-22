@@ -22,19 +22,17 @@ version attribute used to tell Editra the file has changed since last load
             <!-- std keywords -->
             <keywords value="0">
                  if then else elsif forever for loop case of end block using 
-                 alias function procedure is 
+                 alias function procedure is return repeat until asm assembler
+                 break task suspend exit
             </keywords>
 
-            <!-- types -->
             <keywords value="1">
                  var const
                  off on high low input output true false enabled disabled all_input all_output 
             </keywords>
 
-            <!-- special comment tags ? -->
             <keywords value="2">
-                volatile
-                 bit byte word dword sbyte sword sdword 
+                volatile bit byte word dword sbyte sword sdword 
             </keywords>
 
             <keywords value="4">
@@ -46,7 +44,7 @@ version attribute used to tell Editra the file has changed since last load
             </keywords>
 
             <keywords value="6">
-                 pragma target clock interrupt inline
+                 pragma target clock interrupt inline fuses
             </keywords>
 
 
@@ -63,8 +61,8 @@ version attribute used to tell Editra the file has changed since last load
 
             <syntaxspec value="STC_MSSQL_DEFAULT" tag="default_style"/>
             <syntaxspec value="STC_MSSQL_COMMENT" tag="comment_style"/>
-            <syntaxspec value="STC_MSSQL_COLUMN_NAME" tag="keyword_style"/>
-            <syntaxspec value="STC_MSSQL_COLUMN_NAME_2" tag="keyword_style"/>
+            <syntaxspec value="STC_MSSQL_COLUMN_NAME" tag="string_style"/>
+            <syntaxspec value="STC_MSSQL_COLUMN_NAME_2" tag="char_style"/>
             <syntaxspec value="STC_MSSQL_DATATYPE" tag="keyword2_style"/>
             <syntaxspec value="STC_MSSQL_DEFAULT_PREF_DATATYPE" tag="class_style"/>
             <syntaxspec value="STC_MSSQL_FUNCTION" tag="keyword3_style"/>
@@ -75,7 +73,7 @@ version attribute used to tell Editra the file has changed since last load
             <syntaxspec value="STC_MSSQL_OPERATOR" tag="operator_style"/>
             <syntaxspec value="STC_MSSQL_STATEMENT" tag="keyword_style"/>
             <syntaxspec value="STC_MSSQL_STORED_PROCEDURE" tag="scalar2_style"/>
-            <syntaxspec value="STC_MSSQL_STRING" tag="string_style"/>
+            <syntaxspec value="STC_MSSQL_STRING" tag="char_style"/>
             <syntaxspec value="STC_MSSQL_SYSTABLE" tag="keyword4_style"/>
             <syntaxspec value="STC_MSSQL_VARIABLE" tag="scalar_style"/>
 

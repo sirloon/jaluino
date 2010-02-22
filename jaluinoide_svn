@@ -60,6 +60,7 @@ def nix():
                'JALLIB_REPOS'        : os.path.join(common_env['JALUINO_ROOT'],"lib") + ":" + os.path.join(common_env['JALLIB_ROOT'],"include"),
                'PYTHONPATH'          : os.path.join(common_env['JALLIB_ROOT'],"tools") + ":" + os.environ.get("PYTHONPATH",""),
                'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch.xml",
+               'JALUINO_WRAPPER'     : os.path.join(common_env['JALUINO_BIN'],"jaluino_svn"),
               }
 
     # Editra configuration directories
@@ -95,8 +96,6 @@ def win():
         editra_exec = os.environ['EDITRA_EXEC']
     else:
         editra_exec = os.path.join(common_env['JALUINO_ROOT'],"3rdparty","Editra","Editra.pyw")
-        print "rortot %s" % common_env['JALUINO_ROOT']
-        print "inninn %s" % editra_exec
         if not os.path.exists(editra_exec):
             try:
                 editra_exec = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Editra.exe")
@@ -113,9 +112,10 @@ def win():
                'PYTHON_EXEC'         : python_exec,
                'EDITRA_SRC'          : editra_src,
                'PATH'                : common_env['JALUINO_BIN'] + ";" + os.environ.get("PATH",""),
-               'JALLIB_REPOS'        : os.path.join(common_env['JALUINO_ROOT'],"lib") + ":" + os.path.join(common_env['JALLIB_ROOT'],"include"),
+               'JALLIB_REPOS'        : os.path.join(common_env['JALUINO_ROOT'],"lib") + ";" + os.path.join(common_env['JALLIB_ROOT'],"include"),
                'PYTHONPATH'          : os.path.join(common_env['JALLIB_ROOT'],"tools") + ";" + os.environ.get("PYTHONPATH",""),
                'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch_win.xml",
+               'JALUINO_WRAPPER'     : os.path.join(common_env['JALUINO_BIN'],"jaluino_svn.bat"),
               }
 
     # Editra configuration directories
@@ -183,10 +183,30 @@ def install():
         file(destn,"wb").write(content)
     
     
+def prepare():
+    env = get_env()
+    globalenv = dict(os.environ)
+    globalenv.update(env)
+
+    wrapper = env['JALUINO_WRAPPER']
+    cachedir = env['EDITRA_CACHE']
+    pickfile = os.path.join(env['EDITRA_CACHE'],"jaluino_api.pick")
+    if not os.path.exists(pickfile):
+        print "Generating complete API..."
+        filelistpath = os.path.join(env['EDITRA_CACHE'],"jalfile.list")
+        filelist = file(filelistpath,"w")
+        list = subprocess.Popen(["%s" % wrapper,"list"],stdout=filelist,env=globalenv,cwd=env['JALUINO_BIN'])
+        list.communicate()
+        p = subprocess.Popen(["%s" % wrapper,"api","-k","-l","%s" % filelistpath,"-o","%s" % pickfile],env=globalenv,cwd=env['JALUINO_BIN'])
+        p.communicate()
+    else:
+        print "Found complete API file '%s'" % pickfile
+
 
 
 if __name__ == "__main__":
     install()
+    prepare()
     launch()
 
 
