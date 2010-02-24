@@ -138,9 +138,6 @@ def launch():
     env = get_env()
     globalenv = dict(os.environ)
     globalenv.update(env)
-    use_shell = True
-    if subprocess.mswindows:
-        use_shell = True
     print "Jaluinoide env:" % env
     for k,v in env.items():
         print "    %s : %s" % (k,v)
@@ -152,8 +149,8 @@ def launch():
         cmd = [env["EDITRA_EXEC"]]
 
     print "Running %s" % cmd
-    p = subprocess.Popen(cmd,env=globalenv,shell=use_shell)
-    p.communicate()
+    p = subprocess.Popen(cmd,env=globalenv,shell=False)
+    p.wait()
 
 def install():
     # TODO: check if already installed
@@ -196,9 +193,9 @@ def prepare():
         filelistpath = os.path.join(env['EDITRA_CACHE'],"jalfile.list")
         filelist = file(filelistpath,"w")
         list = subprocess.Popen(["%s" % wrapper,"list"],stdout=filelist,env=globalenv,cwd=env['JALUINO_BIN'])
-        list.communicate()
+        list.wait()
         p = subprocess.Popen(["%s" % wrapper,"api","-k","-l","%s" % filelistpath,"-o","%s" % pickfile],env=globalenv,cwd=env['JALUINO_BIN'])
-        p.communicate()
+        p.wait()
     else:
         print "Found complete API file '%s'" % pickfile
 

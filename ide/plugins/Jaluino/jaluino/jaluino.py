@@ -26,6 +26,8 @@
 # Imports
 import os
 import re
+import types as pytypes
+import subprocess
 import wx
 import wx.stc
 
@@ -94,9 +96,17 @@ class JaluinoWindow(eclib.ControlBox):
             msg = _("Launch plugin is missing and is required for Jaluino IDE\nPlease first install Launch plugin.")
             self._log(msg)
             return
+
+        try:
+            import codebrowser
+            self.codebrowser = codebrowser
+            import codebrowser.tagload
+            codebrowser.tagload.LOAD_MAP[synglob.ID_LANG_JAL] = "jaluino.jalbrowser"
+        except ImportError:
+            msg = _("[jaluino][warn] CodeBrowser plugin is missing. If not required, it can make you life easier...")
+            self._log(msg)
+
             
-
-
         # Attributes
         self._mw = self.__FindMainWindow()
         self._buffer = OutputDisplay(self)
@@ -623,7 +633,8 @@ class JaluinoWindow(eclib.ControlBox):
         self._compile_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fname,
                                            args, path,
-                                           handler.GetEnvironment())
+                                           handler.GetEnvironment())#,
+                                           ##use_shell=True)
         self._compile_worker.start()
 
 
@@ -650,15 +661,19 @@ class JaluinoWindow(eclib.ControlBox):
         # Potentially enrich/format registered command with configuration values
         try:
             cfg = Profile_Get(cfgdlg.JALUINO_PREFS, default={})
-            cmd = cmd % cfg
-        except (KeyError,TypeError),e:
+            fullenv = handler.GetEnvironment()
+            fullenv.update(cfg)
+            # complete with Jaluino specific variables and  global env. vars
+            cmd = cmd % fullenv
+        except (KeyError,TypeError,ValueError),e:
             self._log("[jaluino][err] Unable to format command because: %s" % e)
 
         self._log("[jaluino][info] Uploading with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
         self._upload_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fhex,
                                            args, path,
-                                           handler.GetEnvironment())
+                                           handler.GetEnvironment())#,
+                                           ##use_shell=True)
         self._upload_worker.start()
 
     def StartStopCompile(self):
@@ -919,6 +934,8 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
     def DoProcessStart(self, cmd=''):
         """Do any necessary preprocessing before a process is started"""
         self.GetParent().SetProcessRunning(True)
+        if not isinstance(cmd,pytypes.UnicodeType):
+            cmd = u' '.join(cmd)
         self.AppendUpdate(">>> %s%s" % (cmd, os.linesep))
 
     def GetCurrentHandler(self):

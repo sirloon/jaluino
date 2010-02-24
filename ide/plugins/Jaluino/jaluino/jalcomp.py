@@ -169,9 +169,9 @@ class Completer(completer.BaseCompleter):
                     self._registered_symbol.setdefault(command,{})[lcname] = True
 
         libname = jalfile and jalfile.replace(".jal","")
-        fill(libname,api['procedure'],"procedure","name","line",completer.TYPE_METHOD)
+        fill(libname,api['procedure'],"procedure","name","line",completer.TYPE_FUNCTION)
         fill(libname,api['function'],"function","name","line",completer.TYPE_FUNCTION)
-        fill(libname,api['pseudovar'],"pseudovar","name","line",completer.TYPE_PROPERTY)
+        fill(libname,api['pseudovar'],"pseudovar","name","line",completer.TYPE_VARIABLE)
         fill(libname,api['var'],"var","name","line",completer.TYPE_VARIABLE)
         fill(libname,api['const'],"const","name","line",completer.TYPE_ATTRIBUTE)
         fill(libname,api['alias'],"alias","name","line",completer.TYPE_ELEMENT)
