@@ -23,7 +23,7 @@ version attribute used to tell Editra the file has changed since last load
             <keywords value="0">
                  if then else elsif forever for loop case of end block using 
                  alias function procedure is return repeat until asm assembler
-                 break task suspend exit
+                 break task suspend exit while otherwise
             </keywords>
 
             <keywords value="1">
@@ -62,7 +62,7 @@ version attribute used to tell Editra the file has changed since last load
             <syntaxspec value="STC_MSSQL_DEFAULT" tag="default_style"/>
             <syntaxspec value="STC_MSSQL_COMMENT" tag="comment_style"/>
             <syntaxspec value="STC_MSSQL_COLUMN_NAME" tag="string_style"/>
-            <syntaxspec value="STC_MSSQL_COLUMN_NAME_2" tag="char_style"/>
+            <syntaxspec value="STC_MSSQL_COLUMN_NAME_2" tag="default_style"/>
             <syntaxspec value="STC_MSSQL_DATATYPE" tag="keyword2_style"/>
             <syntaxspec value="STC_MSSQL_DEFAULT_PREF_DATATYPE" tag="class_style"/>
             <syntaxspec value="STC_MSSQL_FUNCTION" tag="keyword3_style"/>
@@ -73,7 +73,7 @@ version attribute used to tell Editra the file has changed since last load
             <syntaxspec value="STC_MSSQL_OPERATOR" tag="operator_style"/>
             <syntaxspec value="STC_MSSQL_STATEMENT" tag="keyword_style"/>
             <syntaxspec value="STC_MSSQL_STORED_PROCEDURE" tag="scalar2_style"/>
-            <syntaxspec value="STC_MSSQL_STRING" tag="char_style"/>
+            <syntaxspec value="STC_MSSQL_STRING" tag="default_style"/>
             <syntaxspec value="STC_MSSQL_SYSTABLE" tag="keyword4_style"/>
             <syntaxspec value="STC_MSSQL_VARIABLE" tag="scalar_style"/>
 
