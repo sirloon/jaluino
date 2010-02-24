@@ -57,13 +57,20 @@ class Completer(completer.BaseCompleter):
         completer.BaseCompleter.__init__(self, stc_buffer)
 
         class AlwaysIn(list):
+            def __init__(self,cmpl):
+                self.cmpl = cmpl
             def __contains__(self,val):
-                return True
+                # except chars used for calltip'ing
+                # and while calltip'ing
+                return not self.cmpl.GetBuffer().CallTipActive() and \
+                       not val in self.cmpl.GetCallTipKeys()
 
         # Setup
-        self.SetAutoCompKeys(AlwaysIn())
-        self.SetAutoCompStops('()=,.\t\n')
+        self.SetAutoCompKeys(AlwaysIn(self))
+        self.SetAutoCompStops('=,.\t\n')
         self.SetAutoCompFillups('')
+        self.SetCallTipKeys([ord('('), ])
+        self.SetCallTipCancel([ord(')'), wx.WXK_RETURN])
 
         # don't start to autocomplete until ... chars entered
         self.min_char_before_cmpl = 3
@@ -164,8 +171,8 @@ class Completer(completer.BaseCompleter):
                     self._api_symbols["__all__"].pop(idx)
                     del self._registered_symbol[command][lcname]
                 else:
-                    self._api_symbols.setdefault(command,[]).append((lcname,symbol,libfile,line))
-                    self._api_symbols.setdefault("__all__",[]).append((lcname,symbol,libfile,line))
+                    self._api_symbols.setdefault(command,[]).append((lcname,symbol,libfile,line,elem))
+                    self._api_symbols.setdefault("__all__",[]).append((lcname,symbol,libfile,line,elem))
                     self._registered_symbol.setdefault(command,{})[lcname] = True
 
         libname = jalfile and jalfile.replace(".jal","")
@@ -217,7 +224,8 @@ class Completer(completer.BaseCompleter):
         after the command !
         '''
         chars = chars.lower()
-        if self._api_symbols.has_key(command):
+        command = command and command.lower()
+        if command and command == "include":
             res = sorted([symbol_info[1] for symbol_info in self._api_symbols[command] if symbol_info[0].startswith(chars)])
             return res
         elif len(chars) >= self.min_char_before_cmpl:
@@ -227,6 +235,9 @@ class Completer(completer.BaseCompleter):
         else:
             return list()
 
+    def GetAPIs(self,chars,command):
+        apis = [symbol_info[-1] for symbol_info in self._api_symbols.get(command,[]) if symbol_info[0] == chars]
+        return apis
 
 
     def GetAutoCompList(self, chars):
@@ -243,4 +254,34 @@ class Completer(completer.BaseCompleter):
 
         ##print "prevcmd: %s, chars: %s" % (repr(prevcmd),repr(chars))
         return self.GetSymbols(chars,prevcmd)
+
+    def GenerateToolTip(self,command,apis):
+        '''Return tooltip string'''
+        # there can be multiple definition (conditional compile)
+        tp = []
+        for api in apis:
+            name = api['name']
+            params = ["%(type)s %(context)s %(name)s" % param for param in api.get('params',[])]
+            strparams = ", ".join(params)
+            if command == "procedure" :
+                tp.append("%s(%s)" % (name,strparams))
+            if command == "function":
+                rettype = api['return']
+                tp.append("%s(%s) return %s" % (name,strparams,rettype))
+        return u"\n\n".join(tp)
+
+
+    def GetCallTip(self, chars):
+        chars = chars.lower()
+        # find which is the command type
+        if self._registered_symbol.get("procedure") and self._registered_symbol['procedure'].get(chars):
+            apis = self.GetAPIs(chars,"procedure")
+            return self.GenerateToolTip("procedure",apis)
+        elif self._registered_symbol.get("function") and self._registered_symbol['function'].get(chars):
+            apis = self.GetAPIs(chars,"function")
+            return self.GenerateToolTip("function",apis)
+
+        # no tooltip...
+        return u""
+
 

@@ -395,6 +395,8 @@ class JaluinoWindow(eclib.ControlBox):
 
         fname = msg.GetData()
         self.SetFile(fname)
+        ##ctx = msg.GetContext()
+        ##zetab = elf._mw._mpane.GetNotebook().GetPage(xxx)
 
         # Setup filetype settings
         self.RefreshControlBar()
