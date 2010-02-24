@@ -20,6 +20,17 @@ then
    export JALLIB_PYTHON=$PYTHON_EXEC
 fi
 
+# This is tricky: we need to catch some signals in order to kill
+# underlying called program, else, if we get killed, called program
+# won't be killed and will continue to run (possible infinitely
+killit()
+{
+    kill $pid
+}
+trap "killit" SIGINT SIGTERM
+
 echo "Press reset button..."
-$JALLIB_PYTHON $JALUINO_ROOT/bootloaders/pdfusb/hostapp/UsbBootLoader.py $*
+$JALLIB_PYTHON $JALUINO_ROOT/bootloaders/pdfusb/hostapp/UsbBootLoader.py $* &
+pid=$!
+wait
 

@@ -3,4 +3,31 @@
 # wrapper around tinybld2 to call it with absolute path
 # so tinybld2 can find its configuration file
 
-$JALUINO_BIN/tinybld2 $*
+if [ "$JALUINO_BIN" = "" ]
+then
+    # launch location
+    ABSRELPATH=`dirname $0`
+    
+    if echo $ABSRELPATH | grep -q ^/
+    then
+        RUNFROM=$ABSRELPATH
+    else
+        RUNFROM="`pwd`/`dirname $0`"
+    fi
+
+    export JALUINO_BIN="$RUNFROM"
+fi
+
+# This is tricky: we need to catch some signals in order to kill
+# underlying called program, else, if we get killed, called program
+# won't be killed and will continue to run (possible infinitely
+killit()
+{
+    kill $pid
+}
+trap "killit" SIGINT SIGTERM
+
+$JALUINO_BIN/tinybld2 $* &
+pid=$!
+wait
+
