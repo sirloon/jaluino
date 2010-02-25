@@ -938,6 +938,7 @@ class JaluinoWindow(eclib.ControlBox):
 
     def OnValidate(self,buff,event_obj):
         jalfile = buff.GetFileName()
+        self._PreProcess(jalfile)
         # set last lang/fname, so Editra can find file handler (highlight output)
         self._config['last'] = jalfile
         self._config['lastlang'] = synglob.ID_LANG_JAL
