@@ -23,6 +23,7 @@ import wx.stc
 #--------------------------------------------------------------------------#
 # Imports
 import ed_glob
+import ed_msg
 import autocomp.completer as completer
 import jallib
 
@@ -94,12 +95,18 @@ class Completer(completer.BaseCompleter):
 
         # auto-update API with a timer/worker (brut-force...)
         self._timer = wx.Timer(self.GetBuffer())
-        self.GetBuffer().Bind(wx.EVT_TIMER, self.OnUpdateAPINeeded)
+        self.GetBuffer().Bind(wx.EVT_TIMER, self.OnUpdateAPINeeded,self._timer)
         # wel will update API every xxx msecs
         self._timer.Start(1000)
+        # we need to stop timer when buffer gets closed, or segfault will knock at your door :)
+        ed_msg.Subscribe(self.OnTimeStopNeeded, ed_msg.EDMSG_UI_NB_CLOSING)
 
         # Generate current API
         self.GenerateAPI()
+
+    def OnTimeStopNeeded(self,msg):
+        if self._timer.IsRunning():
+            self._timer.Stop()
 
     def OnUpdateAPINeeded(self, evt):
         self.GenerateCurrentAPI()
