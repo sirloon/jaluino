@@ -67,6 +67,8 @@ ID_UPLOAD_LAUNCH = wx.NewId()
 
 ID_OPEN_LIBRARY = wx.NewId()
 ID_JSG_VALIDATE = wx.NewId()
+ID_OPEN_DEPS = wx.NewId()
+ID_CLOSE_DEPS = wx.NewId()
 
 # Profile Settings Key
 JALUINO_KEY = 'Jaluino.Config'
@@ -186,7 +188,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Unsubscribe(self.OnConfigExit)
         ed_msg.Unsubscribe(self.OnCompileMsg)
         ed_msg.Unsubscribe(self.OnUploadMsg)
-        ed_msg.Unsubscribe(self.OnContextMenu)
+        ed_msg.Unsubscribe(self.OnContextMessage)
         ed_msg.UnRegisterCallback(self._CanLaunch)
         ed_msg.UnRegisterCallback(self._CanReLaunch)
         super(JaluinoWindow, self).__del__()
@@ -869,10 +871,17 @@ class JaluinoWindow(eclib.ControlBox):
         txt = buff.GetSelectedText()
 
         data['menu'].AppendSeparator()
+        # Open all dependencies
+        data['menu'].Append(ID_OPEN_DEPS,_("Open dependencies"))
+        data['handlers'].append((ID_OPEN_DEPS,self.OnOpenDependencies))
+        # Close all dependencies
+        data['menu'].Append(ID_CLOSE_DEPS,_("Close dependencies"))
+        data['handlers'].append((ID_CLOSE_DEPS,self.OnCloseDependencies))
+       
+        data['menu'].AppendSeparator()
         # JSG validate
         data['menu'].Append(ID_JSG_VALIDATE,_("Validate"))
         data['handlers'].append((ID_JSG_VALIDATE,self.OnValidate))
-       
         # View <symbolname> code
         comp = buff.GetCompleter()
         for command in comp._registered_symbol.keys():
@@ -891,17 +900,17 @@ class JaluinoWindow(eclib.ControlBox):
                 # fow now, only consider first definition
                 api = apis[0]
                 if command == "include":
-                    self.OpenLibrary(buff,chars)
+                    self.OpenLibrary(chars)
                 else:
                     _,_,libfile,line,_ = api
-                    self.OpenLibrary(buff,libfile,line)
+                    self.OpenLibrary(libfile,line)
  
     def GetLibraryPath(self,libname):
         jalfile = "%s.jal" % libname
         path = jalcomp.JALLIBS.get(jalfile)
         return path
 
-    def OpenLibrary(self,buff,libname,line=0):
+    def OpenLibrary(self,libname,line=0):
         path = self.GetLibraryPath(libname)
         nb = self.GetMainWindow().GetNotebook()
         if not path and libname:
@@ -915,6 +924,17 @@ class JaluinoWindow(eclib.ControlBox):
         if line:
             page = nb.GetCurrentPage()
             page.GotoLine(line)
+
+    def CloseLibrary(self,libname):
+        nb = self.GetMainWindow().GetNotebook()
+        path = self.GetLibraryPath(libname)
+        nb.GotoPage(path)
+        # this won't close modified tabs because there's a "*" in label
+        label = nb.GetCurrentPage().GetTabLabel()
+        if label == os.path.basename(path):
+            # this means we've found the page
+            nb.GoCurrentPage()
+            nb.ClosePage()
 
     def OnValidate(self,buff,event_obj):
         jalfile = buff.GetFileName()
@@ -936,12 +956,36 @@ class JaluinoWindow(eclib.ControlBox):
                 self._buffer.AppendUpdate(u"\twarning: %s:%s\n" % (jalfile,err))
 
         if jallib.errors or jallib.warnings:
-            self._buffer.AppendUpdate(u"\n%s:1: is not JSG compliant !" % jalfile)
+            self._buffer.AppendUpdate(u"\n%s:1: is not JSG compliant !\n\n" % jalfile)
         else:
-             self._buffer.AppendUpdate(u"\n%s is JSG compliant :)" % jalfile)
+             self._buffer.AppendUpdate(u"\n%s is JSG compliant :)\n\n" % jalfile)
 
         # HACK: calling a private method...
         self._buffer._OutputBuffer__FlushBuffer()
+
+    def OpenDependencies(self,api,close=False):
+        for libname in api['include']:
+            # infix/suffix when walking the tree and open/close tabs
+            if not close:
+                self.OpenLibrary(libname['name'])
+
+            path = self.GetLibraryPath(libname['name'])
+            if path:
+                api = jallib.api_parse([path]).values()[0]
+                self.OpenDependencies(api,close)
+
+            if close:
+                self.CloseLibrary(libname['name'])
+
+    def OnOpenDependencies(self,buff,event_obj):
+        txt = buff.GetText().splitlines()
+        api = jallib.api_parse_content(txt,strict=False)
+        self.OpenDependencies(api)
+
+    def OnCloseDependencies(self,buff,event_obj):
+        txt = buff.GetText().splitlines()
+        api = jallib.api_parse_content(txt,strict=False)
+        self.OpenDependencies(api,close=True)
 
 
 #-----------------------------------------------------------------------------#
