@@ -33,6 +33,9 @@ import jallib
 DEFAULT_JALUINO_API_FILE = "jaluino_api.pick"
 INCLUDE_API_FILE = "jaluino_include.api"
 
+# get all available libraries' path at startup
+JALLIBS = jallib.get_library_list()
+
 #--------------------------------------------------------------------------#
 
 
@@ -80,9 +83,8 @@ class Completer(completer.BaseCompleter):
         # jalv2 is case-insensitive
         self.SetCaseSensitive(False)
 
-        # get all available libraries' path at startup
-        self.libraries = jallib.get_library_list()
-
+        # TODO: Seb, please explain to me why you're using two dict ?...
+        #       please clean the code, make it efficient, and remove one of them
         # Contains every includes + symbols available in current buffer
         self._api_symbols = {}
         # Contains only API strings, for convenience (quick search, "it this symbol
@@ -126,8 +128,8 @@ class Completer(completer.BaseCompleter):
             content = self.GetBufferContent()
         else:
             jalfile = "%s.jal" % libname
-            if self.libraries.get(jalfile):
-                content = file(self.libraries[jalfile]).readlines()
+            if JALLIBS.get(jalfile):
+                content = file(JALLIBS[jalfile]).readlines()
             else:
                 content = ""
                 self._log("[jaluino][warn] Unable to get JAL file for library '%s'" % libname)
@@ -171,7 +173,7 @@ class Completer(completer.BaseCompleter):
                     continue
                 # keep original case for symbol to be inserted
                 symbol = completer.CreateSymbols([name],type)[0]
-                libfile = self.libraries.get("%s.jal" % libname)
+                libfile = JALLIBS.get("%s.jal" % libname)
                 line = elem[keyline]
                 if remove:
                     idx = [symbol_info[0] for symbol_info in self._api_symbols["__all__"]].index(lcname)
@@ -180,7 +182,7 @@ class Completer(completer.BaseCompleter):
                 else:
                     self._api_symbols.setdefault(command,[]).append((lcname,symbol,libfile,line,elem))
                     self._api_symbols.setdefault("__all__",[]).append((lcname,symbol,libfile,line,elem))
-                    self._registered_symbol.setdefault(command,{})[lcname] = True
+                    self._registered_symbol.setdefault(command,{})[lcname] = (lcname,symbol,libfile,line,elem)
 
         libname = jalfile and jalfile.replace(".jal","")
         fill(libname,api['procedure'],"procedure","name","line",completer.TYPE_FUNCTION)
@@ -217,7 +219,7 @@ class Completer(completer.BaseCompleter):
                 libname = inc.replace(".jal","")
                 symbol = completer.CreateSymbols([libname],completer.TYPE_CLASS)[0]
                 # put all lowercased to do case-insensitive search, but keep original case
-                self._api_symbols.setdefault('include',[]).append((libname.lower(),symbol,self.libraries.get(inc)))
+                self._api_symbols.setdefault('include',[]).append((libname.lower(),symbol,JALLIBS.get(inc)))
 
         else:
             self._log("[jaluino][warn] No API file available, '%s' does not exist" % filepath)
@@ -243,7 +245,7 @@ class Completer(completer.BaseCompleter):
             return list()
 
     def GetAPIs(self,chars,command):
-        apis = [symbol_info[-1] for symbol_info in self._api_symbols.get(command,[]) if symbol_info[0] == chars]
+        apis = [symbol_info for symbol_info in self._api_symbols.get(command,[]) if symbol_info[0] == chars]
         return apis
 
 
@@ -267,13 +269,15 @@ class Completer(completer.BaseCompleter):
         # there can be multiple definition (conditional compile)
         tp = []
         for api in apis:
-            name = api['name']
-            params = ["%(type)s %(context)s %(name)s" % param for param in api.get('params',[])]
+            # get original API elem
+            elem = api[-1]
+            name = elem['name']
+            params = ["%(type)s %(context)s %(name)s" % param for param in elem.get('params',[])]
             strparams = ", ".join(params)
             if command == "procedure" :
                 tp.append("%s(%s)" % (name,strparams))
             if command == "function":
-                rettype = api['return']
+                rettype = elem['return']
                 tp.append("%s(%s) return %s" % (name,strparams,rettype))
         return u"\n\n".join(tp)
 

@@ -116,3 +116,12 @@ ide:
 
 release: export prepare dita archive check
 
+api_svn:
+	# generate XML API file for all jallib/jaluino libraries
+	for i in `../bin/jaluino_svn list`; \
+	do \
+		../bin/jaluino_svn api -x $$i | grep -v \?xml; \
+	done > /tmp/jaluino_api_tmp.xml
+	echo \<apis\> | cat - /tmp/jaluino_api_tmp.xml > ../ide/conf/jaluino_api.xml
+	echo \</apis\> >> ../ide/conf/jaluino_api.xml
+	rm /tmp/jaluino_api_tmp.xml

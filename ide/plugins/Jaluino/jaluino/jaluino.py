@@ -33,6 +33,7 @@ import wx.stc
 
 # Local Imports
 import cfgdlg
+import jalcomp
 
 # Editra Libraries
 import ed_glob
@@ -61,6 +62,8 @@ ID_UPLOAD_ARGS = wx.NewId()
 
 ID_COMPILE_LAUNCH = wx.NewId()
 ID_UPLOAD_LAUNCH = wx.NewId()
+
+ID_OPEN_LIBRARY = wx.NewId()
 
 # Profile Settings Key
 JALUINO_KEY = 'Jaluino.Config'
@@ -168,6 +171,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Subscribe(self.OnConfigExit, cfgdlg.EDMSG_JALUINO_CFG_EXIT)
         ed_msg.Subscribe(self.OnCompileMsg, MSG_COMPILE)
         ed_msg.Subscribe(self.OnUploadMsg, MSG_UPLOAD)
+        ed_msg.Subscribe(self.OnContextMessage,ed_msg.EDMSG_UI_STC_CONTEXT_MENU)
         ed_msg.RegisterCallback(self._CanLaunch, REQUEST_ACTIVE)
         ed_msg.RegisterCallback(self._CanReLaunch, REQUEST_RELAUNCH)
 
@@ -179,6 +183,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Unsubscribe(self.OnConfigExit)
         ed_msg.Unsubscribe(self.OnCompileMsg)
         ed_msg.Unsubscribe(self.OnUploadMsg)
+        ed_msg.Unsubscribe(self.OnContextMenu)
         ed_msg.UnRegisterCallback(self._CanLaunch)
         ed_msg.UnRegisterCallback(self._CanReLaunch)
         super(JaluinoWindow, self).__del__()
@@ -850,6 +855,59 @@ class JaluinoWindow(eclib.ControlBox):
         except TypeError:
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))
             self._chFiles.SetItems([''])
+
+    def OnContextMessage(self,msg):
+        data = msg.GetData()
+        buff = data['buff']
+        # is it even jalv2 related ?
+        if buff.GetLangId() != synglob.ID_LANG_JAL:
+            return
+
+        txt = buff.GetSelectedText()
+
+        data['menu'].AppendSeparator()
+       
+        # View <symbolname> code
+        comp = buff.GetCompleter()
+        for command in comp._registered_symbol.keys():
+            if comp._registered_symbol[command].has_key(txt.lower()):
+                menu_item = data['menu'].Append(ID_OPEN_LIBRARY,_("View") + u" " + txt + u" " + _("code"))
+                data['handlers'].append((ID_OPEN_LIBRARY,self.OnOpenLibrary))
+
+    def OnOpenLibrary(self,buff,event_obj):
+        chars = buff.GetSelectedText()
+        comp = buff.GetCompleter()
+        for command in comp._registered_symbol.keys():
+            apis = comp.GetAPIs(chars,command)
+            if len(apis) > 1:
+                util.Log(u"[jaluino][warn] More than one API definition for %s (found %s)" % (chars,len(apis)))
+            if apis:
+                # fow now, only consider first definition
+                api = apis[0]
+                if command == "include":
+                    self.OpenLibrary(buff,chars)
+                else:
+                    _,_,libfile,line,_ = api
+                    self.OpenLibrary(buff,libfile,line)
+ 
+    def GetLibraryPath(self,libname):
+        jalfile = "%s.jal" % libname
+        path = jalcomp.JALLIBS.get(jalfile)
+        return path
+
+    def OpenLibrary(self,buff,libname,line=0):
+        path = self.GetLibraryPath(libname)
+        if not path and libname:
+            # maybe it's file path, not a libname ?
+            path = os.path.exists(libname) and libname
+        if path:
+            buff._nb.OpenPage(ebmlib.GetPathName(path),
+                                ebmlib.GetFileName(path),quiet=True)
+            buff._nb.GoCurrentPage()
+        # we may stay in current buffer, still need to move to a line
+        if line:
+            page = buff._nb.GetCurrentPage()
+            page.GotoLine(line)
 
 #-----------------------------------------------------------------------------#
 
