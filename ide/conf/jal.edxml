@@ -36,11 +36,11 @@ version attribute used to tell Editra the file has changed since last load
             </keywords>
 
             <keywords value="4">
-                 include defined 
+                 include
             </keywords>
 
             <keywords value="5">
-                 _usec_delay _debug _warn _error count 
+                 _usec_delay _debug _warn _error count whereis defined 
             </keywords>
 
             <keywords value="6">
