@@ -12,6 +12,7 @@ Uses an API file to get all available symbols.
 """
 
 import os, re
+import weakref
 import cPickle
 
 import xml
@@ -61,8 +62,6 @@ class Completer(completer.BaseCompleter):
         completer.BaseCompleter.__init__(self, stc_buffer)
 
         class AlwaysIn(list):
-            def __init__(self,cmpl):
-                self.cmpl = cmpl
             def __contains__(self,val):
                 # except chars used for calltip'ing
                 # and while calltip'ing
@@ -70,7 +69,13 @@ class Completer(completer.BaseCompleter):
                        not val in self.cmpl.GetCallTipKeys()
 
         # Setup
-        self.SetAutoCompKeys(AlwaysIn(self))
+        dynkeys = AlwaysIn()
+        # this creates a circular dependencies (Completer.keys is AlwaysIn.cmpl is ...)
+        # when Completer gets deleted, AlwaysIn gets deleted too, but conflicts while
+        # destruction occurs, which seems to bug wxPython. 
+        # Using weakref solves the problem
+        dynkeys.cmpl = weakref.proxy(self)
+        self.SetAutoCompKeys(dynkeys)
         self.SetAutoCompStops('=,.\t\n')
         self.SetAutoCompFillups('')
         self.SetCallTipKeys([ord('('), ])

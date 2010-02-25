@@ -882,8 +882,13 @@ class JaluinoWindow(eclib.ControlBox):
         # JSG validate
         data['menu'].Append(ID_JSG_VALIDATE,_("Validate"))
         data['handlers'].append((ID_JSG_VALIDATE,self.OnValidate))
-        # View <symbolname> code
+
+        # Do we have a decent completer ?
         comp = buff.GetCompleter()
+        if not isinstance(comp,jalcomp.Completer):
+            return
+
+        # View <symbolname> code
         for command in comp._registered_symbol.keys():
             if comp._registered_symbol[command].has_key(txt.lower()):
                 menu_item = data['menu'].Append(ID_OPEN_LIBRARY,_("View") + u" " + txt + u" " + _("code"))
