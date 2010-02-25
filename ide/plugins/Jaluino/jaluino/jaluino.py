@@ -45,6 +45,8 @@ import ed_msg
 import eclib
 import syntax.synglob as synglob
 
+import jallib
+
 # import placeholder...
 handlers = None
 
@@ -64,6 +66,7 @@ ID_COMPILE_LAUNCH = wx.NewId()
 ID_UPLOAD_LAUNCH = wx.NewId()
 
 ID_OPEN_LIBRARY = wx.NewId()
+ID_JSG_VALIDATE = wx.NewId()
 
 # Profile Settings Key
 JALUINO_KEY = 'Jaluino.Config'
@@ -866,6 +869,9 @@ class JaluinoWindow(eclib.ControlBox):
         txt = buff.GetSelectedText()
 
         data['menu'].AppendSeparator()
+        # JSG validate
+        data['menu'].Append(ID_JSG_VALIDATE,_("Validate"))
+        data['handlers'].append((ID_JSG_VALIDATE,self.OnValidate))
        
         # View <symbolname> code
         comp = buff.GetCompleter()
@@ -897,17 +903,46 @@ class JaluinoWindow(eclib.ControlBox):
 
     def OpenLibrary(self,buff,libname,line=0):
         path = self.GetLibraryPath(libname)
+        nb = self.GetMainWindow().GetNotebook()
         if not path and libname:
             # maybe it's file path, not a libname ?
             path = os.path.exists(libname) and libname
         if path:
-            buff._nb.OpenPage(ebmlib.GetPathName(path),
+            nb.OpenPage(ebmlib.GetPathName(path),
                                 ebmlib.GetFileName(path),quiet=True)
-            buff._nb.GoCurrentPage()
+            nb.GoCurrentPage()
         # we may stay in current buffer, still need to move to a line
         if line:
-            page = buff._nb.GetCurrentPage()
+            page = nb.GetCurrentPage()
             page.GotoLine(line)
+
+    def OnValidate(self,buff,event_obj):
+        jalfile = buff.GetFileName()
+        # set last lang/fname, so Editra can find file handler (highlight output)
+        self._config['last'] = jalfile
+        self._config['lastlang'] = synglob.ID_LANG_JAL
+        self._buffer.AppendUpdate(_(">>> Checking") + u" " + jalfile  + u"\n")
+        jallib.validate(jalfile)
+
+        jalfile = os.path.basename(jalfile)
+        self._buffer.AppendUpdate("%d errors found\n" % len(jallib.errors))
+        if jallib.errors:
+            for err in jallib.errors:
+                self._buffer.AppendUpdate(u"\tERROR: %s:%s\n" % (jalfile,err))
+
+        self._buffer.AppendUpdate("%d warnings found\n" % len(jallib.errors))
+        if jallib.warnings:
+            for warn in jallib.warnings:
+                self._buffer.AppendUpdate(u"\twarning: %s:%s\n" % (jalfile,err))
+
+        if jallib.errors or jallib.warnings:
+            self._buffer.AppendUpdate(u"\n%s:1: is not JSG compliant !" % jalfile)
+        else:
+             self._buffer.AppendUpdate(u"\n%s is JSG compliant :)" % jalfile)
+
+        # HACK: calling a private method...
+        self._buffer._OutputBuffer__FlushBuffer()
+
 
 #-----------------------------------------------------------------------------#
 
@@ -1013,6 +1048,9 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
 
         """
         self._prefs = prefs
+
+    def Clear(self):
+        super(OutputDisplay,self).Clear()
 
 #-----------------------------------------------------------------------------#
 def GetLangIdFromMW(mainw):
