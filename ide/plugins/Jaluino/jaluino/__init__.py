@@ -21,16 +21,15 @@ import cfgdlg
 import jalcomp
 
 # Editra imports
-import ed_glob
 import iface
 import plugin
-import ed_msg
 import util
 import autocomp
 from profiler import Profile_Get
+import ed_glob
+import ed_msg
 import syntax
 import syntax.synglob as synglob
-from ed_menu import EdMenuBar
 #-----------------------------------------------------------------------------#
 # Globals
 _ = wx.GetTranslation
@@ -87,16 +86,10 @@ class Jaluino(plugin.Plugin):
 
         """
         # TODO: deal with keybinder
-        tmenu = mainw.GetMenuBar().GetMenuByName("tools")
-        tmenu.Insert(0, jaluino.ID_COMPILE_LAUNCH, _("Compile") + \
-                     EdMenuBar.keybinder.GetBinding(jaluino.ID_COMPILE_LAUNCH),
-                     _("Compile current Jalv2 file"))
-        mainw.AddMenuHandler(jaluino.ID_COMPILE_LAUNCH, OnCompile)
-        tmenu.Insert(1, jaluino.ID_UPLOAD_LAUNCH, _("Upload") + \
-                     EdMenuBar.keybinder.GetBinding(jaluino.ID_UPLOAD_LAUNCH),
-                     _("Upload HEX file associated to current Jalv2 file"))
-        mainw.AddMenuHandler(jaluino.ID_UPLOAD_LAUNCH, OnUpload)
-        tmenu.Insert(2, wx.ID_SEPARATOR)
+        # TODO: build specific menu
+        bar = mainw.GetMenuBar()
+        menu = jaluino.GetMenu(mainw)
+        bar.Insert(bar.GetMenuCount() - 1,menu,_("Jaluino"))
 
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
         self.RegisterJaluinoCommands()
@@ -186,18 +179,4 @@ class JaluinoConfigObject(plugin.PluginConfigObject):
         return _("Jaluino")
 
 #-----------------------------------------------------------------------------#
-
-def OnCompile(evt):
-    """Handle the Run Script menu event and dispatch it to the currently
-    active Jaluino panel
-
-    """
-    ed_msg.PostMessage(jaluino.MSG_COMPILE)
-
-def OnUpload(evt):
-    """Handle the Run Last Script menu event and dispatch it to the currently
-    active Launch panel
-
-    """
-    ed_msg.PostMessage(jaluino.MSG_UPLOAD)
 

@@ -44,6 +44,7 @@ from profiler import Profile_Get, Profile_Set
 import ed_msg
 import eclib
 import syntax.synglob as synglob
+from ed_menu import EdMenuBar, EdMenu
 
 import jallib
 
@@ -76,6 +77,10 @@ JALUINO_KEY = 'Jaluino.Config'
 # Custom Messages
 MSG_COMPILE = ('jaluino', 'compile')
 MSG_UPLOAD = ('jaluino', 'upload')
+MSG_VALIDATE = ('jaluino', 'validate')
+MSG_OPEN_DEPS = ('jaluino', 'opendeps')
+MSG_CLOSE_DEPS = ('jaluino', 'closedeps')
+MSG_SETTINGS = ('jaluino', 'settings')
 
 # Value request messages
 REQUEST_ACTIVE = 'Jaluino.IsActive'
@@ -114,7 +119,6 @@ class JaluinoWindow(eclib.ControlBox):
             msg = _("[jaluino][warn] CodeBrowser plugin is missing. If not required, it can make you life easier...")
             self._log(msg)
 
-            
         # Attributes
         self._mw = self.__FindMainWindow()
         self._buffer = OutputDisplay(self)
@@ -176,7 +180,12 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Subscribe(self.OnConfigExit, cfgdlg.EDMSG_JALUINO_CFG_EXIT)
         ed_msg.Subscribe(self.OnCompileMsg, MSG_COMPILE)
         ed_msg.Subscribe(self.OnUploadMsg, MSG_UPLOAD)
+        ed_msg.Subscribe(self.OnValidateMsg, MSG_VALIDATE)
+        ed_msg.Subscribe(self.OnOpenDependenciesMsg, MSG_OPEN_DEPS)
+        ed_msg.Subscribe(self.OnCloseDependenciesMsg, MSG_CLOSE_DEPS)
+        ed_msg.Subscribe(self.OnSettingsMsg, MSG_SETTINGS)
         ed_msg.Subscribe(self.OnContextMessage,ed_msg.EDMSG_UI_STC_CONTEXT_MENU)
+        ##ed_msg.Subscribe(self.OnTabContextMessage,ed_msg.EDMSG_UI_NB_CONTEXT_MENU)
         ed_msg.RegisterCallback(self._CanLaunch, REQUEST_ACTIVE)
         ed_msg.RegisterCallback(self._CanReLaunch, REQUEST_RELAUNCH)
 
@@ -188,7 +197,12 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Unsubscribe(self.OnConfigExit)
         ed_msg.Unsubscribe(self.OnCompileMsg)
         ed_msg.Unsubscribe(self.OnUploadMsg)
+        ed_msg.Unsubscribe(self.OnValidateMsg)
+        ed_msg.Unsubscribe(self.OnOpenDependenciesMsg)
+        ed_msg.Unsubscribe(self.OnCloseDependenciesMsg)
+        ed_msg.Unsubscribe(self.OnSettingsMsg)
         ed_msg.Unsubscribe(self.OnContextMessage)
+        ##ed_msg.Unsubscribe(self.OnTabContextMessage)
         ed_msg.UnRegisterCallback(self._CanLaunch)
         ed_msg.UnRegisterCallback(self._CanReLaunch)
         super(JaluinoWindow, self).__del__()
@@ -305,8 +319,10 @@ class JaluinoWindow(eclib.ControlBox):
         @return: bool
 
         """
-        parent = self.GetParent()
-        return parent.GetParent().IsActive() and self._isready
+        # Don't check if maindow is active, to enable tab context menu. 
+        # (I can't understand why it's needed, but... if things go crazy,
+        # there might be something to look here
+        return self._isready
 
     def GetFile(self):
         """Get the file that is currently set to be run
@@ -333,14 +349,7 @@ class JaluinoWindow(eclib.ControlBox):
         """Handle events from the buttons on the control bar"""
         e_id = evt.GetId()
         if e_id == ID_SETTINGS:
-            app = wx.GetApp()
-            win = app.GetWindowInstance(cfgdlg.ConfigDialog)
-            if win is None:
-                config = cfgdlg.ConfigDialog(self._mw)
-                config.CentreOnParent()
-                config.Show()
-            else:
-                win.Raise()
+            self.OnSettings()
         elif e_id == ID_COMPILE:
             # May be run or abort depending on current state
             self._config['lastactionid'] = ID_COMPILE
@@ -461,26 +470,25 @@ class JaluinoWindow(eclib.ControlBox):
             self.StartStopCompile()
 
     def OnUploadMsg(self, msg):
-        """Re-run the last run program.
-        """
         if self.CanLaunch():
-            fname, ftype = self.GetLastCompile()
-            # If there is no last run file return
-            if not len(fname):
-                return
-
             shelf = self._mw.GetShelf()
-            self.UpdateCurrentFiles(ftype)
-            self.SetFile(fname)
-            self.RefreshControlBar()
             shelf.RaiseWindow(self)
+            self.StartStopUpload()
 
-            if self._prefs.get('autoclear'):
-                self._buffer.Clear()
+    def OnValidateMsg(self, msg):
+        buff = GetTextBuffer(self._mw)
+        self.OnValidate(buff)
 
-            self.SetProcessRunning(True)
+    def OnOpenDependenciesMsg(self,msg):
+        buff = GetTextBuffer(self._mw)
+        self.OnOpenDependencies(buff)
+        
+    def OnCloseDependenciesMsg(self,msg):
+        buff = GetTextBuffer(self._mw)
+        self.OnCloseDependencies(buff)
 
-            self.Compile(fname, self._config['lcmd'], self._config['largs'], ftype)
+    def OnSettingsMsg(self,msg):
+        self.OnSettings()
 
     def OnThemeChanged(self, msg):
         """Update icons when the theme has been changed
@@ -861,6 +869,15 @@ class JaluinoWindow(eclib.ControlBox):
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))
             self._chFiles.SetItems([''])
 
+    def OnTabContextMessage(self,msg):
+        data = msg.GetData()
+        menu = data['menu']
+        page = data['page']
+        if page.GetLangId() != synglob.ID_LANG_JAL:
+            return
+        menu.AppendSeparator()
+        BuildFileRelatedMenu(self._mw,menu)
+
     def OnContextMessage(self,msg):
         data = msg.GetData()
         buff = data['buff']
@@ -868,26 +885,14 @@ class JaluinoWindow(eclib.ControlBox):
         if buff.GetLangId() != synglob.ID_LANG_JAL:
             return
 
-        txt = buff.GetSelectedText()
-
-        data['menu'].AppendSeparator()
-        # Open all dependencies
-        data['menu'].Append(ID_OPEN_DEPS,_("Open dependencies"))
-        data['handlers'].append((ID_OPEN_DEPS,self.OnOpenDependencies))
-        # Close all dependencies
-        data['menu'].Append(ID_CLOSE_DEPS,_("Close dependencies"))
-        data['handlers'].append((ID_CLOSE_DEPS,self.OnCloseDependencies))
-       
-        data['menu'].AppendSeparator()
-        # JSG validate
-        data['menu'].Append(ID_JSG_VALIDATE,_("Validate"))
-        data['handlers'].append((ID_JSG_VALIDATE,self.OnValidate))
-
         # Do we have a decent completer ?
         comp = buff.GetCompleter()
         if not isinstance(comp,jalcomp.Completer):
             return
 
+        data['menu'].AppendSeparator()
+
+        txt = buff.GetSelectedText()
         # View <symbolname> code
         for command in comp._registered_symbol.keys():
             if comp._registered_symbol[command].has_key(txt.lower()):
@@ -936,12 +941,12 @@ class JaluinoWindow(eclib.ControlBox):
         nb.GotoPage(path)
         # this won't close modified tabs because there's a "*" in label
         label = nb.GetCurrentPage().GetTabLabel()
-        if label == os.path.basename(path):
+        if path and label == os.path.basename(path):
             # this means we've found the page
             nb.GoCurrentPage()
             nb.ClosePage()
 
-    def OnValidate(self,buff,event_obj):
+    def OnValidate(self,buff,event_obj=None):
         jalfile = buff.GetFileName()
         self._PreProcess(jalfile)
         # set last lang/fname, so Editra can find file handler (highlight output)
@@ -983,15 +988,31 @@ class JaluinoWindow(eclib.ControlBox):
             if close:
                 self.CloseLibrary(libname['name'])
 
-    def OnOpenDependencies(self,buff,event_obj):
-        txt = buff.GetText().splitlines()
+    def OnOpenDependencies(self,buff,event_obj=None):
+        try:
+            # EdEditorView
+            txt = buff.GetText().splitlines()
+        except AttributeError:
+            # EdPages
+            txt = buff.GetCurrentPage().GetText().splitlines()
         api = jallib.api_parse_content(txt,strict=False)
         self.OpenDependencies(api)
 
-    def OnCloseDependencies(self,buff,event_obj):
+    def OnCloseDependencies(self,buff,event_obj=None):
         txt = buff.GetText().splitlines()
         api = jallib.api_parse_content(txt,strict=False)
         self.OpenDependencies(api,close=True)
+
+    def OnSettings(self):
+        app = wx.GetApp()
+        win = app.GetWindowInstance(cfgdlg.ConfigDialog)
+        if win is None:
+            config = cfgdlg.ConfigDialog(self._mw)
+            config.CentreOnParent()
+            config.Show()
+        else:
+            win.Raise()
+
 
 
 #-----------------------------------------------------------------------------#
@@ -1117,3 +1138,96 @@ def GetTextBuffer(mainw):
     """Get the current text buffer of the current window"""
     nb = mainw.GetNotebook()
     return nb.GetCurrentCtrl()
+
+def GetCompileMenu(mainw,menu):
+    compile = wx.MenuItem(menu,ID_COMPILE_LAUNCH,_("Compile") + EdMenuBar.keybinder.GetBinding(ID_COMPILE_LAUNCH))
+    bmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_BIN_FILE), wx.ART_MENU)
+    if not bmp.IsNull():
+        compile.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_COMPILE_LAUNCH, OnCompile)
+    return compile
+
+def GetUploadMenu(mainw,menu):
+    upload = wx.MenuItem(menu,ID_UPLOAD_LAUNCH, _("Upload") + EdMenuBar.keybinder.GetBinding(ID_UPLOAD_LAUNCH))
+    bmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_UP), wx.ART_MENU)
+    if not bmp.IsNull():
+        upload.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_UPLOAD_LAUNCH, OnUpload)
+    return upload
+
+def GetValidateMenu(mainw,menu):
+    validate = wx.MenuItem(menu,ID_JSG_VALIDATE, _("Validate") + EdMenuBar.keybinder.GetBinding(ID_JSG_VALIDATE))
+    bmp = wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK, wx.ART_MENU)
+    if not bmp.IsNull():
+        validate.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_JSG_VALIDATE, OnValidate)
+    return validate
+
+def GetOpenDepsMenu(mainw,menu):
+    opendeps = wx.MenuItem(menu,ID_OPEN_DEPS, _("Open dependencies") + EdMenuBar.keybinder.GetBinding(ID_OPEN_DEPS))
+    bmp = wx.ArtProvider.GetBitmap(wx.ART_ADD_BOOKMARK, wx.ART_MENU)
+    if not bmp.IsNull():
+        opendeps.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_OPEN_DEPS, OnOpenDependencies)
+    return opendeps
+
+def GetCloseDepsMenu(mainw,menu):
+    closedeps = wx.MenuItem(menu,ID_CLOSE_DEPS, _("Close dependencies") + EdMenuBar.keybinder.GetBinding(ID_CLOSE_DEPS))
+    bmp = wx.ArtProvider.GetBitmap(wx.ART_DEL_BOOKMARK, wx.ART_MENU)
+    if not bmp.IsNull():
+        closedeps.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_CLOSE_DEPS, OnCloseDependencies)
+    return closedeps
+
+def GetSettingsMenu(mainw,menu):
+    pref = wx.MenuItem(menu,ID_SETTINGS, _("Settings") + EdMenuBar.keybinder.GetBinding(ID_SETTINGS))
+    bmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_PREF), wx.ART_MENU)
+    if not bmp.IsNull():
+        pref.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_SETTINGS, OnSettings)
+    return pref
+
+def BuildFileRelatedMenu(mainw,menu):
+    menu.AppendItem(GetCompileMenu(mainw,menu))
+    menu.AppendItem(GetUploadMenu(mainw,menu))
+    menu.AppendSeparator()
+    menu.AppendItem(GetValidateMenu(mainw,menu))
+    menu.AppendSeparator()
+    menu.AppendItem(GetOpenDepsMenu(mainw,menu))
+    menu.AppendItem(GetCloseDepsMenu(mainw,menu))
+
+
+def GetMenu(mainw):
+    menu = EdMenu()
+    BuildFileRelatedMenu(mainw,menu)
+    menu.AppendSeparator()
+    menu.AppendItem(GetSettingsMenu(mainw,menu))
+    return menu
+
+
+def OnCompile(evt):
+    """Handle the Run Script menu event and dispatch it to the currently
+    active Jaluino panel
+
+    """
+    ed_msg.PostMessage(MSG_COMPILE)
+
+def OnUpload(evt):
+    """Handle the Run Last Script menu event and dispatch it to the currently
+    active Launch panel
+
+    """
+    ed_msg.PostMessage(MSG_UPLOAD)
+
+def OnValidate(evt):
+    ed_msg.PostMessage(MSG_VALIDATE)
+
+def OnOpenDependencies(evt):
+    ed_msg.PostMessage(MSG_OPEN_DEPS)
+
+def OnCloseDependencies(evt):
+    ed_msg.PostMessage(MSG_CLOSE_DEPS)
+
+def OnSettings(evt):
+    ed_msg.PostMessage(MSG_SETTINGS)
+
