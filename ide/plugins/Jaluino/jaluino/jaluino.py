@@ -645,8 +645,8 @@ class JaluinoWindow(eclib.ControlBox):
         self._compile_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fname,
                                            args, path,
-                                           handler.GetEnvironment())#,
-                                           ##use_shell=True)
+                                           handler.GetEnvironment(),
+                                           use_shell=False)
         self._compile_worker.start()
 
 
@@ -684,8 +684,8 @@ class JaluinoWindow(eclib.ControlBox):
         self._upload_worker = eclib.ProcessThread(self._buffer,
                                            cmd, fhex,
                                            args, path,
-                                           handler.GetEnvironment())#,
-                                           ##use_shell=True)
+                                           handler.GetEnvironment(),
+                                           use_shell=False)
         self._upload_worker.start()
 
     def StartStopCompile(self):
