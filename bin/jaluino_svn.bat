@@ -39,7 +39,9 @@ set JALLIB_JALV2=%JALLIB_ROOT%\compiler\jalv2.exe
 
 
 rem get python from default/standard location, but honor PYTHON_EXEC
-set JALLIB_PYTHON=C:\Python25\Python.exe
+
+if not defined JALLIB_PYTHON set JALLIB_PYTHON=C:\Python25\Python.exe
+
 if defined PYTHON_EXEC set JALLIB_PYTHON=%PYTHON_EXEC%
 %JALLIB_PYTHON% "%JALLIB_ROOT%\tools\jallib.py" %1 %2 %3 %4 %5 %6 %7 %8 %9
 
