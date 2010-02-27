@@ -10,6 +10,10 @@
 
 """Jaluino IDE"""
 
+__author__ = "Sebastien Lelong"
+__version__ = "0.16"
+
+
 #-----------------------------------------------------------------------------#
 # Imports
 import os
@@ -67,9 +71,8 @@ class Jaluino(plugin.Plugin):
         return self.ID_JALUINO
 
     def GetMenuEntry(self, menu):
-        """This plugins menu entry"""
-        item = wx.MenuItem(menu, self.ID_JALUINO, self.__name__, 
-                           _("Run script from current buffer"))
+        '''Shelf menu entry'''
+        item = wx.MenuItem(menu, self.ID_JALUINO, self.__name__) 
         item.SetBitmap(self.GetBitmap())
         return item
 
@@ -85,12 +88,6 @@ class Jaluino(plugin.Plugin):
         param mainw: MainWindow Instance
 
         """
-        # TODO: deal with keybinder
-        # TODO: build specific menu
-        bar = mainw.GetMenuBar()
-        menu = jaluino.GetMenu(mainw)
-        bar.Insert(bar.GetMenuCount() - 1,menu,_("Jaluino"))
-
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
         self.RegisterJaluinoCommands()
 

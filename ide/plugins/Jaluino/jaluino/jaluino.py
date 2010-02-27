@@ -170,6 +170,12 @@ class JaluinoWindow(eclib.ControlBox):
         # Setup filetype settings
         self.RefreshControlBar()
 
+        # Menu
+        # TODO: deal with keybinder
+        bar = self._mw.GetMenuBar()
+        menu = GetMenu(self._mw)
+        bar.Insert(bar.GetMenuCount() - 1,menu,_("Jaluino"))
+
         # Event Handlers
         self.Bind(wx.EVT_BUTTON, self.OnButton)
         self.Bind(wx.EVT_CHOICE, self.OnChoice)
@@ -185,7 +191,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Subscribe(self.OnCloseDependenciesMsg, MSG_CLOSE_DEPS)
         ed_msg.Subscribe(self.OnSettingsMsg, MSG_SETTINGS)
         ed_msg.Subscribe(self.OnContextMessage,ed_msg.EDMSG_UI_STC_CONTEXT_MENU)
-        ##ed_msg.Subscribe(self.OnTabContextMessage,ed_msg.EDMSG_UI_NB_CONTEXT_MENU)
+        ed_msg.Subscribe(self.OnTabContextMessage,ed_msg.EDMSG_UI_NB_TABMENU)
         ed_msg.RegisterCallback(self._CanLaunch, REQUEST_ACTIVE)
         ed_msg.RegisterCallback(self._CanReLaunch, REQUEST_RELAUNCH)
 
@@ -202,9 +208,14 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Unsubscribe(self.OnCloseDependenciesMsg)
         ed_msg.Unsubscribe(self.OnSettingsMsg)
         ed_msg.Unsubscribe(self.OnContextMessage)
-        ##ed_msg.Unsubscribe(self.OnTabContextMessage)
+        ed_msg.Unsubscribe(self.OnTabContextMessage)
         ed_msg.UnRegisterCallback(self._CanLaunch)
         ed_msg.UnRegisterCallback(self._CanReLaunch)
+        # remove menu entry
+        bar = self._mw.GetMenuBar()
+        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == u"Jaluino"]
+        if idx:
+            bar.Remove(idx[0])
         super(JaluinoWindow, self).__del__()
 
     def __DoLayout(self):
@@ -234,16 +245,6 @@ class JaluinoWindow(eclib.ControlBox):
         self._up_ch = wx.Choice(ctrlbar, ID_UPLOAD_EXE)
         self._up_ch.SetToolTipString(_("Program Executable Command"))
         ctrlbar.AddControl(self._up_ch, wx.ALIGN_LEFT)
-
-        # Upload Args
-        # TODO: for now, deactivate extra args
-        ##ctrlbar.AddControl((5, 5), wx.ALIGN_LEFT)
-        ##ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Args") + ":"),
-        ##                   wx.ALIGN_LEFT)
-        ##args = wx.TextCtrl(ctrlbar, ID_UPLOAD_ARGS)
-        ##args.SetToolTipString(_("Upload arguments"))
-        ##ctrlbar.AddControl(args, wx.ALIGN_LEFT)
-
 
         # Spacer
         ctrlbar.AddStretchSpacer()
@@ -468,6 +469,7 @@ class JaluinoWindow(eclib.ControlBox):
         self.UpdateCurrentFiles(ctrl.GetLangId())
         if hasattr(ctrl, 'GetFileName'):
             self.SetupControlBar(ctrl)
+        # TODO enable/disable menu items when jalv2 related or not
 
     def OnCompileMsg(self, msg):
         """Run or abort a launch process if this is the current 
@@ -735,8 +737,6 @@ class JaluinoWindow(eclib.ControlBox):
             cmd = self.FindWindowById(ID_UPLOAD_EXE).GetStringSelection()
             self._config['lcmd'] = cmd
             cmd = handler.GetCommand(cmd)
-            # TODO: no args for now
-            ##args = self.FindWindowById(ID_COMPILE_ARGS).GetValue().split()
             args = []
             self._config['largs'] = args
             self.Upload(self._config['file'], cmd, args, self._config['lang'])
@@ -884,16 +884,16 @@ class JaluinoWindow(eclib.ControlBox):
 
     def OnTabContextMessage(self,msg):
         data = msg.GetData()
-        menu = data['menu']
-        page = data['page']
-        if page.GetLangId() != synglob.ID_LANG_JAL:
-            return
+        menu = data.GetMenu()
+        ##page = data.GetUserData('page')
+        ##if page.GetLangId() != synglob.ID_LANG_JAL:
+        ##    return
         menu.AppendSeparator()
         BuildFileRelatedMenu(self._mw,menu)
 
     def OnContextMessage(self,msg):
         data = msg.GetData()
-        buff = data['buff']
+        buff = data.GetUserData('buffer')
         # is it even jalv2 related ?
         if buff.GetLangId() != synglob.ID_LANG_JAL:
             return
@@ -903,14 +903,15 @@ class JaluinoWindow(eclib.ControlBox):
         if not isinstance(comp,jalcomp.Completer):
             return
 
-        data['menu'].AppendSeparator()
+        menu = data.GetMenu()
+        menu.AppendSeparator()
 
         txt = buff.GetSelectedText()
         # View <symbolname> code
         for command in comp._registered_symbol.keys():
             if comp._registered_symbol[command].has_key(txt.lower()):
-                menu_item = data['menu'].Append(ID_OPEN_LIBRARY,_("View") + u" " + txt + u" " + _("code"))
-                data['handlers'].append((ID_OPEN_LIBRARY,self.OnOpenLibrary))
+                menu_item = menu.Append(ID_OPEN_LIBRARY,_("View") + u" " + txt + u" " + _("code"))
+                data.AddHandler(ID_OPEN_LIBRARY,self.OnOpenLibrary)
 
     def OnOpenLibrary(self,buff,event_obj):
         chars = buff.GetSelectedText()
