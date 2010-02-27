@@ -885,9 +885,9 @@ class JaluinoWindow(eclib.ControlBox):
     def OnTabContextMessage(self,msg):
         data = msg.GetData()
         menu = data.GetMenu()
-        ##page = data.GetUserData('page')
-        ##if page.GetLangId() != synglob.ID_LANG_JAL:
-        ##    return
+        page = data.GetUserData('page')
+        if page.GetLangId() != synglob.ID_LANG_JAL:
+            return
         menu.AppendSeparator()
         BuildFileRelatedMenu(self._mw,menu)
 
