@@ -1,0 +1,63 @@
+procedure delay_1usM (byte in N) is
+  asm  nop  ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_20us (byte in N) is
+  asm  nop  ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_50us (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_100us (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_200us (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_500us (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_2ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_5ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_10ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_20ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_50ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_200ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_500ms (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_1s (byte in N) is
+ asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_2s (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+
+procedure delay_5s (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure

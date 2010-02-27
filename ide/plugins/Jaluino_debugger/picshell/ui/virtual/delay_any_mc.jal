@@ -1,0 +1,42 @@
+-- Reduce delay to a single NOP operation...
+--
+-- USE WITH CARE ...
+--
+
+
+procedure delay_1us is    
+  asm nop ; this delay has been optimized by @use_virtual_delay annotation       
+end procedure             
+procedure delay_2uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_3uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_4uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_5uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_6uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_7uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_8uS is
+asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_9uS is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_10uS (byte in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_1ms (byte in N) is
+ asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
+procedure delay_100ms (word in N) is
+  asm  nop ; this delay has been optimized by @use_virtual_delay annotation
+end procedure
