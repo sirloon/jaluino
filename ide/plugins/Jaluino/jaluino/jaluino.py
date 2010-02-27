@@ -374,7 +374,7 @@ class JaluinoWindow(eclib.ControlBox):
             
             ctrlindex = 0
             for txt_ctrl in self._mw.GetNotebook().GetTextControls():
-        		if ctrlindex == e_id:        	
+        		if ctrlindex != e_sel:        	
         			txt_ctrl.IsActiveJalFile = False
         		else:
         			txt_ctrl.IsActiveJalFile = True        		        			
