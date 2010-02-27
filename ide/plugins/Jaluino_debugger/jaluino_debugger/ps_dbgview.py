@@ -1,21 +1,19 @@
 ###############################################################################
-# Name: ed_editv.py                                                           #
-# Purpose: Editor view notebook tab implementation                            #
-# Author: Cody Precord <cprecord@editra.org>                                  #
-# Copyright: (c) 2008 Cody Precord <staff@editra.org>                         #
-# License: wxWindows License                                                  #
+# Name: ps_dbgview.py                                                         #
+# Purpose: Picshell debug view                                                #
+# Author: Albert Faber                                                        #
+# Copyright: (c) 2010 Albert Faber                                            #
+# License: BSD License                                                        #
 ###############################################################################
 
 """
-Text editor buffer view control for the main notebook
+Picshell debug notebook page
 
-@summary: Editor view
+@summary: Picshell debug view
 
 """
 
-__author__ = "Cody Precord <cprecord@editra.org>"
-__svnid__ = "$Id: ed_editv.py 63287 2010-01-28 02:42:12Z CJP $"
-__revision__ = "$Revision: 63287 $"
+__author__ = "Albert Faber"
 
 #--------------------------------------------------------------------------#
 # Imports
@@ -96,6 +94,7 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         self.file = ed_txt.EdFile()
 
         self.debugView = DebugView(self,self)
+        
 
         vboxSplitter = wx.BoxSizer( wx.VERTICAL )
         vboxSplitter.Add(self.debugView.getView(), -1,wx.EXPAND, 0 )
@@ -115,7 +114,8 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
 
         currentPage = self.noteBook.GetCurrentPage()
         
-        if ( currentPage != None ):
+        if ( len( self._fnames ) > 0  ):
+
         	self.dbgfname = self._fnames[0]
         	self._log("[jaluino_debugger][info], set filename to : %s" % self.dbgfname )
 
@@ -126,7 +126,7 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         	self._log("[jaluino_debugger][info], picname: %s" % self.debugView.picName)
 			
         else:
-        	self._log("[jaluino_debugger][info] No active page" )
+        	self._log("[jaluino_debugger][info] No files to debug" )
         	
 
         # Attributes
@@ -172,6 +172,9 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         #                  ed_msg.EDMSG_PROFILE_CHANGE + ('SYNTAX',))
 
 
+
+    def GetLength(self):
+    	return 0
 
     def OnBreakPointAsm(self,event):
     	print "dummy"
@@ -438,8 +441,9 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
 
     def GetZoom(self):
 		return wx.ID_ZOOM_100
+		
     def GetModify(self):
-		return False
+		return True
 
     def GetCaretLineVisible(self):
 		return False
@@ -685,6 +689,50 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         return result
 
 
+    def SetFileName(self, path):
+        """Set the buffers filename attributes from the given path"""
+        path = path        
+        #self.file.SetPath(path)
+
+    def EmptyUndoBuffer(self):
+		print u"EmptyUndoBuffer"
+
+    def FireModified(self):
+		"""Fire a modified event"""
+		print u"FireModified"
+
+    def CheckEOL(self):
+		print u"CheckEOL"
+
+    def GetCurrentPos(self):
+		return 0
+		
+    def SetCaretPos(self,pos):
+		pos = pos
+		
+    def ScrollToColumn(self,col):
+		col = col
+
+    def LoadFile(self, path):
+        """Load the file at the given path into the buffer. Returns
+        True if no errors and False otherwise. To retrieve the errors
+        check the last error that was set in the file object returned by
+        L{GetDocument}.
+        @param path: path to file
+
+        """
+        # Post notification that a file load is starting
+        path = path   
+        return True
+             
+    def FindLexer(self, set_ext=u''):
+        """Sets Text Controls Lexer Based on File Extension
+        @param set_ext: explicit extension to use in search
+        @postcondition: lexer is configured for file
+
+        """
+        set_ext = set_ext
+        
     def SetStatusText(self,text):
         	self._log("[jaluino_debugger][info], set SetStatusText to : %s" % text)
 

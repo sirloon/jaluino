@@ -7,14 +7,13 @@
 ###############################################################################
 """Jaluino debugger/simulator"""
 __author__ = "Albert Faber"
-__version__ = "0.12"
+__version__ = "0.13"
 
 import wx
 import iface
 import plugin
 import ps_dbgview
-
-from ed_menu import EdMenuBar
+from ed_menu import EdMenuBar, EdMenu
 
 
 #from picshell.ui.PicShell import PicShell
@@ -46,16 +45,19 @@ class Jaluino_debugger(plugin.Plugin):
             # This will let you use Editra's loggin system
             self._log = wx.GetApp().GetLog()
             self._log("[Jaluino_debugger][info] Installing Jaluino_debugger")
-            vm = parent.GetMenuBar().GetMenuByName("tools")
-            vm.Append(ID_DBGMENU_START, _("Jaluino Debugger"), 
-                      _("Open a Jaluino_debugger dialog"))
+            #vm = parent.GetMenuBar().GetMenuByName("tools")
+            #vm.Append(ID_DBGMENU_START, _("Jaluino Debugger"), 
+            #          _("Open a Jaluino_debugger dialog"))
+            
             self._mw = parent
+            bar = parent.GetMenuBar()
                         
-            debug_menu = wx.Menu()
+            debug_menu = EdMenu()
             debug_menu.Append(ID_DBGMENU_START   , _("&Start Debugging"))
             debug_menu.Append(ID_DBGMENU_STOP    , _("Sto&p Debugging"))
             debug_menu.Append(ID_DBGMENU_BREAKALL, _("&Break All"))
-            parent.GetMenuBar().Append(debug_menu, _("Debug"))
+            bar.Insert(bar.GetMenuCount() - 1,debug_menu,  _("Debug"))
+            
         else:
             self._log("[Jaluino_debugger][err] Failed to install Jaluino_debugger plugin")
 

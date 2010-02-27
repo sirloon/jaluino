@@ -20,8 +20,7 @@ class Dual7Seg:
         
    def reset(self):
         if (self.ui != None):
-        	if (self.debugView != None )
-            	wx.CallAfter(self.UpdateUI, "00" )
+        	wx.CallAfter(self.UpdateUI, "00" )
             
    def execute(self,value):  
        raz = value & pow(2,self.razBit)
