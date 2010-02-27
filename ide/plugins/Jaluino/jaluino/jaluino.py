@@ -370,6 +370,15 @@ class JaluinoWindow(eclib.ControlBox):
         e_id = evt.GetId()
         e_sel = evt.GetSelection()
         if e_id == self._chFiles.GetId():
+            
+            ctrlindex = 0
+            for txt_ctrl in self._mw.GetNotebook().GetTextControls():
+        		if ctrlindex == e_id:        	
+        			txt_ctrl.IsActiveJalFile = False
+        		else:
+        			txt_ctrl.IsActiveJalFile = True        		        			
+        		ctrlindex = ctrlindex + 1
+
             fname = self._fnames[e_sel]
             self.SetFile(fname)
             self._chFiles.SetToolTipString(fname)
@@ -858,13 +867,17 @@ class JaluinoWindow(eclib.ControlBox):
         for txt_ctrl in self._mw.GetNotebook().GetTextControls():
             if lang_id == txt_ctrl.GetLangId():
                 self._fnames.append(txt_ctrl.GetFileName())
-
+                
+            txt_ctrl.IsActiveJalFile = False
+			
         items = [ os.path.basename(fname) for fname in self._fnames ]
         try:
             if len(u''.join(items)):
                 self._chFiles.SetItems(items)
                 if len(self._fnames):
                     self._chFiles.SetToolTipString(self._fnames[0])
+                    self._mw.GetNotebook().GetTextControls()[0].IsActiveJalFile = True	 
+                    
         except TypeError:
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))
             self._chFiles.SetItems([''])
