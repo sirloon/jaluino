@@ -752,7 +752,16 @@ class JaluinoWindow(eclib.ControlBox):
         """
         # Set currently selected file
         self._config['file'] = fname
+
+        for txt_ctrl in self._mw.GetNotebook().GetTextControls():          
+        	txt_ctrl.IsActiveJalFile = False
+        	if synglob.ID_LANG_JAL == txt_ctrl.GetLangId():
+        		if txt_ctrl.GetFileName() == fname :
+        			util.Log("[jaluino][info] SetActiveJALFileName to :%s:" % fname)
+        			txt_ctrl.IsActiveJalFile = True
+                
         self._chFiles.SetStringSelection(os.path.split(fname)[1])
+        self._chFiles.SetToolTipString( fname )	
         self.GetControlBar().Layout()
 
     def SetLangId(self, langid):
