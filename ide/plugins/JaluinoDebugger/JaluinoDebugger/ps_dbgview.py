@@ -743,4 +743,21 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
     def SetUseTabs( self, val ):
 		val = val
    	
+    def GetTextRaw( self ):
+    	return _("")
+		
+    def SetTextRaw( self, value ):
+		return
+		
+    def GetSelection( self ):
+    	return (0,0)
+    	
+    def GetSelectedText( self ):
+    	return _("")
+    	
+    def BeginUndoAction( self ):
+    	return
+
+    def EndUndoAction( self ):
+    	return
    	
