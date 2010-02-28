@@ -741,7 +741,7 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         	self._log("[jaluino_debugger][info], set cursor" )
 
     def SetIndent( self, val ):
-		print "SetIndent to value %d " % val
+		self.SetTabTitle( _("Debugger") )        
 		
     def SetUseTabs( self, val ):
 		print "SetUseTabs to value %d " % val

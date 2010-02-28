@@ -1,4 +1,4 @@
-d:\python26\python.exe setup.py install
+d:\python26\python.exe setup.py bdist_egg
 copy dist\*.* "C:\Documents and Settings\nly96021\Application Data\Editra\plugins"
 
 set JALLIB_PYTHON=D:\Python26\Python.exe
