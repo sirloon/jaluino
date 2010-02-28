@@ -20,8 +20,8 @@ except ImportError:
 
 if setup != None:
     setup(
-            name='Jaluino_debugger',
-            version='0.1',
+            name='JaluinoDebugger',
+            version='0.15',
             description=__doc__,
             author=__author__,
             author_email="jaluino@jaluino.org",
@@ -38,6 +38,6 @@ if setup != None:
             
             entry_points='''
             [Editra.plugins]
-            Jaluino_debugger = jaluino_debugger:Jaluino_debugger
+            JaluinoDebugger = JaluinoDebugger:Jaluino_debugger
             '''
         )

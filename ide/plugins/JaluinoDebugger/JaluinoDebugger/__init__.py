@@ -1,13 +1,12 @@
 ###############################################################################
 # Name: __init__.py                                                           #
-# Purpose: Hello World Sample Plugin                                          #
-# Author: Cody Precord <cprecord@editra.org>                                  #
-# Copyright: (c) 2007 Cody Precord <staff@editra.org>                         #
-# Licence: wxWindows Licence                                                  #
+# Purpose: JAL Debugger plugin                                                #
+# Author: Albert Faber                                                        #
+# Copyright: (c) 2010 Albert Faber                                            #
+# Licence: BSD Licence                                                        #
 ###############################################################################
 """Jaluino debugger/simulator"""
-__author__ = "Albert Faber"
-__version__ = "0.13"
+
 
 import wx
 import iface
