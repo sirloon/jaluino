@@ -82,32 +82,24 @@ class Jaluino_debugger(plugin.Plugin):
     def StopDebugger(self,evt):
     	"""Startus the debugger"""
     	if evt.GetId() == ID_DBGMENU_STOP:
-    		print "StopDebugger "
-    		print evt.GetId()
+    		self._log("[JaluinoDebugger][info] StopDebugger")
+    		
     		if self.control != None:
-    		   self.control.debugView.stop() 		
+    			self.control.debugView.stop() 		
 
     def StartDebugger(self,evt):
     	"""Startus the debugger"""
     	if evt.GetId() == ID_DBGMENU_START:
-    		print "StartDebugger "
-    		print evt.GetId()
+    		self._log("[JaluinoDebugger][info] StartDebugger")
     		
     		createNew = False
     		
     		if ( self.control == None ):
-    			print "StartDebugger  1"
     			createNew = True
     		else:
-    			print "StartDebugger  2 isClosed is "
-    			print self.control.IsClosed
     			if ( self.control.IsClosed  == True ):
-	    			print "StartDebugger  3"
 	    			createNew = True
-    		
-    		print "createNew ..."
-    		print createNew
-    			
+    		    			
     		if ( createNew == True ):
     			self.control = ps_dbgview.PsDebugView(self, self._mw, wx.ID_ANY)
     			# self.LOG("[ed_pages][evt] New Page Created ID: %d" % self.control.GetId())

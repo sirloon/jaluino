@@ -279,5 +279,6 @@ class JalV2AsmParser:
 	            if fin: 
 	            	fin.close()              
             except :
-            	print "could not open file: " + incfile
+            	# print "could not open file: " + incfile
+            	incfile = incfile
         return array

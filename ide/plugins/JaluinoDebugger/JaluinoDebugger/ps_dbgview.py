@@ -177,19 +177,19 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
     	return 0
 
     def OnBreakPointAsm(self,event):
-    	print "dummy"
+    	event = event
     	    
     def OnBreakPointLang(self,event):
-    	print "dummy"
+    	event = event
         
     def OnListLangSelected(self,event):
-    	print "dummy"
+    	event = event
 
     def OnlistBreakPointSelected(self,event):
-    	print "dummy"
+    	event = event
 
     def OnRemoveAllBreakpoints(self,event):
-    	print "dummy"
+    	event = event
 
     def disableActionWidget(self):
 		self.debugView.bNextLang.Disable()
@@ -284,8 +284,7 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
 
     def DoTabClosing(self):
     	self.IsClosed = True
-    	print "Set is closed is "
-    	print self.IsClosed
+
     	self.debugView.Close()
     	
     	self.plug_parent.control = None
@@ -507,8 +506,6 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
     def OnTabMenu(self, evt):
         """Tab menu event handler"""
         e_id = evt.GetId()
-        print "OnTabMenu "
-        print e_id
         
         if e_id == ed_glob.ID_COPY_PATH:
             path = self.GetFileName()
@@ -695,14 +692,14 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         #self.file.SetPath(path)
 
     def EmptyUndoBuffer(self):
-		print u"EmptyUndoBuffer"
+		return
 
     def FireModified(self):
 		"""Fire a modified event"""
-		print u"FireModified"
+		return
 
     def CheckEOL(self):
-		print u"CheckEOL"
+		return
 
     def GetCurrentPos(self):
 		return 0
@@ -734,16 +731,16 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         set_ext = set_ext
         
     def SetStatusText(self,text):
-        	self._log("[jaluino_debugger][info], set SetStatusText to : %s" % text)
+		self._log("[jaluino_debugger][info], set SetStatusText to : %s" % text)
 
 
     def SetCursor(self,cursor):
-        	self._log("[jaluino_debugger][info], set cursor" )
+		cursor = cursor
 
     def SetIndent( self, val ):
 		self.SetTabTitle( _("Debugger") )        
 		
     def SetUseTabs( self, val ):
-		print "SetUseTabs to value %d " % val
+		val = val
    	
    	
