@@ -1,0 +1,39 @@
+
+include 16f887
+
+;@use_virtual_delay
+;@asciiReceiver
+
+procedure test_byte(byte in val) is 
+   asm nop
+end procedure
+
+procedure test_dword(dword in val) is 
+   asm nop
+end procedure
+
+var byte var_byte
+var dword var_dword
+
+forever loop
+	var_byte = 100
+	test_byte(var_byte) ;@assertEquals 100 EQUALS_PASS
+	test_byte(var_byte) ;@assertEquals 101 EQUALS_FAIL
+	
+	test_byte(var_byte) ;@assertLess 101 LESS_PASS
+	test_byte(var_byte) ;@assertLess 100 LESS_FAIL
+	
+	test_byte(var_byte) ;@assertGreater 99 GREATER_PASS
+	test_byte(var_byte) ;@assertGreater 100 GREATER_FAIL
+
+	test_byte(var_byte) ;@assertNotEqueal 101 NOTEQUAL_PASS
+	test_byte(var_byte) ;@assertNotEqueal 100 NOTEQUAL_FAIL
+
+   var_dword = var_byte
+   var_dword = var_dword * var_byte
+   var_dword = var_dword * var_byte
+   
+	test_dword(var_dword) ;@assertEquals    1000000 EQUALS_PASS
+	test_dword(var_dword) ;@assertEquals 1000001 EQUALS_FAIL
+
+end loop

@@ -1,0 +1,52 @@
+-- ------------------------------------------------------
+-- Title: Blink-an-LED of the Microchip PIC*
+--
+-- Author: Rob Hamerling, Copyright (c) 2008..2008, all rights reserved.
+--
+-- Adapted-by: Joep Suijs (universal test file)
+--
+-- Compiler: >=2.4g
+--
+-- This file is part of jallib  (http://jallib.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: Sample blink-an-LED program
+--
+-- Sources:
+--
+-- Notes:
+--  - File creation date/time: 22 Aug 2008 13:36:27.
+--
+-- ------------------------------------------------------
+
+;@jallib section chipdef
+;@use_virtual_delay
+
+-- device include
+include 16f628a
+
+-- Internal osc, running at 16 MHz
+pragma target clock 16_000_000
+
+include delay
+
+;@jallib section led
+-- LED IO definition
+alias led             is pin_a1
+alias led_direction   is pin_a1_direction
+
+
+;@led_red pin_a1 led
+;@watch_bin PORTA portA
+
+enable_digital_io()
+--
+led_direction = output
+--
+forever loop
+  led = on
+  delay_100ms( 25 )
+  led = off
+  delay_100ms( 25 )
+end loop
+--

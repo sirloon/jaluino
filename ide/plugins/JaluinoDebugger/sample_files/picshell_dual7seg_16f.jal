@@ -1,0 +1,86 @@
+;@no_debug 16f877_inc
+include 16f887
+
+pragma target clock 4_000_000
+
+include delay ;@no_debug
+
+enable_digital_io()
+
+portA_direction = all_input
+var bit b1More is pin_a0 ;@mpu INC
+var bit b1Less is pin_a1 ;@mpu RESET
+
+
+var bit raz is pin_b0
+var bit unitee is pin_b1
+var bit deci is pin_b2
+var byte cpt = 0
+
+portB_direction = all_output
+-- dual7seg address,razBit,uniteeBit,deciBit name
+;@dual7seg 0x6,0,1,2 counter
+
+-- watch port A in real time
+;@watch_bin 0x5 port_a
+
+
+procedure impDelay is
+    delay_1uS   
+end procedure
+
+procedure _impulsionDeci (byte in val) is
+    for val loop
+        deci = low
+        impDelay
+        deci = high
+        impDelay
+    end loop
+    deci = low
+end procedure
+procedure _impulsionUnitee (byte in val) is
+    for val loop
+        unitee = low
+        impDelay
+        unitee = high
+        impDelay
+    end loop
+    unitee = low
+end procedure
+
+procedure update7seg(byte in num) is
+    var byte _unitee = num
+    var byte _deci = num
+    
+    _unitee = _unitee % 10
+    _deci = _deci / 10
+    
+    raz = high
+    impDelay
+    raz = low
+    _impulsionUnitee(_unitee )
+    _impulsionDeci(_deci )
+end procedure
+raz = low 
+raz = high
+raz = low   
+forever loop
+  if (b1More == low) then
+    if cpt < 99 then
+      cpt = cpt + 1
+    end if
+    update7seg(cpt)
+    while (b1More == low) loop end loop
+  end if
+  if (b1Less == low) then
+    cpt = 0
+    raz = high
+    while (b1Less == low) loop end loop
+    raz = low
+  end if
+  
+end loop
+
+
+
+

@@ -1,0 +1,16 @@
+include 16f628a
+pragma target clock 4_000_000
+
+;@virtualDelay
+PORTB_direction = all_output
+
+include delay
+
+forever loop
+
+	PORTB = 1
+	PORTB = 3
+	PORTB = 5
+	PORTB = 7
+   delay_100ms(10)
+end loop

@@ -1,0 +1,39 @@
+
+;@jallib section chipdef
+
+;@asciiReceiver
+;@asciiSender
+
+-- chip setup
+include 16f877a
+
+pragma target clock 20_000_000                  -- xtal frequency
+
+-- set all IO as digital
+enable_digital_io()
+
+-- setup serial (see echo.jal for more details);@jallib section serial
+const serial_hw_baudrate = 115_200
+include serial_hardware
+
+serial_hw_init()
+
+
+include print
+
+const byte str1[] = "CHARACTER A\n"
+const byte str2[] = "CHARACTER B\n"
+
+
+forever loop
+   var byte ch
+
+   if serial_hw_read(ch) then
+      case ch of
+          "A": print_string( serial_hw_data, str1 )
+          "B": print_string( serial_hw_data, str2 )
+          otherwise
+             serial_hw_data = ch
+      end case
+   end if
+end loop

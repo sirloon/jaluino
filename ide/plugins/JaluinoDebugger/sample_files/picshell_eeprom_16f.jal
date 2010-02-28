@@ -1,0 +1,72 @@
+-- ------------------------------------------------------
+-- Title: Sample data EEPROM write and read for the Microchip PIC16F88
+--
+-- Author: Rob Hamerling, Copyright (c) 2008..2008, all rights reserved.
+--
+-- Adapted-by: Albert Faber
+--
+-- Compiler: =2.4
+-- 
+-- This file is part of jallib  (http://jallib.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description:
+-- Sample data EEPROM write and read for the Microchip PIC16F88
+--
+-- Sources:
+--
+-- Notes: Includes blink-an-LED
+-- 
+-- ------------------------------------------------------
+
+-- test eeprom for 16f series pic with 128 bytes of eeprom
+
+include 16f628
+
+enable_digital_io()                     -- disable analog modules
+
+include pic_data_eeprom
+
+alias led      is pin_A0
+pin_A0_direction = output
+
+var word i = 0                          -- counter
+
+
+procedure test_byte(byte in t) is
+end procedure
+
+var byte rd = 120
+test_byte(rd)		 ;@assertEquals 120 test_test
+
+const byte eeprom_size = 128
+
+for eeprom_size  using i loop
+   data_eeprom_write(i,i)
+end loop
+
+rd = data_eeprom(0x00) ;
+test_byte(rd) ;@assertEquals 0x00 rd_00
+rd = data_eeprom(0x20)
+test_byte(rd) ;@assertEquals 0x20 rd_20
+rd = data_eeprom(eeprom_size-1) 
+
+if ( eeprom_size == 256 ) then
+   test_byte(rd) ;@assertEquals 255 rd_ff
+end if   
+if ( eeprom_size == 128 ) then
+   test_byte(rd) ;@assertEquals 127 rd_7f
+end if
+   
+for eeprom_size using i loop
+    rd = data_eeprom(i)
+    rd = rd - byte( i )
+    test_byte( rd ) ;@assertEquals 0x00 rd_loop_0
+end loop
+
+
+forever loop  
+end loop
+
+
+

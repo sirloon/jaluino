@@ -1,0 +1,53 @@
+
+;@jallib section chipdef
+
+;@asciiReceiver
+
+-- chip setup
+; include 16f877a
+include 18f4610
+
+pragma target clock 20_000_000                  -- xtal frequency
+
+
+include delay
+
+-- set all IO as digital
+enable_digital_io()
+
+
+-- setup serial (see echo.jal for more details);@jallib section serial
+const serial_hw_baudrate = 115_200
+include serial_hardware
+
+serial_hw_init()
+
+
+include format
+include print
+
+const byte str1[] = "qwerty\n"
+const byte str2[] = "abcdefghijklmnopqrstuvwzyz\n"
+const byte str3[] = "The Quick Brown Fox Jumps Over The Lazy Dog\n"
+const byte str4[] = "app noot mies wim zus jet\n"
+const byte str5[] = "this is test string 1\n"
+const byte str6[] = "this is test string 2\n"
+const byte str7[] = "this is test string 3\n"
+const byte str8[] = "this is test string 4\n"
+const byte str9[] = "this is test string 5\n"
+const byte str10[] = "this is test string 6\n"
+
+
+forever loop
+   print_string( serial_hw_data, str1 )
+   print_string( serial_hw_data, str2 )
+   print_string( serial_hw_data, str3 )   
+   print_string( serial_hw_data, str4 )   
+   print_string( serial_hw_data, str5 )   
+   print_string( serial_hw_data, str6 )   
+   print_string( serial_hw_data, str7 )   
+   print_string( serial_hw_data, str8 )   
+   print_string( serial_hw_data, str9 )   
+   print_string( serial_hw_data, str10 )   
+end loop
+

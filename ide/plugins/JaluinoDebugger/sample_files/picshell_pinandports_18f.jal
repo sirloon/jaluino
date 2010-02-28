@@ -1,0 +1,78 @@
+-- ------------------------------------------------------
+-- Title: Picshell Pin an Ports of the Microchip PIC*
+--
+-- Author: Albert Faber, Copyright (c) 2009..2009, all rights reserved.
+--
+-- Adapted-by:
+--
+-- Compiler: >=2.4g
+--
+-- This file is part of jallib  (http://jallib.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: 
+--
+-- Sources:
+--
+-- Notes:
+-- ------------------------------------------------------
+
+;@jallib section chipdef
+;@no_use_virtual_delay
+
+-- device include
+include 18f2450
+
+-- Internal osc, running at 16 MHz
+pragma target clock 16_000_000
+
+include delay
+
+;@jallib section led
+-- LED IO definition
+alias led_0 is pin_b0
+alias led_1 is pin_b1
+alias led_2 is pin_b2
+alias led_3 is pin_b3 
+
+alias sw_0 is pin_b4
+alias sw_1 is pin_b5
+alias sw_2 is pin_b6
+alias sw_3 is pin_b7
+
+
+PORTB_direction = 0b_1111_0000
+PORTC_direction = all_output
+
+enable_digital_io()
+
+
+;@mpu sw_MPU pin_b4
+;@mpd sw_MPD pin_b5
+;@ppu sw_PPU pin_b6
+;@ppd sw_PPD pin_b7
+
+;@led_red pin_b0 led_0
+;@led pin_b1 led_1
+;@led_red pin_b2 led_2
+;@led_red pin_b3 led_3
+
+;@watch PORTB portB
+;@watch_hex PORTB portB_hex
+;@watch_bin PORTB portB_bin
+
+;@upDownCounter PORTC,0,1,2,10 counter1
+;@watch_hex PORTC portc_hex
+;@watch_hex PORTC portc_hex
+ 
+--
+forever loop
+   led_0 = sw_0
+   led_1 = sw_1
+   led_2 = sw_2
+   led_3 = sw_3
+   
+   porta = portc
+   -- delay_1ms( 10 )
+end loop
+--
