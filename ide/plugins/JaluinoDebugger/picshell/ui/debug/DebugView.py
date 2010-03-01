@@ -911,6 +911,9 @@ class DebugView :
          if (not self.running) and self.listAsm.GetItemCount()>0:
             self._runTo(self.breakpoints)
         
+    def restart(self):
+    	self.SetupDebugSession(self.sessionHexFileName , self.sessionJalSrcCode, self.sessionVirtualDelay )
+        self.run()
         
     def reset(self):
         if self.running:
@@ -1433,7 +1436,10 @@ class DebugView :
         
     def SetupDebugSession(self,hexFileName, jalSrcCode, virtualDelay ):
     
-    
+		self.sessionHexFileName = hexFileName
+		self.sessionJalSrcCode = jalSrcCode
+		self.sessionVirtualDelay = virtualDelay
+		    
 		if self.running:
 			self.stop() # reset will be call at the and of callback
 			self.running = False

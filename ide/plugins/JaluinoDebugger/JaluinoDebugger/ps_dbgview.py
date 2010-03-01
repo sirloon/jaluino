@@ -147,49 +147,9 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
                                                   os.sep + u'positions')
 
         self.debugView.run()
-        #self._spell.clearAll()
-        #self._spell.setDefaultLanguage(spref.get('dict', 'en_US'))
-        #self._spell.startIdleProcessing()
-
-        # Context Menu Events
-        # self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
-
-        # Need to relay the menu events from the context menu to the top level
-        # window to be handled on gtk. Other platforms don't require this.
-        # self.Bind(wx.EVT_MENU, self.OnMenuEvent)
-
-        # Hide autocomp/calltips when window looses focus
-        # TODO: decide on whether this belongs in base class or not
-        # self.Bind(wx.EVT_KILL_FOCUS, lambda evt: self.HidePopups())
-
-        #ed_msg.Subscribe(self.OnConfigMsg,
-        #                 ed_msg.EDMSG_PROFILE_CHANGE + ('SPELLCHECK',))
-        #ed_msg.Subscribe(self.OnConfigMsg,
-        #                 ed_msg.EDMSG_PROFILE_CHANGE + ('AUTOBACKUP',))
-        #ed_msg.Subscribe(self.OnConfigMsg,
-        #                 ed_msg.EDMSG_PROFILE_CHANGE + ('SYNTHEME',))
-        #ed_msg.Subscribe(self.OnConfigMsg,
-        #                  ed_msg.EDMSG_PROFILE_CHANGE + ('SYNTAX',))
-
-
 
     def GetLength(self):
-    	return 0
-
-    def OnBreakPointAsm(self,event):
-    	event = event
-    	    
-    def OnBreakPointLang(self,event):
-    	event = event
-        
-    def OnListLangSelected(self,event):
-    	event = event
-
-    def OnlistBreakPointSelected(self,event):
-    	event = event
-
-    def OnRemoveAllBreakpoints(self,event):
-    	event = event
+    	return 1
 
     def disableActionWidget(self):
 		self.debugView.bNextLang.Disable()
@@ -285,9 +245,8 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
     def DoTabClosing(self):
     	self.IsClosed = True
 
+    	self.plug_parent.CloseDebugWindow()
     	self.debugView.Close()
-    	
-    	self.plug_parent.control = None
 
         """Save the current position in the buffer to reset on next load"""
         if len(self.GetFileName()) > 1:
