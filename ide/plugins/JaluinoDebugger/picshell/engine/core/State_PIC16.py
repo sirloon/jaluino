@@ -1,5 +1,6 @@
 from picshell.engine.util.Format import Format
 from picshell.engine.core.PicBuilder_PIC16 import PicBuilder_PIC16
+import array
 
 #
 # PIC_16 State Implementation
@@ -26,7 +27,10 @@ class State_PIC16:
         
         self.w=0 # the w register 
 
-        self.bk = [0]* ((0xFFF)) # int[] internal registers (16 banks)
+
+        tmpList = [0]* ((0xFFF)) # int[] internal registers (16 banks)
+        self.bk = array.array( 'B',  tmpList )
+        
         self.accessMap = [0]* ((0xFF)) # int[] internal registers (16 banks)
         self.cycles = 0
                
@@ -852,6 +856,7 @@ class State_PIC16:
               
     def appendMonitor(self, monitor):
         self.monitors.append( monitor )
+
         m = getattr(monitor, 'setPic', None)
         if callable(m):
            m( self.pic )

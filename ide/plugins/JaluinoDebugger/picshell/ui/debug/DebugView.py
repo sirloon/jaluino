@@ -1446,24 +1446,27 @@ class DebugView :
 
 		self.Clear()
 
-    
-		parseRes = AnnotationParser.parse( jalSrcCode )    
-		
-		noDebugList = parseRes["noDebug"] 
-		debugList =parseRes["debug"]  
-		
-		if parseRes["regfilter"] != "":
-		   self.regFilter.SetLabel(parseRes["regfilter"])
-		if parseRes["varfilter"] != "":
-		   self.varFilter.SetLabel(parseRes["varfilter"])
-		
 		asmFileName = hexFileName.replace(".hex",".asm")
 		
 		wholeCode = self.asmParser.parseAsmFile(asmFileName, [])
 		self.picName = self.asmParser.picName
 		self.langParser = JalV2AsmParser()			
-		code = self.langParser.parseAsmFile(asmFileName, noDebugList, debugList )
+		code = self.langParser.parseAsmFile(asmFileName, None, None )
 
+		self.pic = PicFactory( "pic_" + self.picName )           
+		Format.spReg = self.pic.fsr_regs
+    
+		parseRes = AnnotationParser.parse( jalSrcCode )    
+
+		noDebugList = parseRes["noDebug"] 
+		debugList =parseRes["debug"]  
+
+		code = self.langParser.parseAsmFile(asmFileName, noDebugList, debugList )
+		
+		if parseRes["regfilter"] != "":
+		   self.regFilter.SetLabel(parseRes["regfilter"])
+		if parseRes["varfilter"] != "":
+		   self.varFilter.SetLabel(parseRes["varfilter"])
 		
 		if virtualDelay :
 			self.buildEmu( hexFileName )
@@ -1475,15 +1478,13 @@ class DebugView :
 		self.varTypeDict = JalV2AsmParser.buildVarTypeDict(wholeCode)
 		
 		#build in / out
+		
 		self.buildInOut(parseRes["inputs"],parseRes["outputs"])
 		self.devices = parseRes["devices"]
 		
-		self.buildDevices(self.devices)
-		
+		self.buildDevices(self.devices)		
 		self.listUnitTest.DeleteAllItems()
 		
-		self.pic = PicFactory( "pic_" + self.picName )           
-		Format.spReg = self.pic.fsr_regs
 		
     def Close( self ):
 		self.Quit = True
