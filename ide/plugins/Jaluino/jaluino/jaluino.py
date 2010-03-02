@@ -952,11 +952,17 @@ class JaluinoWindow(eclib.ControlBox):
             if apis:
                 # fow now, only consider first definition
                 api = apis[0]
+                # HACK: because this is called from within a buffer, and because OpenLibrary may switch
+                # to an existing tab if file already opened, we need to use wx.CallLater() because Cody
+                # said: "switching context to the new buffer before the event loop as exiting the handling
+                # of the context menu in the other buffer [may cause troubles]"
+                # wx.CallAfter() will ensure this will be called after the event loop has processed 
+                # the context menu
                 if command == "include":
-                    self.OpenLibrary(chars)
+                    wx.CallAfter(self.OpenLibrary,chars)
                 else:
                     _,_,libfile,line,_ = api
-                    self.OpenLibrary(libfile,line)
+                    wx.CallAfter(self.OpenLibrary,libfile,line)
  
     def GetLibraryPath(self,libname):
         jalfile = "%s.jal" % libname
