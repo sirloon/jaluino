@@ -1,5 +1,6 @@
 from picshell.engine.util.Format import Format
 from picshell.engine.core.PicBuilder_PIC16 import PicBuilder_PIC16
+
 import array
 
 #
@@ -27,10 +28,7 @@ class State_PIC16:
         
         self.w=0 # the w register 
 
-
-        tmpList = [0]* ((0xFFF)) # int[] internal registers (16 banks)
-        self.bk = array.array( 'B',  tmpList )
-        
+        self.bk = array.array( 'B', [0]* ((0xFFF)) ) # int[] internal registers (16 banks)
         self.accessMap = [0]* ((0xFF)) # int[] internal registers (16 banks)
         self.cycles = 0
                
@@ -140,7 +138,7 @@ class State_PIC16:
         self.lat_addr  = []
         self.tris_addr = []
 
-        for portID in range( ord("A"),ord("L") ):
+        for portID in xrange( ord("A"),ord("L") ):
            portName = "PORT" + chr( portID )
            trisName = "TRIS" + chr( portID )
            latName  = "LAT" + chr( portID )
@@ -169,27 +167,27 @@ class State_PIC16:
 
         # 32 byte flash holding register
         self.flash_holding = [0] * 32
-        for i in range (0x00, len( self.flash_holding )):
+        for i in xrange (0x00, len( self.flash_holding )):
              self.flash_holding[i] = 0xFF
 
 
         # init active memory banks (bank 0..7)
-        for i in range (0x00, 0xFFF):
+        for i in xrange (0x00, 0xFFF):
              self.bk[i] = 0xFF
              
         # init special purpose regs (from F60 )
-        for i in range (0xF60, 0xFFF):
+        for i in xrange (0xF60, 0xFFF):
              self.bk[i] = 0x00
              
         # setup access map (0..5F maps to bank 0, 60..FF maps to bank 15)
-        for i in range (0, 0xFF):
+        for i in xrange (0, 0xFF):
         	if i < 0x60:
         		self.accessMap[i] = 0x000 + i
         	else:
         		self.accessMap[i] = 0xF00 + i
       	             
         # init eeprom
-        for i in range (0,len(self.eeData)):
+        for i in xrange (0,len(self.eeData)):
             self.eeData[i] = 0xFF  
         
         # init TRIS
@@ -242,7 +240,7 @@ class State_PIC16:
        if ( ( value & 0x80 ) != 0):
           new_stat = new_stat | 0x10
 
-       self.regWrite( self.STATUS, new_stat, True)
+       self.bk[ self.STATUS ] = new_stat
     
     
     def SetStatusForAdd(self, new_value, src1, src2):
@@ -302,7 +300,7 @@ class State_PIC16:
        if ( (new_value & 0x80) != 0 ):
           new_stat = new_stat | 0x10
 		
-       self.regWrite( self.STATUS, new_stat, True)
+       self.bk[self.STATUS] = new_stat
 
  
 #    value.put((value.get() & ~ (STATUS_Z | STATUS_C | STATUS_DC | STATUS_OV | STATUS_N)) |  
@@ -317,27 +315,27 @@ class State_PIC16:
     
     def setC(self,c):
          if (c):
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] | 0x01, True)  # set 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] | 0x01
          else:
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] & 0xFE, True) # clear 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] & 0xFE
 
     def getDC(self):
         return (self.bk[self.STATUS] & 0x02 )>0
     
     def setDC(self,n):
          if (n):
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] | 0x02, True)  # set 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] | 0x02
          else:
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] & 0xFD, True) # clear 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] & 0xFD
 
     def getZ(self):
         return (self.bk[self.STATUS] & 0x04)>0
     
     def setZ(self,z):
         if (z):
-            self.regWrite(self.STATUS & 0xFF, self.bk[self.STATUS] | 0x04, True)  # set
+         	self.bk[self.STATUS] = self.bk[self.STATUS] | 0x04
         else:
-            self.regWrite(self.STATUS & 0xFF ,self.bk[self.STATUS] & 0xFB, True)  # clear
+         	self.bk[self.STATUS] = self.bk[self.STATUS] & 0xFB
 
 
     def getOV(self):
@@ -345,18 +343,18 @@ class State_PIC16:
     
     def setOV(self,n):
          if (n):
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] | 0x08, True)  # set 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] | 0x08
          else:
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] & 0xF7, True) # clear 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] & 0xF7
     
     def getN(self):
         return (self.bk[self.STATUS] & 0x10 )>0
     
     def setN(self,n):
          if (n):
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] | 0x10, True)  # set 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] | 0x10
          else:
-             self.regWrite(self.STATUS & 0xFF,self.bk[self.STATUS] & 0xEF, True) # clear 
+         	self.bk[self.STATUS] = self.bk[self.STATUS] & 0xEF
     
     
     def setLFSR( self, ff, value ):
@@ -414,7 +412,7 @@ class State_PIC16:
     
         # check if this is a LAT register, if so, take TRIS bits into account
         # i.e. don't change the bits that are set to output
-        for i in range( 0, len( self.lat_addr) ) :
+        for i in xrange( 0, len( self.lat_addr) ) :
            if self.lat_addr[i] == abs_addr:
 
               port_addr = self.port_addr[i] 
@@ -542,7 +540,7 @@ class State_PIC16:
                         
                         print "ERASING FLASH 32 bytes, start at :%06X " % base_addr
                         
-                        for addr in range( 0, 32 ):
+                        for addr in xrange( 0, 32 ):
                             self.writeProgramMem( base_addr + addr,Format.bin( 0xFFFF ) )
 
                         #WR set back to 0
@@ -555,7 +553,7 @@ class State_PIC16:
                         
                         base_addr = ( taddr & 0xFFFFE0 )
 
-                        for addr in range( 0, len(self.flash_holding) / 2 ):
+                        for addr in xrange( 0, len(self.flash_holding) / 2 ):
                             data = self.flash_holding[ addr * 2 + 1 ] +  self.flash_holding[ addr * 2 ]
                             self.writeProgramMem( base_addr + addr,Format.bin( data ) )
                             print "WRITING FLASH, addr :%06X " % (base_addr + addr ) + " value " + Format.bin( data ) 
@@ -642,7 +640,7 @@ class State_PIC16:
         
         # check if this is a PORT register, if so, take TRIS bits into account
         # i.e. don't change the bits that are set to output
-        for i in range( 0, len( self.port_addr) ) :
+        for i in xrange( 0, len( self.port_addr) ) :
            if self.port_addr[i] == abs_addr:
               for monitor in self.globalReadMonitors:
                  retValue = monitor.execute(reg,self,retValue); # will be updated by the monitor
@@ -856,7 +854,6 @@ class State_PIC16:
               
     def appendMonitor(self, monitor):
         self.monitors.append( monitor )
-
         m = getattr(monitor, 'setPic', None)
         if callable(m):
            m( self.pic )

@@ -13,15 +13,14 @@ import iface
 import plugin
 import ps_dbgview
 from ed_menu import EdMenuBar, EdMenu
-
-
-#from picshell.ui.PicShell import PicShell
-
 import platform
-if platform.machine()=='i386':
-    import psyco
-    psyco.full()
 
+# Import Psyco if available
+try:
+	import psyco
+	psyco.full()
+except ImportError:
+	pass
     
 _ = wx.GetTranslation
 

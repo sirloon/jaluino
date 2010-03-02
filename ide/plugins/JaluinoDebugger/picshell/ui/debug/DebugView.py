@@ -168,9 +168,9 @@ class DebugView :
         self.listWatchRegs.InsertColumn(0, 'Reg')
         self.listWatchRegs.InsertColumn(1, 'Values')
         self.listWatchRegs.InsertColumn(2, 'Comment')
-        self.listWatchRegs.SetColumnWidth(0, 100)
-        self.listWatchRegs.SetColumnWidth(1, 150)
-        self.listWatchRegs.SetColumnWidth(2, 250)
+        self.listWatchRegs.SetColumnWidth(0, 150)
+        self.listWatchRegs.SetColumnWidth(1, 200)
+        self.listWatchRegs.SetColumnWidth(2, 200)
         
         vboxRegs.Add(self.listWatchRegs, -1,wx.EXPAND, 0 )
 
@@ -188,8 +188,12 @@ class DebugView :
         self.listWatchVars.InsertColumn(0, 'Vars')
         self.listWatchVars.InsertColumn(1, 'Type')
         self.listWatchVars.InsertColumn(2, 'Values')
-        self.listWatchVars.InsertColumn(3, 'Addr.')
+        self.listWatchVars.InsertColumn(3, 'Address')
         self.listWatchVars.SetColumnWidth(0, 150)
+        self.listWatchVars.SetColumnWidth(1, 160)
+        self.listWatchVars.SetColumnWidth(2, 160)
+        self.listWatchVars.SetColumnWidth(3, 160)
+
         vboxVars.Add(self.listWatchVars, -1,wx.EXPAND, 0 )
         
         # data eeprom panel
@@ -352,6 +356,7 @@ class DebugView :
         self.listWatchVars.SetItemFont(1,font)
         self.listWatchVars.SetItemFont(2,font)
         index = 3
+
         if hasattr(self,"langParser"):
             for var in sorted(self.langParser.varAdrMapping):
                 varDispType ="h:"
@@ -386,8 +391,10 @@ class DebugView :
 
                     if hasattr(self, "varTypeDict") and self.varTypeDict != None and self.varTypeDict.has_key(varName):
                         type = self.varTypeDict[varName]
+                        #print "update watch %s to %s " % (type,varName)
                     else:
                         type = "? (byte)"
+                        #print "update watch Unknown to %s " % varName
                     type = type.upper()  
                     self.listWatchVars.SetStringItem(index,1,type )
                     
@@ -1404,7 +1411,8 @@ class DebugView :
                     ref = res["ref"]
                     if (self.langParser.varAdrMapping.has_key("v_"+var)):
                         varAddr = self.langParser.varAdrMapping["v_"+var]
-                        # print self.varTypeDict
+                        print "VAR TYPE DICT 1"
+                        print self.varTypeDict
                         
                         if self.varTypeDict.has_key( var ):
                             varType = type = self.self.varTypeDict[var]
@@ -1446,7 +1454,8 @@ class DebugView :
 
 		self.Clear()
 
-		asmFileName = hexFileName.replace(".hex",".asm")
+		asmFileName = hexFileName[:-4] + ".asm"
+		jalFileName = hexFileName[:-4] + ".jal"
 		
 		wholeCode = self.asmParser.parseAsmFile(asmFileName, [])
 		self.picName = self.asmParser.picName
@@ -1475,10 +1484,10 @@ class DebugView :
 								
 		self.loadDebugList(self.emu.instructionList,self.emu.lastAddress,code,wholeCode)
 		
-		self.varTypeDict = JalV2AsmParser.buildVarTypeDict(wholeCode)
+		# build dictionary of variables types
+		self.varTypeDict = JalV2AsmParser.BuildVarTypeDict(wholeCode,jalFileName)
 		
-		#build in / out
-		
+		#build in / out		
 		self.buildInOut(parseRes["inputs"],parseRes["outputs"])
 		self.devices = parseRes["devices"]
 		

@@ -237,11 +237,12 @@ class JalV2AsmParser:
         if fin: fin.close()              
         return list;
     @staticmethod
-    def buildVarTypeDict(lines):
+    def BuildVarTypeDict(lines, jalFileName):
         array = {}
         arrayCpt = {}
          
-        incfiles = {}
+        incfiles = list()
+        incfiles.append( jalFileName )
         
         # get all include files (once) from asm file			
         for st in lines:
@@ -250,7 +251,7 @@ class JalV2AsmParser:
             #print lg
             if lg.upper().strip().find(".JAL") > 0 :
                filename = lg[ 3:]
-               incfiles[ filename ] = 1
+               incfiles.append( filename )
       
         # loop through all JAL files
         for incfile in incfiles:
