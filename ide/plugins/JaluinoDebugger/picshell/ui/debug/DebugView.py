@@ -72,6 +72,8 @@ class DebugView :
         self.devices = []
         self.plugins = []
 
+        self.parent = parent
+        		
         # debug view
         self.mainSplitter = wx.SplitterWindow(parent, -1,style=wx.NO_BORDER)
         topSplitter = wx.SplitterWindow(self.mainSplitter, -1) # jal / asm splitter
@@ -1013,8 +1015,10 @@ class DebugView :
     # Callback function, called by thread engine when thread engine has finished
     # 
     def callback(self,adr):
-    	self.running = False    	
+    	self.running = False
+    	
     	if self.Quit == False:
+	        self.parent.OnBreak()
         	wx.CallAfter( self.updateDebugListPosition, adr )
         	wx.CallAfter( self.updateViews)    	
         	wx.CallAfter( self.uiManager.enableActionWidget)

@@ -101,6 +101,8 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         self.SetSizer(vboxSplitter)
         self.NewSession()
 
+    def OnBreak(self):
+    	self.plug_parent.OnBreak()
 
     def NewSession(self):
         self.debugView.reset()

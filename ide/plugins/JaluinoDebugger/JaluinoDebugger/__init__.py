@@ -30,6 +30,7 @@ _ = wx.GetTranslation
 
 ID_DBGMENU = wx.NewId()
 ID_DBGMENU_START = wx.NewId()
+ID_DBGMENU_STEPINTO = wx.NewId()
 ID_DBGMENU_STOP = wx.NewId()
 ID_DBGMENU_CONTINUE = wx.NewId()
 ID_DBGMENU_BREAKALL = wx.NewId()
@@ -181,3 +182,5 @@ class Jaluino_debugger(plugin.Plugin):
     	else:
     		evt.Skip()
 
+    def OnBreak(self):
+    	self.UpdateMenu(DBG_STATE_PAUSED)
