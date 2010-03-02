@@ -13,6 +13,8 @@
 #-----------------------------------------------------------------------------#
 # Imports
 import sys, os
+import subprocess
+import cPickle
 import wx
 import wx.lib.mixins.listctrl as listmix
 import cStringIO
@@ -22,14 +24,13 @@ import zlib
 # Editra Libraries
 import eclib
 import util
+import ed_glob
 import ed_msg
 from profiler import Profile_Get, Profile_Set
 
+
 # placeholder for import
 handlers = None
-
-# Locals
-import jalcomp
 
 #-----------------------------------------------------------------------------#
 # Globals
@@ -56,6 +57,15 @@ ID_AUTOCLEAR = wx.NewId()
 ID_ERROR_BEEP = wx.NewId()
 ID_GENERATE_API = wx.NewId()
 
+# Environment panel
+ID_JALUINO_ROOT = wx.NewId()
+ID_JALLIB_REPOS = wx.NewId()
+ID_JALLIB_JALV2 = wx.NewId()
+ID_JALUINO_BIN = wx.NewId()
+ID_JALLIB_PYPATH = wx.NewId()
+ID_PYTHON_EXEC = wx.NewId()
+ID_JALUINO_LAUNCH_FILE = wx.NewId()
+
 # Color Buttons
 ID_DEF_BACK = wx.NewId()
 ID_DEF_FORE = wx.NewId()
@@ -73,6 +83,7 @@ COLOR_MAP = { ID_DEF_BACK : 'defaultb', ID_DEF_FORE : 'defaultf',
 
 # Message Types
 EDMSG_JALUINO_CFG_EXIT = ed_msg.EDMSG_ALL + ('jaluino', 'cfg', 'exit')
+
 
 _ = wx.GetTranslation
 #-----------------------------------------------------------------------------#
@@ -120,7 +131,6 @@ class ConfigDialog(wx.Frame):
         @keyword: The filetype to set
 
         """
-        # Local Imports
         # Depends on Launch
         import launch.handlers as handlersmod
         global handlers
@@ -153,7 +163,7 @@ class ConfigDialog(wx.Frame):
         self.SetSizer(sizer)
         self.SetAutoLayout(True)
         self.SetInitialSize()
-        self.SetMinSize((420, 345))
+        self.SetMinSize((550, 345))
 
     def OnClose(self, evt):
         """Unregister the window when its closed"""
@@ -188,6 +198,7 @@ class ConfigNotebook(wx.Notebook):
         # Setup
         self.AddPage(ConfigPanel(self), _("General"))
         self.AddPage(SerialUSBPanel(self), _("Serial/USB"))
+        self.AddPage(EnvironmentPanel(self), _("Environment"))
         self.AddPage(MiscPanel(self), _("Misc"))
 
     def __del__(self):
@@ -438,7 +449,7 @@ class MiscPanel(wx.Panel):
         error_cb = wx.CheckBox(self, ID_ERROR_BEEP,
                                _("Audible feedback when errors are detected"))
         error_cb.SetValue(cfg.get('errorbeep', False))
-        gen_api_btn = wx.Button(self,ID_GENERATE_API,_("Re-generate jalv2 API"))
+        gen_api_btn = wx.Button(self,ID_GENERATE_API,_("Re-discover JAL libraries"))
 
         # Colors
         colors = dict()
@@ -521,15 +532,16 @@ class MiscPanel(wx.Panel):
             evt.Skip()
 
     def OnButton(self, evt):
-        fullapi = jalcomp.GetFullAPIFile()
+        # import here, as jalcomp imports cfgldg imports jalcomp...
+        # baaah...
+        import jalcomp
         incapi = jalcomp.GetIncludeAPIFile()
-        for api in [fullapi,incapi]:
-            try:
-                os.unlink(api)
-            except OSError,e:
-                util.Log("[jaluino][warn] Unable to delete file '%s': %s" % (api,e))
+        try:
+            os.unlink(incapi)
+        except OSError,e:
+            util.Log("[jaluino][warn] Unable to delete file '%s': %s" % (incapi,e))
 
-        mb = wx.MessageBox(_("You need to restart editor in order re-generate API"),
+        mb = wx.MessageBox(_("You need to restart editor in order discover all JAL libraries"),
                            _("Restart needed"))
         
 
@@ -719,6 +731,107 @@ class SerialUSBPanel(wx.Panel):
         color = COLOR_MAP.get(e_id, None)
         if color is not None:
             Profile_Get(JALUINO_PREFS)[color] = evt.GetValue().Get()
+        else:
+            evt.Skip()
+
+
+class EnvironmentPanel(wx.Panel):
+    """Environment (lib, compiler paths, ...) panel"""
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        self.__DoLayout()
+
+        self.Bind(wx.EVT_TEXT, self.OnText)
+
+    def __DoLayout(self):
+        import jalutil
+        cfg = jalutil.GetJaluinoPrefs()
+
+        msizer = wx.BoxSizer(wx.VERTICAL)
+
+        sboxsz = wx.BoxSizer(wx.VERTICAL)
+
+        msg = _("Installation directory (JALUINO_ROOT):")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        instdir = wx.TextCtrl(self, ID_JALUINO_ROOT,u"",(0,0),(450,-1))
+        instdir.SetValue(cfg.get("JALUINO_ROOT",""))
+        sboxsz.Add(instdir)
+
+        msg = _("Jalv2 compiler executable (JALLIB_JALV2):")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        jalv2 = wx.TextCtrl(self, ID_JALLIB_JALV2,u"",(0,0),(450,-1))
+        jalv2.SetValue(cfg.get("JALLIB_JALV2",""))
+        sboxsz.Add(jalv2)
+
+        msg = _("Specify where JAL libraries can be found, one directory per line.\nSub-directories are considered, recursively (JALLIB_REPOS)")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        libs = wx.TextCtrl(self, ID_JALLIB_REPOS,u"",style=wx.TE_MULTILINE)
+        libs.SetValue("\n".join(cfg.get("JALLIB_REPOS","").split(os.pathsep)))
+        sboxsz.Add(libs,1,wx.EXPAND)
+
+        msg = _("Specify where jallib.py library can be found (JALLIB_PYPATH):")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        execs = wx.TextCtrl(self, ID_JALLIB_PYPATH,u"",(0,0),(450,-1))
+        execs.SetValue("\n".join(cfg.get("JALLIB_PYPATH","").split(os.pathsep)))
+        sboxsz.Add(execs)
+
+        msg = _("Specify where executables (compiler wrappers, uploaders, etc...) can be found (JALUINO_BIN):")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        execs = wx.TextCtrl(self, ID_JALUINO_BIN,u"",(0,0),(450,-1))
+        execs.SetValue("\n".join(cfg.get("JALUINO_BIN","").split(os.pathsep)))
+        sboxsz.Add(execs)
+
+        msg = _("Python executable (PYTHON_EXEC):")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        pyexec = wx.TextCtrl(self, ID_PYTHON_EXEC,u"",(0,0),(400,-1))
+        pyexec.SetValue(cfg.get("PYTHON_EXEC",""))
+        sboxsz.Add(pyexec)
+
+        msg = _("XML filename containing Jaluino commands (JALUINO_LAUNCH_FILE):")
+        txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
+        txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        sboxsz.Add(txt)
+        cmdfn = wx.TextCtrl(self, ID_JALUINO_LAUNCH_FILE,u"",(0,0),(200,-1))
+        cmdfn.SetValue(cfg.get("JALUINO_LAUNCH_FILE",""))
+        sboxsz.Add(cmdfn)
+
+        # Layout
+        msizer.AddMany([((5, 5), 0),
+                        (sboxsz, 1, wx.EXPAND)])
+        hsizer = wx.BoxSizer(wx.HORIZONTAL)
+        hsizer.AddMany([((5, 5), 0), (msizer, 1, wx.EXPAND), ((5, 5), 0)])
+        self.SetSizer(hsizer)
+
+    def OnText(self, evt):
+        e_id = evt.GetId()
+        e_val = evt.GetEventObject().GetValue()
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+        if e_id == ID_JALUINO_ROOT:
+            cfg['JALUINO_ROOT'] = e_val
+        elif e_id == ID_JALLIB_JALV2:
+            cfg['JALLIB_JALV2'] = e_val
+        elif e_id == ID_JALLIB_REPOS:
+            cfg['JALLIB_REPOS'] = os.pathsep.join(e_val.splitlines())
+        elif e_id == ID_JALUINO_BIN:
+            cfg['JALUINO_BIN'] = e_val
+        elif e_id == ID_JALLIB_PYPATH:
+            cfg['JALLIB_PYPATH'] = e_val
+        elif e_id == ID_PYTHON_EXEC:
+            cfg['PYTHON_EXEC'] = e_val
+        elif e_id == ID_JALUINO_LAUNCH_FILE:
+            cfg['JALUINO_LAUNCH_FILE'] = e_val
         else:
             evt.Skip()
 

@@ -24,7 +24,7 @@
 
 #-----------------------------------------------------------------------------#
 # Imports
-import os
+import os, sys
 import re
 import types as pytypes
 import subprocess
@@ -34,6 +34,7 @@ import wx.stc
 # Local Imports
 import cfgdlg
 import jalcomp
+import jalutil
 
 # Editra Libraries
 import ed_glob
@@ -46,7 +47,11 @@ import eclib
 import syntax.synglob as synglob
 from ed_menu import EdMenuBar, EdMenu
 
-import jallib
+try:
+    import jallib
+    HAS_JALLIB = True
+except ImportError:
+    HAS_JALLIB = False
 
 # import placeholder...
 handlers = None
@@ -97,6 +102,7 @@ ed_msg.Subscribe(OnStoreConfig, cfgdlg.EDMSG_JALUINO_CFG_EXIT)
 
 class JaluinoWindow(eclib.ControlBox):
     """Control window for showing and running scripts"""
+
     def __init__(self, parent):
         self._log = wx.GetApp().GetLog()
         eclib.ControlBox.__init__(self, parent)
@@ -491,6 +497,7 @@ class JaluinoWindow(eclib.ControlBox):
         self.OnValidate(buff)
 
     def OnOpenDependenciesMsg(self,msg):
+        print "OnOpenDependenciesMsg: %s" % msg
         buff = GetTextBuffer(self._mw)
         self.OnOpenDependencies(buff)
         
@@ -650,6 +657,16 @@ class JaluinoWindow(eclib.ControlBox):
         
         return path,fname
 
+    def GetEnv(self,handenv):
+        #cfg = Profile_Get(cfgdlg.JALUINO_PREFS, default={})
+        cfg = jalutil.GetJaluinoPrefs()
+        handenv.update(cfg)
+        # adjust path with JALUINO_BIN
+        path = handenv.get("PATH","")
+        path = path + os.pathsep + os.pathsep.join([cfg.get('JALUINO_BIN',""),os.path.dirname(cfg.get('JALLIB_JALV2',""))])
+        handenv['PATH'] = path
+        return handenv
+
     def Compile(self, fname, cmd, args, ftype):
         """Run the given file
         @param fname: File path
@@ -660,12 +677,19 @@ class JaluinoWindow(eclib.ControlBox):
         """
         path,fname = self._PreProcess(fname)
         handler = handlers.GetHandlerById(ftype)
-        self._log("[jaluino][info] Compiling with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
-        self._compile_worker = eclib.ProcessThread(self._buffer,
-                                           cmd, fname,
-                                           args, path,
-                                           handler.GetEnvironment(),
-                                           use_shell=False)
+
+        # Potentially enrich/format registered command with configuration values
+        try:
+            env = self.GetEnv(handler.GetEnvironment())
+            cmd = cmd % env
+        except (KeyError,TypeError,ValueError),e:
+            self._log("[jaluino][err] Unable to format command because: %s" % e)
+            wx.MessageBox(_("Something wrong happened\nDid you setup preferences correctly ?\n\nError was: %s" % e),
+                               _("Restart needed"))
+
+        self._log("[jaluino][info] Compiling with cmd=%s, fname=%s, args=%s, path=%s, env=%s" % (cmd,fname,args,path,env))
+        self._log("[jaluino][info] path: %s" % env.get("PATH"))
+        self._compile_worker = eclib.ProcessThread(self._buffer,cmd,fname,args,path,env,use_shell=False)
         self._compile_worker.start()
 
 
@@ -691,20 +715,16 @@ class JaluinoWindow(eclib.ControlBox):
 
         # Potentially enrich/format registered command with configuration values
         try:
-            cfg = Profile_Get(cfgdlg.JALUINO_PREFS, default={})
-            fullenv = handler.GetEnvironment()
-            fullenv.update(cfg)
             # complete with Jaluino specific variables and  global env. vars
-            cmd = cmd % fullenv
+            env = self.GetEnv(handler.GetEnvironment())
+            cmd = cmd % env
         except (KeyError,TypeError,ValueError),e:
             self._log("[jaluino][err] Unable to format command because: %s" % e)
+            wx.MessageBox(_("Something wrong happened\nDid you setup preferences correctly ?\n\nError was: %s" % e),
+                               _("Restart needed"))
 
-        self._log("[jaluino][info] Uploading with cmd=%s, fname=%s, args=%s, path=%s, handlenv=%s" % (cmd,fname,args,path,handler.GetEnvironment()))
-        self._upload_worker = eclib.ProcessThread(self._buffer,
-                                           cmd, fhex,
-                                           args, path,
-                                           handler.GetEnvironment(),
-                                           use_shell=False)
+        self._log("[jaluino][info] Uploading with cmd=%s, fname=%s, args=%s, path=%s, env=%s" % (cmd,fname,args,path,env))
+        self._upload_worker = eclib.ProcessThread(self._buffer,cmd,fhex,args,path,env,use_shell=False)
         self._upload_worker.start()
 
     def StartStopCompile(self):
@@ -946,6 +966,7 @@ class JaluinoWindow(eclib.ControlBox):
     def OpenLibrary(self,libname,line=0):
         path = self.GetLibraryPath(libname)
         nb = self.GetMainWindow().GetNotebook()
+        print "open %s %s" % (libname,path)
         if not path and libname:
             # maybe it's file path, not a libname ?
             path = os.path.exists(libname) and libname
@@ -1019,6 +1040,7 @@ class JaluinoWindow(eclib.ControlBox):
             # EdPages
             txt = buff.GetCurrentPage().GetText().splitlines()
         api = jallib.api_parse_content(txt,strict=False)
+        print "api: %s" % api
         self.OpenDependencies(api)
 
     def OnCloseDependencies(self,buff,event_obj=None):
@@ -1110,7 +1132,7 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
                 excstr = str(excdata)
                 if not ebmlib.IsUnicode(excstr):
                     excstr = ed_txt.DecodeString(excstr)
-                util.Log(u"[jaluino][err] %s" % excdata)
+                util.Log(u"[jaluino][err] %s" % excstr)
             except UnicodeDecodeError:
                 util.Log(u"[jaluino][err] error decoding log message string")
 
@@ -1183,6 +1205,7 @@ def GetValidateMenu(mainw,menu):
     bmp = wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK, wx.ART_MENU)
     if not bmp.IsNull():
         validate.SetBitmap(bmp)
+    validate.Enable(HAS_JALLIB)
     mainw.AddMenuHandler(ID_JSG_VALIDATE, OnValidate)
     return validate
 
@@ -1192,6 +1215,7 @@ def GetOpenDepsMenu(mainw,menu):
     if not bmp.IsNull():
         opendeps.SetBitmap(bmp)
     mainw.AddMenuHandler(ID_OPEN_DEPS, OnOpenDependencies)
+    opendeps.Enable(HAS_JALLIB)
     return opendeps
 
 def GetCloseDepsMenu(mainw,menu):
@@ -1200,6 +1224,7 @@ def GetCloseDepsMenu(mainw,menu):
     if not bmp.IsNull():
         closedeps.SetBitmap(bmp)
     mainw.AddMenuHandler(ID_CLOSE_DEPS, OnCloseDependencies)
+    closedeps.Enable(HAS_JALLIB)
     return closedeps
 
 def GetSettingsMenu(mainw,menu):
@@ -1213,11 +1238,12 @@ def GetSettingsMenu(mainw,menu):
 def BuildFileRelatedMenu(mainw,menu):
     menu.AppendItem(GetCompileMenu(mainw,menu))
     menu.AppendItem(GetUploadMenu(mainw,menu))
-    menu.AppendSeparator()
-    menu.AppendItem(GetValidateMenu(mainw,menu))
-    menu.AppendSeparator()
-    menu.AppendItem(GetOpenDepsMenu(mainw,menu))
-    menu.AppendItem(GetCloseDepsMenu(mainw,menu))
+    if HAS_JALLIB:
+        menu.AppendSeparator()
+        menu.AppendItem(GetValidateMenu(mainw,menu))
+        menu.AppendSeparator()
+        menu.AppendItem(GetOpenDepsMenu(mainw,menu))
+        menu.AppendItem(GetCloseDepsMenu(mainw,menu))
 
 
 def GetMenu(mainw):
@@ -1246,6 +1272,7 @@ def OnValidate(evt):
     ed_msg.PostMessage(MSG_VALIDATE)
 
 def OnOpenDependencies(evt):
+    print "OnOpenDependencies: %s" % evt
     ed_msg.PostMessage(MSG_OPEN_DEPS)
 
 def OnCloseDependencies(evt):

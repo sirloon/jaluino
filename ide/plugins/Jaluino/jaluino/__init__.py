@@ -16,8 +16,15 @@ __version__ = "0.16"
 
 #-----------------------------------------------------------------------------#
 # Imports
-import os
+import os, sys
 import wx
+
+import jalutil
+# adjust PYTHONPATH for jallib.py
+cfg = jalutil.GetJaluinoPrefs()
+path = cfg.get("JALLIB_PYPATH")
+if path:
+    sys.path.extend(path.split(os.pathsep))
 
 # Local modules
 import jaluino
@@ -126,7 +133,7 @@ class Jaluino(plugin.Plugin):
         loaded = False
         xmlcmds = {}
         path = ed_glob.CONFIG['CACHE_DIR']
-        xmlfile = unicode(os.environ.get("JALUINO_LAUNCH_FILE","jaluino_launch.xml"))
+        xmlfile = jalutil.GetJaluinoPrefs().get("JALUINO_LAUNCH_FILE","jaluino_launch.xml")
         path = os.path.join(path,xmlfile)
         if os.path.exists(path):
             lxml = launchxml.LaunchXml()

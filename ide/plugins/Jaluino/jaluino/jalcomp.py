@@ -11,7 +11,7 @@ Autocompletion for jalv2.
 Uses an API file to get all available symbols.
 """
 
-import os, re
+import os, sys, re
 import weakref
 import cPickle
 
@@ -25,29 +25,31 @@ import wx.stc
 # Imports
 import ed_glob
 import ed_msg
+from profiler import Profile_Get, Profile_Set
 import autocomp.completer as completer
-import jallib
 
 # Local Imports
+import cfgdlg
+import jalutil
 
 # Globals
 DEFAULT_JALUINO_API_FILE = "jaluino_api.pick"
 INCLUDE_API_FILE = "jaluino_include.api"
 
-# get all available libraries' path at startup
-JALLIBS = jallib.get_library_list()
+try:
+    import jallib
+    # get all available libraries' path at startup
+    prefs = jalutil.GetJaluinoPrefs()
+    JALLIBS = jallib.get_library_list(prefs.get("JALLIB_REPOS"))
+except ImportError:
+    class DummyJallib(object):
+        def api_parse_content(*args,**kwargs):
+            return {"include" : {}, "procedure" : {}, "function" : {},
+                     "var" : {}, "const" : {}, 'alias' : {}, 'pseudovar' : {}}
+    jallib = DummyJallib()
 
 #--------------------------------------------------------------------------#
 
-
-def GetFullAPIFile():
-    '''Return path to the file containing full API generated from
-    all available JAL libraries
-    '''
-    pickfile = os.environ.get("JALUINO_API_FILE",DEFAULT_JALUINO_API_FILE)
-    path = ed_glob.CONFIG['CACHE_DIR']
-    filepath = os.path.join(path, unicode(pickfile))
-    return filepath
 
 def GetIncludeAPIFile():
     path = ed_glob.CONFIG['CACHE_DIR']
@@ -101,6 +103,8 @@ class Completer(completer.BaseCompleter):
         self._first_level_include = []  # include in current buffer only
 
         # auto-update API with a timer/worker (brut-force...)
+        # TODO: this really needs serious optimization, as when lots of files are opened,
+        # CPU gets burnt every 1 second...
         self._timer = wx.Timer(self.GetBuffer())
         self.GetBuffer().Bind(wx.EVT_TIMER, self.OnUpdateAPINeeded,self._timer)
         # wel will update API every xxx msecs
@@ -211,24 +215,14 @@ class Completer(completer.BaseCompleter):
             self.GenerateCurrentAPI()
             return
 
-        filepath = GetFullAPIFile()
-        if os.path.exists(filepath):
-            try:
-                apis = cPickle.load(file(filepath))
-            except Exception,e:
-                self._log("[jaluino][err] Can't load complete API file '%s': %s" % (filepath,e))
-                return
+        # exploring all libraries in order to identify all possible includes
+        for jalfile,path in JALLIBS.items():
+            libname = jalfile.replace(".jal","")
+            self._log("[jaluino][debug] Including library '%s' in API" % libname)
+            symbol = completer.CreateSymbols([libname],completer.TYPE_CLASS)[0]
+            self._api_symbols.setdefault('include',[]).append((libname.lower(),symbol,path))
 
-            # first deal with all includes
-            for inc in apis.keys():
-                libname = inc.replace(".jal","")
-                symbol = completer.CreateSymbols([libname],completer.TYPE_CLASS)[0]
-                # put all lowercased to do case-insensitive search, but keep original case
-                self._api_symbols.setdefault('include',[]).append((libname.lower(),symbol,JALLIBS.get(inc)))
-
-        else:
-            self._log("[jaluino][warn] No API file available, '%s' does not exist" % filepath)
-
+        self._log("[jaluino][debug] Saving include API to '%s'" % apifile)
         cPickle.dump(self._api_symbols['include'],file(apifile,"wb"))
         self.GenerateCurrentAPI()
 
