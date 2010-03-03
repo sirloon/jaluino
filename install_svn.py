@@ -12,7 +12,6 @@
 
 import os, sys, glob
 import subprocess
-import time
 import cPickle
 
 def common():
@@ -41,7 +40,7 @@ def nix():
         python_exec = out.strip()
     except OSError,e:
         print >> sys.stderr, "Unable to find python, not installed...\nError: %s" % e
-        time.sleep(3)
+        raw_input("Press a key to quit...")
         sys.exit(255)
 
     nix_env = {'PYTHON_EXEC'         : python_exec,
@@ -71,7 +70,7 @@ def win():
         python_exec = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Python.exe")
     except OSError,e:
         print >> sys.stderr, "Unable to find python, not installed...\nError: %s" % e
-        time.sleep(3)
+        raw_input("Press a key to quit...")
         sys.exit(255)
 
     win_env = {'PYTHON_EXEC'         : python_exec,
@@ -120,9 +119,7 @@ Please run Editra once, and re-launch this script !
 
 
 """
-        if subprocess.mswindows:
-            time.sleep(5)
-        return
+        raw_input("Press a key to quit...")
 
     path = os.path.join(env['EDITRA_CACHE'],"install.pick")
     print "Now generating default configuration file '%s'" % path
@@ -152,9 +149,7 @@ You can now run Editra and enable Jaluino IDE plugin.
 
 
 """
-    if subprocess.mswindows:
-        print "Exiting in 5 seconds..."
-        time.sleep(5)
+    raw_input("Press a key to quit...")
     return
 
 

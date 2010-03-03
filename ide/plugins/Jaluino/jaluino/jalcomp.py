@@ -102,25 +102,16 @@ class Completer(completer.BaseCompleter):
         # current available API
         self._first_level_include = []  # include in current buffer only
 
-        # auto-update API with a timer/worker (brut-force...)
-        # TODO: this really needs serious optimization, as when lots of files are opened,
-        # CPU gets burnt every 1 second...
-        self._timer = wx.Timer(self.GetBuffer())
-        self.GetBuffer().Bind(wx.EVT_TIMER, self.OnUpdateAPINeeded,self._timer)
-        # wel will update API every xxx msecs
-        self._timer.Start(1000)
-        # we need to stop timer when buffer gets closed, or segfault will knock at your door :)
-        ed_msg.Subscribe(self.OnTimeStopNeeded, ed_msg.EDMSG_UI_NB_CLOSING)
+        # auto-update API when file gets saved
+        ed_msg.Subscribe(self.OnUpdateAPINeeded, ed_msg.EDMSG_FILE_SAVED)
 
         # Generate current API
         self.GenerateAPI()
 
-    def OnTimeStopNeeded(self,msg):
-        if self._timer.IsRunning():
-            self._timer.Stop()
-
-    def OnUpdateAPINeeded(self, evt):
-        self.GenerateCurrentAPI()
+    def OnUpdateAPINeeded(self, msg):
+        # filter: only generate API for buffer being saved
+        if self.GetBuffer().GetFileName() == msg.GetData()[0]:
+            self.GenerateCurrentAPI()
 
     def GetBufferContent(self):
         txt = self.GetBuffer().GetText().splitlines()
@@ -244,7 +235,7 @@ class Completer(completer.BaseCompleter):
             return list()
 
     def GetAPIs(self,chars,command):
-        apis = [symbol_info for symbol_info in self._api_symbols.get(command,[]) if symbol_info[0] == chars]
+        apis = [symbol_info for symbol_info in self._api_symbols.get(command,[]) if symbol_info[0] == chars.lower()]
         return apis
 
 

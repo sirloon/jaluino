@@ -30,6 +30,7 @@ import types as pytypes
 import subprocess
 import wx
 import wx.stc
+import zipfile, StringIO
 
 # Local Imports
 import cfgdlg
@@ -39,12 +40,14 @@ import jalutil
 # Editra Libraries
 import ed_glob
 import ebmlib
+import ed_mdlg
 import ed_txt
 import util
 from profiler import Profile_Get, Profile_Set
 import ed_msg
 import eclib
 import syntax.synglob as synglob
+import syntax.syntax as syntax
 from ed_menu import EdMenuBar, EdMenu
 
 try:
@@ -75,6 +78,7 @@ ID_OPEN_LIBRARY = wx.NewId()
 ID_JSG_VALIDATE = wx.NewId()
 ID_OPEN_DEPS = wx.NewId()
 ID_CLOSE_DEPS = wx.NewId()
+ID_BACKUP = wx.NewId()
 
 # Profile Settings Key
 JALUINO_KEY = 'Jaluino.Config'
@@ -85,6 +89,7 @@ MSG_UPLOAD = ('jaluino', 'upload')
 MSG_VALIDATE = ('jaluino', 'validate')
 MSG_OPEN_DEPS = ('jaluino', 'opendeps')
 MSG_CLOSE_DEPS = ('jaluino', 'closedeps')
+MSG_BACKUP = ('jaluino', 'backup')
 MSG_SETTINGS = ('jaluino', 'settings')
 
 # Value request messages
@@ -195,6 +200,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Subscribe(self.OnValidateMsg, MSG_VALIDATE)
         ed_msg.Subscribe(self.OnOpenDependenciesMsg, MSG_OPEN_DEPS)
         ed_msg.Subscribe(self.OnCloseDependenciesMsg, MSG_CLOSE_DEPS)
+        ed_msg.Subscribe(self.OnBackupMsg, MSG_BACKUP)
         ed_msg.Subscribe(self.OnSettingsMsg, MSG_SETTINGS)
         ed_msg.Subscribe(self.OnContextMessage,ed_msg.EDMSG_UI_STC_CONTEXT_MENU)
         ed_msg.Subscribe(self.OnTabContextMessage,ed_msg.EDMSG_UI_NB_TABMENU)
@@ -497,13 +503,16 @@ class JaluinoWindow(eclib.ControlBox):
         self.OnValidate(buff)
 
     def OnOpenDependenciesMsg(self,msg):
-        print "OnOpenDependenciesMsg: %s" % msg
         buff = GetTextBuffer(self._mw)
         self.OnOpenDependencies(buff)
         
     def OnCloseDependenciesMsg(self,msg):
         buff = GetTextBuffer(self._mw)
         self.OnCloseDependencies(buff)
+
+    def OnBackupMsg(self,msg):
+        buff = GetTextBuffer(self._mw)
+        self.OnBackup(buff)
 
     def OnSettingsMsg(self,msg):
         self.OnSettings()
@@ -937,6 +946,7 @@ class JaluinoWindow(eclib.ControlBox):
 
         txt = buff.GetSelectedText()
         # View <symbolname> code
+        print "reg: %s" % sorted(comp._registered_symbol['var'].keys())
         for command in comp._registered_symbol.keys():
             if comp._registered_symbol[command].has_key(txt.lower()):
                 menu_item = menu.Append(ID_OPEN_LIBRARY,_("View") + u" " + txt + u" " + _("code"))
@@ -972,7 +982,6 @@ class JaluinoWindow(eclib.ControlBox):
     def OpenLibrary(self,libname,line=0):
         path = self.GetLibraryPath(libname)
         nb = self.GetMainWindow().GetNotebook()
-        print "open %s %s" % (libname,path)
         if not path and libname:
             # maybe it's file path, not a libname ?
             path = os.path.exists(libname) and libname
@@ -1024,20 +1033,25 @@ class JaluinoWindow(eclib.ControlBox):
         # HACK: calling a private method...
         self._buffer._OutputBuffer__FlushBuffer()
 
-    def OpenDependencies(self,api,close=False):
+    def IdentidyDependencies(self,api):
+        deps = []
         for libname in api['include']:
-            # infix/suffix when walking the tree and open/close tabs
-            if not close:
-                self.OpenLibrary(libname['name'])
-
             path = self.GetLibraryPath(libname['name'])
             if path:
+                deps.append((libname['name'],path))
                 api = jallib.api_parse([path]).values()[0]
-                self.OpenDependencies(api,close)
+                deps.extend(self.IdentidyDependencies(api))
+        return deps
 
-            if close:
-                self.CloseLibrary(libname['name'])
-
+    def OpenDependencies(self,api,close=False):
+        deps = self.IdentidyDependencies(api)
+        if close:
+            func = self.CloseLibrary
+        else:
+            func = self.OpenLibrary
+        for libname,path in deps:
+            func(libname)
+        
     def OnOpenDependencies(self,buff,event_obj=None):
         try:
             # EdEditorView
@@ -1046,7 +1060,6 @@ class JaluinoWindow(eclib.ControlBox):
             # EdPages
             txt = buff.GetCurrentPage().GetText().splitlines()
         api = jallib.api_parse_content(txt,strict=False)
-        print "api: %s" % api
         self.OpenDependencies(api)
 
     def OnCloseDependencies(self,buff,event_obj=None):
@@ -1054,6 +1067,51 @@ class JaluinoWindow(eclib.ControlBox):
         api = jallib.api_parse_content(txt,strict=False)
         self.OpenDependencies(api,close=True)
 
+    def OnBackup(self,buff,event_obj=None):
+        backup = []
+        # first save current file
+        jalfile = buff.GetFileName()
+        self._PreProcess(jalfile)
+        backup.append(jalfile.encode(sys.getfilesystemencoding()))
+        # explore dependencies
+        txt = buff.GetText().splitlines()
+        api = jallib.api_parse_content(txt,strict=False)
+        deps = self.IdentidyDependencies(api)
+        backup.extend([dep[1].encode(sys.getfilesystemencoding()) for dep in deps])
+        # include compiler
+        jalv2 = jalutil.GetJaluinoPrefs().get("JALLIB_JALV2")
+        if jalv2:
+            backup.append(jalv2.encode(sys.getfilesystemencoding()))
+
+        [util.Log(u"[jaluino][warn] Include '%s' in backup" % os.path.basename(f)) for f in backup]
+        zipstr = ZIPDumper(backup)
+
+        zipfn = os.path.basename(jalfile).replace(".jal",".zip")
+        # partially from ed_main.OnSaveAs()
+        nb = self.GetMainWindow().GetNotebook()
+        ctrl = nb.GetCurrentCtrl()
+        dlg = wx.FileDialog(self, _("Choose a Save Location"),
+                            os.path.dirname(jalfile),
+                            zipfn,
+                            u''.join(syntax.GenFileFilters()),
+                            wx.SAVE | wx.OVERWRITE_PROMPT)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            fname = os.path.basename(path)
+            dlg.Destroy()
+            try:
+                fout = file(path,"wb")
+                fout.write(zipstr)
+                fout.close()
+                self.GetMainWindow().PushStatusText(_("Saved File As: %s") % fname, ed_glob.SB_INFO)
+            except Exception,e:
+                ed_mdlg.SaveErrorDlg(self,fname,e)
+                self.GetMainWindow().PushStatusText(_("ERROR: Failed to save %s") % fname, ed_glob.SB_INFO)
+        else:
+            dlg.Destroy()
+        
+        
     def OnSettings(self):
         app = wx.GetApp()
         win = app.GetWindowInstance(cfgdlg.ConfigDialog)
@@ -1190,6 +1248,17 @@ def GetTextBuffer(mainw):
     nb = mainw.GetNotebook()
     return nb.GetCurrentCtrl()
 
+
+def ZIPDumper(filelist):
+    buff = StringIO.StringIO()
+    zip = zipfile.ZipFile(buff,"wb")
+    for f in filelist:
+        zip.write(f,os.path.basename(f))
+    zip.close()
+    buff.seek(0)
+    return buff.read()
+
+
 def GetCompileMenu(mainw,menu):
     compile = wx.MenuItem(menu,ID_COMPILE_LAUNCH,_("Compile") + EdMenuBar.keybinder.GetBinding(ID_COMPILE_LAUNCH))
     bmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_BIN_FILE), wx.ART_MENU)
@@ -1211,7 +1280,6 @@ def GetValidateMenu(mainw,menu):
     bmp = wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK, wx.ART_MENU)
     if not bmp.IsNull():
         validate.SetBitmap(bmp)
-    validate.Enable(HAS_JALLIB)
     mainw.AddMenuHandler(ID_JSG_VALIDATE, OnValidate)
     return validate
 
@@ -1221,7 +1289,6 @@ def GetOpenDepsMenu(mainw,menu):
     if not bmp.IsNull():
         opendeps.SetBitmap(bmp)
     mainw.AddMenuHandler(ID_OPEN_DEPS, OnOpenDependencies)
-    opendeps.Enable(HAS_JALLIB)
     return opendeps
 
 def GetCloseDepsMenu(mainw,menu):
@@ -1230,8 +1297,15 @@ def GetCloseDepsMenu(mainw,menu):
     if not bmp.IsNull():
         closedeps.SetBitmap(bmp)
     mainw.AddMenuHandler(ID_CLOSE_DEPS, OnCloseDependencies)
-    closedeps.Enable(HAS_JALLIB)
     return closedeps
+
+def GetBackupMenu(mainw,menu):
+    backup = wx.MenuItem(menu,ID_BACKUP, _("Backup project") + EdMenuBar.keybinder.GetBinding(ID_BACKUP))
+    bmp = wx.ArtProvider.GetBitmap(str(ed_glob.ID_HARDDISK), wx.ART_MENU)
+    if not bmp.IsNull():
+        backup.SetBitmap(bmp)
+    mainw.AddMenuHandler(ID_BACKUP, OnBackup)
+    return backup
 
 def GetSettingsMenu(mainw,menu):
     pref = wx.MenuItem(menu,ID_SETTINGS, _("Settings") + EdMenuBar.keybinder.GetBinding(ID_SETTINGS))
@@ -1250,6 +1324,8 @@ def BuildFileRelatedMenu(mainw,menu):
         menu.AppendSeparator()
         menu.AppendItem(GetOpenDepsMenu(mainw,menu))
         menu.AppendItem(GetCloseDepsMenu(mainw,menu))
+        menu.AppendSeparator()
+        menu.AppendItem(GetBackupMenu(mainw,menu))
 
 
 def GetMenu(mainw):
@@ -1278,11 +1354,13 @@ def OnValidate(evt):
     ed_msg.PostMessage(MSG_VALIDATE)
 
 def OnOpenDependencies(evt):
-    print "OnOpenDependencies: %s" % evt
     ed_msg.PostMessage(MSG_OPEN_DEPS)
 
 def OnCloseDependencies(evt):
     ed_msg.PostMessage(MSG_CLOSE_DEPS)
+
+def OnBackup(evt):
+    ed_msg.PostMessage(MSG_BACKUP)
 
 def OnSettings(evt):
     ed_msg.PostMessage(MSG_SETTINGS)
