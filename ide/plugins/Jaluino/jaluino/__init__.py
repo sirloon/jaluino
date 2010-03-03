@@ -20,6 +20,7 @@ import os, sys
 import wx
 
 import jalutil
+import util
 # adjust PYTHONPATH for jallib.py
 cfg = jalutil.GetJaluinoPrefs()
 path = cfg.get("JALLIB_PYPATH")
@@ -95,6 +96,21 @@ class Jaluino(plugin.Plugin):
         param mainw: MainWindow Instance
 
         """
+        util.Log("[Jaluino][info] Building Jaluino menu")
+        # Menu
+        # TODO: deal with keybinder
+        bar = mainw.GetMenuBar()
+        menu = jaluino.GetMenu(mainw)
+        # Insert just before Help
+        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == u"Help"]
+        if idx:
+            bar.Insert(idx[0],menu,_("Jaluino"))
+            # disable it, JaluinoWindow will handle this (so if Jaluino shelf isn't active
+            # you can't click on menu entries
+            jaluino.EnableJaluinoMenu(mainw,False)
+        else:
+            util.Log("[Jaluino][info] Building Jaluino menu")
+
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
         self.RegisterJaluinoCommands()
 

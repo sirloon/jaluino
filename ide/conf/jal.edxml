@@ -29,6 +29,7 @@ version attribute used to tell Editra the file has changed since last load
             <keywords value="1">
                  var const
                  off on high low input output true false enabled disabled all_input all_output 
+                 in out
             </keywords>
 
             <keywords value="2">

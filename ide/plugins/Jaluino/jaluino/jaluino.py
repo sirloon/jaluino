@@ -182,10 +182,7 @@ class JaluinoWindow(eclib.ControlBox):
         self.RefreshControlBar()
 
         # Menu
-        # TODO: deal with keybinder
-        bar = self._mw.GetMenuBar()
-        menu = GetMenu(self._mw)
-        bar.Insert(bar.GetMenuCount() - 1,menu,_("Jaluino"))
+        EnableJaluinoMenu(self._mw)
 
         # Event Handlers
         self.Bind(wx.EVT_BUTTON, self.OnButton)
@@ -223,11 +220,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Unsubscribe(self.OnTabContextMessage)
         ed_msg.UnRegisterCallback(self._CanLaunch)
         ed_msg.UnRegisterCallback(self._CanReLaunch)
-        # remove menu entry
-        bar = self._mw.GetMenuBar()
-        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == u"Jaluino"]
-        if idx:
-            bar.Remove(idx[0])
+        EnableJaluinoMenu(self._mw,False)
         super(JaluinoWindow, self).__del__()
 
     def __DoLayout(self):
@@ -386,11 +379,11 @@ class JaluinoWindow(eclib.ControlBox):
             
             ctrlindex = 0
             for txt_ctrl in self._mw.GetNotebook().GetTextControls():
-        		if ctrlindex != e_sel:        	
-        			txt_ctrl.IsActiveJalFile = False
-        		else:
-        			txt_ctrl.IsActiveJalFile = True        		        			
-        		ctrlindex = ctrlindex + 1
+                if ctrlindex != e_sel:            
+                    txt_ctrl.IsActiveJalFile = False
+                else:
+                    txt_ctrl.IsActiveJalFile = True                                    
+                ctrlindex = ctrlindex + 1
 
             fname = self._fnames[e_sel]
             self.SetFile(fname)
@@ -783,14 +776,14 @@ class JaluinoWindow(eclib.ControlBox):
         self._config['file'] = fname
 
         for txt_ctrl in self._mw.GetNotebook().GetTextControls():          
-        	txt_ctrl.IsActiveJalFile = False
-        	if synglob.ID_LANG_JAL == txt_ctrl.GetLangId():
-        		if txt_ctrl.GetFileName() == fname :
-        			util.Log("[jaluino][info] SetActiveJALFileName to :%s:" % fname)
-        			txt_ctrl.IsActiveJalFile = True
+            txt_ctrl.IsActiveJalFile = False
+            if synglob.ID_LANG_JAL == txt_ctrl.GetLangId():
+                if txt_ctrl.GetFileName() == fname :
+                    util.Log("[jaluino][info] SetActiveJALFileName to :%s:" % fname)
+                    txt_ctrl.IsActiveJalFile = True
                 
         self._chFiles.SetStringSelection(os.path.split(fname)[1])
-        self._chFiles.SetToolTipString( fname )	
+        self._chFiles.SetToolTipString( fname )    
         self.GetControlBar().Layout()
 
     def SetLangId(self, langid):
@@ -907,14 +900,14 @@ class JaluinoWindow(eclib.ControlBox):
                 self._fnames.append(txt_ctrl.GetFileName())
                 
             txt_ctrl.IsActiveJalFile = False
-			
+            
         items = [ os.path.basename(fname) for fname in self._fnames ]
         try:
             if len(u''.join(items)):
                 self._chFiles.SetItems(items)
                 if len(self._fnames):
                     self._chFiles.SetToolTipString(self._fnames[0])
-                    self._mw.GetNotebook().GetTextControls()[0].IsActiveJalFile = True	 
+                    self._mw.GetNotebook().GetTextControls()[0].IsActiveJalFile = True     
                     
         except TypeError:
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))
@@ -946,7 +939,6 @@ class JaluinoWindow(eclib.ControlBox):
 
         txt = buff.GetSelectedText()
         # View <symbolname> code
-        print "reg: %s" % sorted(comp._registered_symbol['var'].keys())
         for command in comp._registered_symbol.keys():
             if comp._registered_symbol[command].has_key(txt.lower()):
                 menu_item = menu.Append(ID_OPEN_LIBRARY,_("View") + u" " + txt + u" " + _("code"))
@@ -1007,6 +999,10 @@ class JaluinoWindow(eclib.ControlBox):
 
     def OnValidate(self,buff,event_obj=None):
         jalfile = buff.GetFileName()
+        if not jalfile:
+            self._buffer.AppendUpdate(u">>> No JAL file to validate..\n")
+            self._buffer._OutputBuffer__FlushBuffer()
+            return
         self._PreProcess(jalfile)
         # set last lang/fname, so Editra can find file handler (highlight output)
         self._config['last'] = jalfile
@@ -1028,7 +1024,7 @@ class JaluinoWindow(eclib.ControlBox):
         if jallib.errors or jallib.warnings:
             self._buffer.AppendUpdate(u"\n%s:1: is not JSG compliant !\n\n" % jalfile)
         else:
-             self._buffer.AppendUpdate(u"\n%s is JSG compliant :)\n\n" % jalfile)
+            self._buffer.AppendUpdate(u"\n%s is JSG compliant :)\n\n" % jalfile)
 
         # HACK: calling a private method...
         self._buffer._OutputBuffer__FlushBuffer()
@@ -1335,6 +1331,15 @@ def GetMenu(mainw):
     menu.AppendItem(GetSettingsMenu(mainw,menu))
     return menu
 
+def EnableJaluinoMenu(mainw,enable=True):
+    # Enable Jaluino menu content
+    bar = mainw.GetMenuBar()
+    ml = [menu for menu,label in bar.GetMenus() if label == _("Jaluino")]
+    if ml:
+        menu = ml[0]
+        [menu.Enable(m.GetId(),enable) for m in menu.GetMenuItems()]
+    else:
+        util.Log("[jaluino][warn] Unable to find Jaluino menu, can't enable/disable it")
 
 def OnCompile(evt):
     """Handle the Run Script menu event and dispatch it to the currently
