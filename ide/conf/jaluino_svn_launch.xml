@@ -36,7 +36,7 @@
    <handler name="Hex" id="ID_LANG_HEX">
       <commandlist default="Tiny Bootloader">
          <command name="Tiny Bootloader" execute="%(JALUINO_BIN)s/tinybld2 -s %(serial.baudrate)s -p %(serial.port)s"/>
-         <command name="PDFUSB Bootloader" execute="%(PYTHON_EXEC)s %(JALUINO_ROOT)s/bootloaders/pdfusb/hostapp/UsbBootLoader.py write"/>
+         <command name="PDFUSB Bootloader" execute="%(PYTHON_EXEC)s %(JALUINO_ROOT)s/bootloaders/pdfusb/hostapp/UsbBootLoader.py -x write"/>
          <command name="Wisp Programmer" execute="%(JALUINO_BIN)s/xwisp2u port %(serial.port)s go"/>
       </commandlist>
    </handler>
