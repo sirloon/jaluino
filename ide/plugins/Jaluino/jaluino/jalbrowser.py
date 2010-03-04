@@ -52,7 +52,7 @@ class JalBrowser(object):
         self.rtags.SetElementPriority("variable",1)
         self.rtags.SetElementPriority("tag_blue",0)
 
-        apidesc = jallib.api_parse_content(buff.readlines())
+        apidesc = jallib.api_parse_content(buff.readlines(),strict=False)
         self.fill(apidesc)
 
     def fill(self,apidesc):

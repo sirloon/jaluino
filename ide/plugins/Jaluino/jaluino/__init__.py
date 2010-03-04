@@ -102,7 +102,7 @@ class Jaluino(plugin.Plugin):
         bar = mainw.GetMenuBar()
         menu = jaluino.GetMenu(mainw)
         # Insert just before Help
-        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == u"Help"]
+        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == _("Help")]
         if idx:
             bar.Insert(idx[0],menu,_("Jaluino"))
             # disable it, JaluinoWindow will handle this (so if Jaluino shelf isn't active
