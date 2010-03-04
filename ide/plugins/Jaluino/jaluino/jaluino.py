@@ -150,8 +150,6 @@ class JaluinoWindow(eclib.ControlBox):
 
         # Setup
         self.__DoLayout()
-        if not handlers.InitCustomHandlers(ed_glob.CONFIG['CACHE_DIR']):
-            util.Log(u"[jaluino][warn] failed to load jaluino extensions")
 
         hstate = Profile_Get(JALUINO_KEY)
         if hstate is not None:
@@ -182,7 +180,7 @@ class JaluinoWindow(eclib.ControlBox):
         self.RefreshControlBar()
 
         # Menu
-        EnableJaluinoMenu(self._mw)
+        ##EnableJaluinoMenu(self._mw)
 
         # Event Handlers
         self.Bind(wx.EVT_BUTTON, self.OnButton)
@@ -220,7 +218,7 @@ class JaluinoWindow(eclib.ControlBox):
         ed_msg.Unsubscribe(self.OnTabContextMessage)
         ed_msg.UnRegisterCallback(self._CanLaunch)
         ed_msg.UnRegisterCallback(self._CanReLaunch)
-        EnableJaluinoMenu(self._mw,False)
+        ##EnableJaluinoMenu(self._mw,False)
         super(JaluinoWindow, self).__del__()
 
     def __DoLayout(self):
@@ -534,7 +532,7 @@ class JaluinoWindow(eclib.ControlBox):
         # generalize compile and upload actions
         # sanity check
         if not hasattr(synglob,'ID_LANG_JAL') or not hasattr(synglob,'ID_LANG_HEX'):
-            util.Log("[jaluino][err] Something is wrong, ID languae JAL and HEX can't be found")
+            util.Log("[jaluino][err] Something is wrong, ID language JAL and HEX can't be found")
             self._DisableToolbar()
             return
 
@@ -546,10 +544,13 @@ class JaluinoWindow(eclib.ControlBox):
         compile_enabled = False
         upload_enabled = False
         # if jalv2 relared, enable compile + upload
+        # and enable/disable Jaluino menu (not triggered by HEX related files)
         if handler.GetName() != "Jalv2":
             util.Log("[jaluino][debug] Not jalv2 related, skip it")
             self._DisableCompileToolbar()
+            EnableJaluinoMenu(self._mw,False)
         else:
+            EnableJaluinoMenu(self._mw)
             compile_enabled = True
             upload_enabled = True
             cmds = handler.GetAliases()
@@ -1247,7 +1248,7 @@ def GetTextBuffer(mainw):
 
 def ZIPDumper(filelist):
     buff = StringIO.StringIO()
-    zip = zipfile.ZipFile(buff,"wb")
+    zip = zipfile.ZipFile(buff,"w")
     for f in filelist:
         zip.write(f,os.path.basename(f))
     zip.close()
@@ -1339,7 +1340,7 @@ def EnableJaluinoMenu(mainw,enable=True):
         menu = ml[0]
         [menu.Enable(m.GetId(),enable) for m in menu.GetMenuItems()]
     else:
-        util.Log("[jaluino][warn] Unable to find Jaluino menu, can't enable/disable it")
+        util.Log("[jaluino][warn] Unable to find Jaluino menu, can't %s it" % enable and "enable" or "disable")
 
 def OnCompile(evt):
     """Handle the Run Script menu event and dispatch it to the currently
