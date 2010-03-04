@@ -57,7 +57,6 @@ def GetIncludeAPIFile():
     return apifile
         
 
-
 class Completer(completer.BaseCompleter):
     """Code completer provider"""
     def __init__(self, stc_buffer):
@@ -128,8 +127,12 @@ class Completer(completer.BaseCompleter):
             content = self.GetBufferContent()
         else:
             jalfile = "%s.jal" % libname
+            # we'll look into current main file's directory for extra libraries
+            locallib = os.path.join(os.path.dirname(self.GetBuffer().GetFileName()),jalfile)
             if JALLIBS.get(jalfile):
                 content = file(JALLIBS[jalfile]).readlines()
+            elif os.path.exists(locallib):
+                content = file(locallib).readlines()
             else:
                 content = ""
                 self._log("[jaluino][warn] Unable to get JAL file for library '%s'" % libname)
