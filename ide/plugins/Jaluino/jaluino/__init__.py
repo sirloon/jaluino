@@ -102,14 +102,18 @@ class Jaluino(plugin.Plugin):
         bar = mainw.GetMenuBar()
         menu = jaluino.GetMenu(mainw)
         # Insert just before Help
-        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == _("Help")]
+        idx = [i for i,e in enumerate(bar.GetMenus()) if e[1] == _("&Help").replace("&","")]
         if idx:
+            util.Log("[Jaluino][info] Jaluino menu will be just before Help entry")
             bar.Insert(idx[0],menu,_("Jaluino"))
             # disable it, JaluinoWindow will handle this (so if Jaluino shelf isn't active
             # you can't click on menu entries
-            jaluino.EnableJaluinoMenu(mainw,False)
         else:
-            util.Log("[Jaluino][info] Building Jaluino menu")
+            # put menu just before last entry if can't fing Help menu entry
+            # so at least it's displayed...
+            util.Log("[Jaluino][info] Jaluino menu will be just before last entry")
+            bar.Insert(bar.GetMenuCount()-1,menu,_("Jaluino"))
+        jaluino.EnableJaluinoMenu(mainw,False)
 
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
         self.RegisterJaluinoCommands()
