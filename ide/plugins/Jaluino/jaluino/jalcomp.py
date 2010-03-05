@@ -101,16 +101,36 @@ class Completer(completer.BaseCompleter):
         # current available API
         self._first_level_include = []  # include in current buffer only
 
-        # auto-update API when file gets saved
-        ed_msg.Subscribe(self.OnUpdateAPINeeded, ed_msg.EDMSG_FILE_SAVED)
+        # auto-update API with a timer/worker (brut-force...)
+        # TODO: this really needs serious optimization, as when lots of files are opened,
+        # CPU gets burnt every 1 second...
+        self._timer = wx.Timer(self.GetBuffer())
+        self._something_changed = False     # track changes in buffer
+        self.GetBuffer().Bind(wx.EVT_TIMER, self.OnUpdateAPINeeded,self._timer)
+        # wel will update API every xxx msecs
+        self._timer.Start(1000)
+        # we need to stop timer when buffer gets closed, or segfault will knock at your door :)
+        ed_msg.Subscribe(self.OnTimeStopNeeded, ed_msg.EDMSG_UI_NB_CLOSING)
+        ed_msg.Subscribe(self.OnSomethingChanged, ed_msg.EDMSG_UI_STC_CHANGED)
 
         # Generate current API
         self.GenerateAPI()
 
+    def OnTimeStopNeeded(self,msg):
+        if self._timer.IsRunning():
+            self._timer.Stop()
+
+    def OnSomethingChanged(self,msg):
+        # all buffer/completer will receive this msg, we need to check if it is
+        # related to current buffer
+        if self._buffer is not wx.GetApp().GetCurrentBuffer():
+            return
+        self._something_changed = True
+        
     def OnUpdateAPINeeded(self, msg):
-        # filter: only generate API for buffer being saved
-        if self.GetBuffer().GetFileName() == msg.GetData()[0]:
+        if self._something_changed:
             self.GenerateCurrentAPI()
+            self._something_changed = False
 
     def GetBufferContent(self):
         txt = self.GetBuffer().GetText().splitlines()
