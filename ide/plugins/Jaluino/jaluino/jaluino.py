@@ -239,14 +239,14 @@ class JaluinoWindow(eclib.ControlBox):
         ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Compile") + ":"),
                            wx.ALIGN_LEFT)
         self._exe_ch = wx.Choice(ctrlbar, ID_COMPILE_EXE)
-        self._exe_ch.SetToolTipString(_("Program Executable Command"))
+        self._exe_ch.SetToolTipString(_("Compilation Command"))
         ctrlbar.AddControl(self._exe_ch, wx.ALIGN_LEFT)
 
         # Upload exe
         ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Upload") + ":"),
                            wx.ALIGN_LEFT)
         self._up_ch = wx.Choice(ctrlbar, ID_UPLOAD_EXE)
-        self._up_ch.SetToolTipString(_("Program Executable Command"))
+        self._up_ch.SetToolTipString(_("Upload Command"))
         ctrlbar.AddControl(self._up_ch, wx.ALIGN_LEFT)
 
         # Spacer
@@ -391,6 +391,11 @@ class JaluinoWindow(eclib.ControlBox):
             handler = handlers.GetHandlerById(self._config['lang'])
             cmd = e_obj.GetStringSelection()
             e_obj.SetToolTipString(handler.GetCommand(cmd))
+        elif e_id == ID_UPLOAD_EXE:
+            e_obj = evt.GetEventObject()
+            uhandler = handlers.GetHandlerByName("hex")
+            cmd = e_obj.GetStringSelection()
+            e_obj.SetToolTipString(uhandler.GetCommand(cmd))
         else:
             evt.Skip()
 
