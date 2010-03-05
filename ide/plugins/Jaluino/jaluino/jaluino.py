@@ -978,19 +978,26 @@ class JaluinoWindow(eclib.ControlBox):
         return path
 
     def OpenLibrary(self,libname,line=0):
-        path = self.GetLibraryPath(libname)
-        nb = self.GetMainWindow().GetNotebook()
-        if not path and libname:
-            # maybe it's file path, not a libname ?
-            path = os.path.exists(libname) and libname
-        if path:
-            nb.OpenPage(ebmlib.GetPathName(path),
-                                ebmlib.GetFileName(path),quiet=True)
-            nb.GoCurrentPage()
-        # we may stay in current buffer, still need to move to a line
-        if line:
-            page = nb.GetCurrentPage()
-            page.GotoLine(line)
+        # deactivate history when loading dependency
+        fhist = Profile_Get('FHIST_LVL')
+        try:
+            Profile_Set('FHIST_LVL', 0)
+            path = self.GetLibraryPath(libname)
+            nb = self.GetMainWindow().GetNotebook()
+            if not path and libname:
+                # maybe it's file path, not a libname ?
+                path = os.path.exists(libname) and libname
+            if path:
+                nb.OpenPage(ebmlib.GetPathName(path),
+                                    ebmlib.GetFileName(path),quiet=True)
+                nb.GoCurrentPage()
+            # we may stay in current buffer, still need to move to a line
+            if line:
+                page = nb.GetCurrentPage()
+                page.GotoLine(line)
+        finally:
+            # restore previous settting
+            Profile_Set('FHIST_LVL', fhist)
 
     def CloseLibrary(self,libname):
         nb = self.GetMainWindow().GetNotebook()
