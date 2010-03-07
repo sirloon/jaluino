@@ -99,12 +99,13 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
         vboxSplitter = wx.BoxSizer( wx.VERTICAL )
         vboxSplitter.Add(self.debugView.getView(), -1,wx.EXPAND, 0 )
         self.SetSizer(vboxSplitter)
-        self.NewSession()
+        # self.NewSession()
 
     def OnBreak(self):
     	self.plug_parent.OnBreak()
 
     def NewSession(self):
+        debuggerStarted = False
         self.debugView.reset()
         self._fnames = list()
         for txt_ctrl in self._mw.GetNotebook().GetTextControls():
@@ -124,8 +125,12 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
 			
         	hexFilename = self.dbgfname[:-4] + u".hex"
 
-        	self.debugView.SetupDebugSession( hexFilename, file(self.dbgfname).read(), False )
-        	self._log("[jaluino_debugger][info], picname: %s" % self.debugView.picName)
+        	if ( self.debugView.SetupDebugSession( hexFilename, file(self.dbgfname).read(), False ) ):
+        		self._log("[jaluino_debugger][info], picname: %s" % self.debugView.picName)
+        		debuggerStarted = True
+        	else:
+        		self._log("[jaluino_debugger][info], SetupDebugSession failed")
+        		
 			
         else:
         	self._log("[jaluino_debugger][info] No files to debug" )
@@ -148,8 +153,12 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
             PsDebugView.DOCMGR.InitPositionCache(ed_glob.CONFIG['CACHE_DIR'] + \
                                                   os.sep + u'positions')
 
-        self.debugView.run()
+        if ( debuggerStarted ):
+        	self.debugView.run()
 
+        return debuggerStarted
+		
+		
     def GetLength(self):
     	return 1
 

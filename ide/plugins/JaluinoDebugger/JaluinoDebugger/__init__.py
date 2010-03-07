@@ -174,10 +174,11 @@ class Jaluino_debugger(plugin.Plugin):
     			self._mw.GetNotebook().AddPage(self.control)
     			self.control.Show()
     			
+    		if ( self.control.NewSession() == True ):
+    			self.UpdateMenu(DBG_STATE_RUNNING)
     		else:
-    			self.control.NewSession()
-
-    		self.UpdateMenu(DBG_STATE_RUNNING)
+    			self.UpdateMenu(DBG_STATE_IDLE)
+    			
 
     	else:
     		evt.Skip()

@@ -374,14 +374,6 @@ class JaluinoWindow(eclib.ControlBox):
         e_id = evt.GetId()
         e_sel = evt.GetSelection()
         if e_id == self._chFiles.GetId():
-            
-            ctrlindex = 0
-            for txt_ctrl in self._mw.GetNotebook().GetTextControls():
-                if ctrlindex != e_sel:            
-                    txt_ctrl.IsActiveJalFile = False
-                else:
-                    txt_ctrl.IsActiveJalFile = True                                    
-                ctrlindex = ctrlindex + 1
 
             fname = self._fnames[e_sel]
             self.SetFile(fname)
@@ -781,12 +773,16 @@ class JaluinoWindow(eclib.ControlBox):
         # Set currently selected file
         self._config['file'] = fname
 
-        for txt_ctrl in self._mw.GetNotebook().GetTextControls():          
-            txt_ctrl.IsActiveJalFile = False
-            if synglob.ID_LANG_JAL == txt_ctrl.GetLangId():
-                if txt_ctrl.GetFileName() == fname :
-                    util.Log("[jaluino][info] SetActiveJALFileName to :%s:" % fname)
-                    txt_ctrl.IsActiveJalFile = True
+        if ( ( len(fname) > 4 ) and ( fname[len(fname)-4:].lower() == ".jal" ) ):
+        	util.Log("[jaluino][debug] SetFile, is a JALV2 file :%s:" % fname)
+	        for txt_ctrl in self._mw.GetNotebook().GetTextControls():          
+	            txt_ctrl.IsActiveJalFile = False
+	            # util.Log("[jaluino][debug] SetActiveJALFileName to False for file :%s:" % txt_ctrl.GetFileName())
+	            if txt_ctrl.GetFileName() == fname :
+	            	txt_ctrl.IsActiveJalFile = True
+	            	util.Log("[jaluino][debug] SetActiveJALFileName to True for file :%s:" % txt_ctrl.GetFileName())
+        else:
+        	util.Log("[jaluino][debug] SetFile, not a JALV2 file :%s:" % fname)
                 
         self._chFiles.SetStringSelection(os.path.split(fname)[1])
         self._chFiles.SetToolTipString( fname )    
@@ -905,7 +901,7 @@ class JaluinoWindow(eclib.ControlBox):
             if lang_id == txt_ctrl.GetLangId():
                 self._fnames.append(txt_ctrl.GetFileName())
                 
-            txt_ctrl.IsActiveJalFile = False
+            # txt_ctrl.IsActiveJalFile = False
             
         items = [ os.path.basename(fname) for fname in self._fnames ]
         try:
@@ -913,7 +909,6 @@ class JaluinoWindow(eclib.ControlBox):
                 self._chFiles.SetItems(items)
                 if len(self._fnames):
                     self._chFiles.SetToolTipString(self._fnames[0])
-                    self._mw.GetNotebook().GetTextControls()[0].IsActiveJalFile = True     
                     
         except TypeError:
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))

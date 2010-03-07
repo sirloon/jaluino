@@ -23,7 +23,7 @@ class JalV2AsmParser:
         self.adrToLine = [0]*(128*1024)
         self.adr =[]       # private int[] adr = null;
         self.adressSet =[] # private Set adressSet = new HashSet();
-        self.picName = "UNKNOWN"        
+        self.picName = None        
         for i in range(0,len( self.lineToAdr )):
             self.lineToAdr[i] = None
             self.adrToLine[i] = None

@@ -152,7 +152,7 @@ forever loop                                  -- loop forever
 
    END CASE
 
-   delay_100ms(30)
+   -- delay_100ms(30)
 
 end loop
 

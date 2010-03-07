@@ -65,6 +65,12 @@ enable_digital_io()
 ;@watch_hex PORTC portc_hex
 ;@watch_hex PORTC portc_hex
  
+ 
+--procedure isr() is 
+--pragma interrupt
+--led_0 = 0
+--end procedure
+ 
 --
 forever loop
    led_0 = sw_0

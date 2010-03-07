@@ -194,7 +194,7 @@ class State:
             self.shadow_status_regs = [ self.STATUS ]
         
         if self.pic.shadow_regs.has_key( self.PCL ):
-            self.shadow_status_regs = self.pic.shadow_regs[ self.PCL ]
+            self.shadow_pcl_regs = self.pic.shadow_regs[ self.PCL ]
         else:
             self.shadow_status_regs = [ self.PCL ]
            

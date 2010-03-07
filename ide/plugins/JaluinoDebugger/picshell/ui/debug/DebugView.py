@@ -1463,6 +1463,10 @@ class DebugView :
 		
 		wholeCode = self.asmParser.parseAsmFile(asmFileName, [])
 		self.picName = self.asmParser.picName
+		
+		if ( self.picName == None ):
+			return False
+			 
 		self.langParser = JalV2AsmParser()			
 		code = self.langParser.parseAsmFile(asmFileName, None, None )
 
@@ -1498,6 +1502,7 @@ class DebugView :
 		self.buildDevices(self.devices)		
 		self.listUnitTest.DeleteAllItems()
 		
+		return True
 		
     def Close( self ):
 		self.Quit = True
