@@ -667,6 +667,26 @@ class JaluinoWindow(eclib.ControlBox):
         handenv['PATH'] = path
         return handenv
 
+    def GetMainFile(self):
+        # in case none selection, main is '', idx is -1...
+        main = self._chFiles.GetStringSelection()
+        idx = self._chFiles.GetSelection()
+        if not main or idx < 0:
+            return self._config['file']
+        try:
+            # look at fnames to have full path. even if tab is moved, order is the same
+            # so we should get the correct index
+            abspath = self._fnames[idx]
+            if not abspath.endswith(main):
+                raise ValueError("Absolute path '%s' isn't related to '%s'..." % (abspath,main))
+            main = abspath
+        except Exception,e:
+            # failed to get correct path, back to original behavior
+            util.Log("[jaluino][info] Couldn't find absolute path for '%s': %s" % (main,e))
+            main = self._config['file']
+        
+        return main
+
     def Compile(self, fname, cmd, args, ftype):
         """Run the given file
         @param fname: File path
@@ -688,7 +708,6 @@ class JaluinoWindow(eclib.ControlBox):
                                _("Restart needed"))
 
         self._log("[jaluino][info] Compiling with cmd=%s, fname=%s, args=%s, path=%s, env=%s" % (cmd,fname,args,path,env))
-        self._log("[jaluino][info] path: %s" % env.get("PATH"))
         self._compile_worker = eclib.ProcessThread(self._buffer,cmd,fname,args,path,env,use_shell=False)
         self._compile_worker.start()
 
@@ -740,7 +759,8 @@ class JaluinoWindow(eclib.ControlBox):
             cmd = handler.GetCommand(cmd)
             args = []
             self._config['largs'] = args
-            self.Compile(self._config['file'], cmd, args, self._config['lang'])
+            tocompile = self.GetMainFile()
+            self.Compile(tocompile, cmd, args, self._config['lang'])
         else:
             util.Log("[jaluino][info] Abort compile")
             self._compile_worker.Abort()
@@ -759,7 +779,8 @@ class JaluinoWindow(eclib.ControlBox):
             cmd = handler.GetCommand(cmd)
             args = []
             self._config['largs'] = args
-            self.Upload(self._config['file'], cmd, args, self._config['lang'])
+            toupload = self.GetMainFile()
+            self.Upload(toupload, cmd, args, self._config['lang'])
         else:
             util.Log("[jaluino][info] Abort upload")
             self._upload_worker.Abort()
