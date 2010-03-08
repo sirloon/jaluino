@@ -134,6 +134,7 @@ class JaluinoWindow(eclib.ControlBox):
         self._mw = self.__FindMainWindow()
         self._buffer = OutputDisplay(self)
         self._fnames = list()
+        self._mainfile = None
         self._chFiles = None # Created in __DoLayout
         self._compile_worker = None
         self._upload_worker = None
@@ -186,6 +187,7 @@ class JaluinoWindow(eclib.ControlBox):
         self.Bind(wx.EVT_BUTTON, self.OnButton)
         self.Bind(wx.EVT_CHOICE, self.OnChoice)
         ed_msg.Subscribe(self.OnPageChanged, ed_msg.EDMSG_UI_NB_CHANGED)
+        ed_msg.Subscribe(self.OnPageClosed,ed_msg.EDMSG_UI_NB_CLOSED)
         ed_msg.Subscribe(self.OnFileOpened, ed_msg.EDMSG_FILE_OPENED)
         ed_msg.Subscribe(self.OnThemeChanged, ed_msg.EDMSG_THEME_CHANGED)
         ed_msg.Subscribe(self.OnLexerChange, ed_msg.EDMSG_UI_STC_LEXER)
@@ -377,6 +379,7 @@ class JaluinoWindow(eclib.ControlBox):
 
             fname = self._fnames[e_sel]
             self.SetFile(fname)
+            self.UpdateMainFile()
             self._chFiles.SetToolTipString(fname)
         elif e_id == ID_COMPILE_EXE:
             e_obj = evt.GetEventObject()
@@ -424,8 +427,8 @@ class JaluinoWindow(eclib.ControlBox):
 
         fname = msg.GetData()
         self.SetFile(fname)
-        ##ctx = msg.GetContext()
-        ##zetab = elf._mw._mpane.GetNotebook().GetPage(xxx)
+        if not self.GetMainFile():
+            self.UpdateMainFile()
 
         # Setup filetype settings
         self.RefreshControlBar()
@@ -470,6 +473,9 @@ class JaluinoWindow(eclib.ControlBox):
         if hasattr(ctrl, 'GetFileName'):
             self.SetupControlBar(ctrl)
         # TODO enable/disable menu items when jalv2 related or not
+
+    def OnPageClosed(self,msg):
+        self.UpdateMainFile()
 
     def OnCompileMsg(self, msg):
         """Run or abort a launch process if this is the current 
@@ -668,11 +674,15 @@ class JaluinoWindow(eclib.ControlBox):
         return handenv
 
     def GetMainFile(self):
+        return self._mainfile
+
+    def UpdateMainFile(self):
         # in case none selection, main is '', idx is -1...
         main = self._chFiles.GetStringSelection()
         idx = self._chFiles.GetSelection()
         if not main or idx < 0:
-            return self._config['file']
+            self._mainfile = self._config['file']
+            self._chFiles.SetStringSelection(os.path.basename(self._mainfile))
         try:
             # look at fnames to have full path. even if tab is moved, order is the same
             # so we should get the correct index
@@ -685,7 +695,10 @@ class JaluinoWindow(eclib.ControlBox):
             util.Log("[jaluino][info] Couldn't find absolute path for '%s': %s" % (main,e))
             main = self._config['file']
         
-        return main
+        self._mainfile = main
+
+    def SetMainFile(self,fname):
+        self._mainfile = fname
 
     def Compile(self, fname, cmd, args, ftype):
         """Run the given file
@@ -920,16 +933,14 @@ class JaluinoWindow(eclib.ControlBox):
             if lang_id == txt_ctrl.GetLangId():
                 self._fnames.append(txt_ctrl.GetFileName())
                 
-            # txt_ctrl.IsActiveJalFile = False
-            
-        items = [ os.path.basename(fname) for fname in self._fnames ]
-        prev = self._chFiles.GetStringSelection()
+        items = filter(None,[os.path.basename(fname) for fname in self._fnames])
         try:
             if len(u''.join(items)):
                 self._chFiles.SetItems(items)
                 if len(self._fnames):
                     self._chFiles.SetToolTipString(self._fnames[0])
-            self._chFiles.SetStringSelection(prev)
+                if self.GetMainFile():
+                    self._chFiles.SetStringSelection(os.path.basename(self.GetMainFile()))
         except TypeError:
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))
             self._chFiles.SetItems([''])
