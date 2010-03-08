@@ -774,18 +774,16 @@ class JaluinoWindow(eclib.ControlBox):
         self._config['file'] = fname
 
         if ( ( len(fname) > 4 ) and ( fname[len(fname)-4:].lower() == ".jal" ) ):
-        	util.Log("[jaluino][debug] SetFile, is a JALV2 file :%s:" % fname)
-	        for txt_ctrl in self._mw.GetNotebook().GetTextControls():          
-	            txt_ctrl.IsActiveJalFile = False
-	            # util.Log("[jaluino][debug] SetActiveJALFileName to False for file :%s:" % txt_ctrl.GetFileName())
-	            if txt_ctrl.GetFileName() == fname :
-	            	txt_ctrl.IsActiveJalFile = True
-	            	util.Log("[jaluino][debug] SetActiveJALFileName to True for file :%s:" % txt_ctrl.GetFileName())
+            util.Log("[jaluino][debug] SetFile, is a JALV2 file :%s:" % fname)
+            for txt_ctrl in self._mw.GetNotebook().GetTextControls():
+                txt_ctrl.IsActiveJalFile = False
+                util.Log("[jaluino][debug] SetActiveJALFileName to False for file :%s:" % txt_ctrl.GetFileName())
+                if txt_ctrl.GetFileName() == fname :
+                    txt_ctrl.IsActiveJalFile = True
+                    util.Log("[jaluino][debug] SetActiveJALFileName to True for file :%s:" % txt_ctrl.GetFileName())
         else:
-        	util.Log("[jaluino][debug] SetFile, not a JALV2 file :%s:" % fname)
+            util.Log("[jaluino][debug] SetFile, not a JALV2 file :%s:" % fname)
                 
-        self._chFiles.SetStringSelection(os.path.split(fname)[1])
-        self._chFiles.SetToolTipString( fname )    
         self.GetControlBar().Layout()
 
     def SetLangId(self, langid):
@@ -904,12 +902,13 @@ class JaluinoWindow(eclib.ControlBox):
             # txt_ctrl.IsActiveJalFile = False
             
         items = [ os.path.basename(fname) for fname in self._fnames ]
+        prev = self._chFiles.GetStringSelection()
         try:
             if len(u''.join(items)):
                 self._chFiles.SetItems(items)
                 if len(self._fnames):
                     self._chFiles.SetToolTipString(self._fnames[0])
-                    
+            self._chFiles.SetStringSelection(prev)
         except TypeError:
             util.Log("[jaluino][err] UpdateCurrent Files: " + str(items))
             self._chFiles.SetItems([''])
