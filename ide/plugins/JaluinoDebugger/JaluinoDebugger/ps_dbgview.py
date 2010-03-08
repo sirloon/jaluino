@@ -104,7 +104,7 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
     def OnBreak(self):
     	self.plug_parent.OnBreak()
 
-    def NewSession(self):
+    def NewSession(self, bStepInto):
         debuggerStarted = False
         self.debugView.reset()
         self._fnames = list()
@@ -154,7 +154,7 @@ class PsDebugView(wx.Panel, ed_tab.EdTabBase):
                                                   os.sep + u'positions')
 
         if ( debuggerStarted ):
-        	self.debugView.run()
+            self.debugView.run(bStepInto)
 
         return debuggerStarted
 		

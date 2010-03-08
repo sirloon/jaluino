@@ -88,7 +88,7 @@ class DebugView :
         self.listWatchVars = None
         self.listWatchRegs = None
         self.watchedReg = set()
-
+        self.hexFileName = ""
        
         # -------------------------------------------------------
         # ASM Debug list  panel
@@ -916,13 +916,16 @@ class DebugView :
         self.toggleBreakPointAtAdr(adr)
         
         
-    def run(self):
+    def run(self, bStepInto ):
          if (not self.running) and self.listAsm.GetItemCount()>0:
-            self._runTo(self.breakpoints)
-        
-    def restart(self):
+            if  bStepInto:
+                self._runTo(None)
+            else:
+                self._runTo(self.breakpoints)
+            
+    def restart(self, bStepInto):
     	self.SetupDebugSession(self.sessionHexFileName , self.sessionJalSrcCode, self.sessionVirtualDelay )
-        self.run()
+    	self.run(bStepInto)
         
     def reset(self):
         if self.running:
@@ -1042,7 +1045,6 @@ class DebugView :
     def updateBreakPoints(self):
         self.listBreakpoint.DeleteAllItems()
         for adr in range(0,self.listAsm.GetItemCount()) :
-            #if (self.breakpoints[adr]):
             if (self.breakpoints.has_key(adr)):
                 mark ="X"
                 self.listBreakpoint.InsertStringItem(0,str(adr))
@@ -1448,6 +1450,11 @@ class DebugView :
         
     def SetupDebugSession(self,hexFileName, jalSrcCode, virtualDelay ):
     
+		if ( self.hexFileName != hexFileName ):
+		    self.breakpoints = {}
+            
+		self.hexFileName = hexFileName
+		    
 		self.sessionHexFileName = hexFileName
 		self.sessionJalSrcCode = jalSrcCode
 		self.sessionVirtualDelay = virtualDelay
@@ -1501,6 +1508,8 @@ class DebugView :
 		
 		self.buildDevices(self.devices)		
 		self.listUnitTest.DeleteAllItems()
+		
+		self.updateBreakPoints()
 		
 		return True
 		

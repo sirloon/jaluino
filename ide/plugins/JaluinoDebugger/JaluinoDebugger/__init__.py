@@ -33,7 +33,7 @@ ID_DBGMENU_START = wx.NewId()
 ID_DBGMENU_STEPINTO = wx.NewId()
 ID_DBGMENU_STOP = wx.NewId()
 ID_DBGMENU_CONTINUE = wx.NewId()
-ID_DBGMENU_BREAKALL = wx.NewId()
+ID_DBGMENU_START_AND_RUN = wx.NewId()
 ID_DBGMENU_RESTART = wx.NewId()
 
 DBG_STATE_IDLE = 0
@@ -45,6 +45,9 @@ class Jaluino_debugger(plugin.Plugin):
     plugin.Implements(iface.MainWindowI)
     def PlugIt(self, parent):
         """Adds the view menu entry registers the event handler"""
+        
+        self.bStepInto = False
+        
         if parent:
             self.control = None
 
@@ -57,11 +60,11 @@ class Jaluino_debugger(plugin.Plugin):
             bar = parent.GetMenuBar()
                         
             debug_menu = EdMenu()
-            self.menuStartDebugger = debug_menu.Append(ID_DBGMENU_START   , _("&Start Debugging"))
-            self.menuStopDebugger = debug_menu.Append(ID_DBGMENU_STOP    , _("Sto&p Debugging"))
-            self.menuBreakAllDebugger = debug_menu.Append(ID_DBGMENU_BREAKALL, _("&Break All"))
-            self.menuRestartDebugger = debug_menu.Append(ID_DBGMENU_RESTART, _("&Restart"))
-            self.menuContinueDebugger = debug_menu.Append(ID_DBGMENU_CONTINUE, _("&Continue"))
+            self.menuStartDebugger = debug_menu.Append(ID_DBGMENU_START        , _("&Start Debugger"))
+            self.menuStartAndRunDebugger = debug_menu.Append(ID_DBGMENU_START_AND_RUN, _("&Start && Run Debugger"))
+            self.menuStopDebugger = debug_menu.Append(ID_DBGMENU_STOP          , _("Sto&p Debugging"))
+            #self.menuRestartDebugger = debug_menu.Append(ID_DBGMENU_RESTART    , _("&Restart"))
+            self.menuContinueDebugger = debug_menu.Append(ID_DBGMENU_CONTINUE  , _("&Continue"))
 
             bar.Insert(bar.GetMenuCount() - 1,debug_menu,  _("&Debug"))
             
@@ -77,7 +80,7 @@ class Jaluino_debugger(plugin.Plugin):
         is providing.
 
         """
-        return [(ID_DBGMENU_START, self.StartDebugger),(ID_DBGMENU_BREAKALL, self.BreakAllDebugger),(ID_DBGMENU_RESTART, self.RestartDebugger),(ID_DBGMENU_STOP, self.StopDebugger),(ID_DBGMENU_CONTINUE, self.ContinueDebugger)]
+        return [(ID_DBGMENU_START, self.StartDebugger),(ID_DBGMENU_START_AND_RUN, self.StartAndRunDebugger),(ID_DBGMENU_STOP, self.StopDebugger),(ID_DBGMENU_CONTINUE, self.ContinueDebugger)]
 
     def GetUIHandlers(self):
         """This is used to register the update ui handler with the app and
@@ -93,22 +96,22 @@ class Jaluino_debugger(plugin.Plugin):
     	self._log("[JaluinoDebugger][info] UpdateMenu(%d)" % state)
     	if state == DBG_STATE_IDLE:
             self.menuStartDebugger.Enable( True )
+            self.menuStartAndRunDebugger.Enable( True )
             self.menuStopDebugger.Enable( False )
-            self.menuBreakAllDebugger.Enable( False )
             self.menuContinueDebugger.Enable( False )
-            self.menuRestartDebugger.Enable( False )
+            #self.menuRestartDebugger.Enable( False )
     	if state == DBG_STATE_RUNNING:
             self.menuStartDebugger.Enable( False )
+            self.menuStartAndRunDebugger.Enable( False )
             self.menuStopDebugger.Enable( True )
-            self.menuBreakAllDebugger.Enable( True )
             self.menuContinueDebugger.Enable( False )
-            self.menuRestartDebugger.Enable( True )
+            #self.menuRestartDebugger.Enable( True )
     	if state == DBG_STATE_PAUSED:
-            self.menuStartDebugger.Enable( False )
-            self.menuStopDebugger.Enable( False )
-            self.menuBreakAllDebugger.Enable( False )
+            self.menuStartDebugger.Enable( True )
+            self.menuStartAndRunDebugger.Enable( True )
+            self.menuStopDebugger.Enable( True )
             self.menuContinueDebugger.Enable( True )
-            self.menuRestartDebugger.Enable( True )
+            #self.menuRestartDebugger.Enable( True )
 
     def CloseDebugWindow(self):
     	self._log("[JaluinoDebugger][info] CloseDebugWindow")
@@ -116,27 +119,22 @@ class Jaluino_debugger(plugin.Plugin):
     	self.UpdateMenu(DBG_STATE_IDLE)    	 
     
     def RestartDebugger(self,evt):
-    	"""Startus the debugger"""
+    	"""Restart the debugger"""
     	if evt.GetId() == ID_DBGMENU_RESTART:
     		self._log("[JaluinoDebugger][info] RestartDebugger")
     		
     		if self.control != None:
-    			self.control.debugView.restart() 		
+    			self.UpdateMenu(DBG_STATE_RUNNING)
+    			self.control.debugView.restart( self.bStepInto) 		
     		
-    		self.UpdateMenu(DBG_STATE_RUNNING)
-
-    def BreakAllDebugger(self,evt):
-    	"""BreakAll the debugger"""
-    	if evt.GetId() == ID_DBGMENU_BREAKALL:
-    		self._log("[JaluinoDebugger][info] BreakAllDebugger")
+    		#if self.bStepInto == True:
+    		#    self.UpdateMenu(DBG_STATE_PAUSED)
+    		#else:
+    		#    self.UpdateMenu(DBG_STATE_RUNNING)
     		
-    		if self.control != None:
-    			self.control.debugView.stop() 		
-    		
-    		self.UpdateMenu(DBG_STATE_PAUSED)
 
     def StopDebugger(self,evt):
-    	"""Startus the debugger"""
+    	"""Stop the debugger"""
     	if evt.GetId() == ID_DBGMENU_STOP:
     		self._log("[JaluinoDebugger][info] StopDebugger")
     		
@@ -151,35 +149,53 @@ class Jaluino_debugger(plugin.Plugin):
     		self._log("[JaluinoDebugger][info] Continue")
     		
     		if self.control != None:
-    			self.control.debugView.run() 		
-    		self.UpdateMenu(DBG_STATE_RUNNING)
+    			self.UpdateMenu(DBG_STATE_RUNNING)
+    			self.control.debugView.run(False) 		
 
+    def _StartAndRunDebugger(self, bStepInto):
+		"""Start and run the debugger"""
+		self.bStepInto = bStepInto
+
+		createNew = False
+		
+		if ( self.control == None ):
+			createNew = True
+		else:
+			if ( self.control.IsClosed  == True ):
+			    createNew = True
+		    			
+		if ( createNew == True ):
+			self.control = ps_dbgview.PsDebugView(self, self._mw, wx.ID_ANY)
+			# self.LOG("[ed_pages][evt] New Page Created ID: %d" % self.control.GetId())
+			#self.control.Hide()
+			self._mw.GetNotebook().AddPage(self.control)
+			self.control.Show()
+			
+		self.UpdateMenu( DBG_STATE_RUNNING )
+		if ( self.control.NewSession(self.bStepInto) == False ):
+			self.UpdateMenu(DBG_STATE_IDLE)
+
+
+    def StartAndRunDebugger(self,evt):
+    	"""Start and run the debugger"""
+
+        self.bStepInto = False
+
+    	if evt.GetId() == ID_DBGMENU_START_AND_RUN:
+    		self._log("[JaluinoDebugger][info] Start and Run debugger")
+    		self._StartAndRunDebugger(False)    		
+    	else:
+    		evt.Skip()
+
+    			
     def StartDebugger(self,evt):
     	"""Startus the debugger"""
-    	if evt.GetId() == ID_DBGMENU_START:
-    		self._log("[JaluinoDebugger][info] StartDebugger")
-    		
-    		createNew = False
-    		
-    		if ( self.control == None ):
-    			createNew = True
-    		else:
-    			if ( self.control.IsClosed  == True ):
-	    			createNew = True
-    		    			
-    		if ( createNew == True ):
-    			self.control = ps_dbgview.PsDebugView(self, self._mw, wx.ID_ANY)
-    			# self.LOG("[ed_pages][evt] New Page Created ID: %d" % self.control.GetId())
-    			#self.control.Hide()
-    			self._mw.GetNotebook().AddPage(self.control)
-    			self.control.Show()
-    			
-    		if ( self.control.NewSession() == True ):
-    			self.UpdateMenu(DBG_STATE_RUNNING)
-    		else:
-    			self.UpdateMenu(DBG_STATE_IDLE)
-    			
 
+    	self.bStepInto = True
+
+    	if evt.GetId() == ID_DBGMENU_START:
+    		self._log("[JaluinoDebugger][info] Start debugger")
+    		self._StartAndRunDebugger(True)    		
     	else:
     		evt.Skip()
 
