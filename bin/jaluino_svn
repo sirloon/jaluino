@@ -37,12 +37,18 @@ fi
 
 export JALLIB_ROOT="$RUNFROM/../3rdparty/jallib_svn"
 export JALUINO_ROOT="$RUNFROM/.."
-# path to jallib root's libraries.
-export JALLIB_REPOS=$JALUINO_ROOT/lib:$JALLIB_ROOT/include
 # path to jallib root's samples.
 export JALLIB_SAMPLEDIR=$JALUINO_ROOT/samples
+# path to jallib root's libraries.
+if [ "$JALLIB_REPOS" = "" ]
+then
+    export JALLIB_REPOS=$JALUINO_ROOT/lib:$JALLIB_ROOT/include
+fi
 # path to "jalv2" executable. If not in your PATH, set an absolute path to the exec
-export JALLIB_JALV2="$JALLIB_ROOT/compiler/jalv2"
+if [ "$JALLIB_JALV2" = "" ]
+then
+    export JALLIB_JALV2="$JALLIB_ROOT/compiler/jalv2"
+fi
 
 
 

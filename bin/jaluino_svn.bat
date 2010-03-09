@@ -29,13 +29,13 @@ if defined JALUINO_ROOT set RUNFROM=%JALUINO_ROOT%
 rem Path to the jallib root's repository (containing "tools,"compiler","include" dirs)
 set JALLIB_ROOT=%RUNFROM%\3rdparty\jallib_svn
 set JALUINO_ROOT=%RUNFROM%
-rem path to jallib root's libraries.
-set JALLIB_REPOS=%JALUINO_ROOT%\lib;%JALLIB_ROOT%\include
 rem path to jallib root's samples.
 set JALLIB_SAMPLEDIR=%JALUINO_ROOT%\samples
+rem path to jallib root's libraries.
+if not defined JALLIB_REPOS set JALLIB_REPOS=%JALUINO_ROOT%\lib;%JALLIB_ROOT%\include
 rem path to "jalv2" executable. If not in your PATH, set an absolute path to the exec
 rem Arguments can be added if they're needed as default (Ex: "jalv2 -long-start")
-set JALLIB_JALV2=%JALLIB_ROOT%\compiler\jalv2.exe
+if not defined JALLIB_JALV2 set JALLIB_JALV2=%JALLIB_ROOT%\compiler\jalv2.exe
 
 
 rem get python from default/standard location, but honor PYTHON_EXEC
