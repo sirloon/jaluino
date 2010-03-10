@@ -970,6 +970,12 @@ class JaluinoWindow(eclib.ControlBox):
         menu.AppendSeparator()
 
         txt = buff.GetSelectedText()
+
+        if len(txt) == 0:
+            currentword = buff.GetWordFromPosition( buff.GetCurrentPos() )
+            print "CurrentWord is "
+            txt = currentword[0]            
+
         # View <symbolname> code
         for command in comp._registered_symbol.keys():
             if comp._registered_symbol[command].has_key(txt.lower()):
@@ -978,6 +984,11 @@ class JaluinoWindow(eclib.ControlBox):
 
     def OnOpenLibrary(self,buff,event_obj):
         chars = buff.GetSelectedText()
+
+        if len(chars) == 0:
+            currentword = buff.GetWordFromPosition( buff.GetCurrentPos() )
+            chars = currentword[0]
+
         comp = buff.GetCompleter()
         for command in comp._registered_symbol.keys():
             apis = comp.GetAPIs(chars,command)
