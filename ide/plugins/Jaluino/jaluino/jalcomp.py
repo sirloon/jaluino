@@ -55,7 +55,23 @@ def GetIncludeAPIFile():
     path = ed_glob.CONFIG['CACHE_DIR']
     apifile = os.path.join(path,INCLUDE_API_FILE)
     return apifile
-        
+
+def GetLibraryPath(libname,buff):
+    '''Return path to file defining JAL libraries. Search in JALLIB_REPOS
+    directories, and locally into dirname of current buffer's filename
+    '''
+    jalfile = "%s.jal" % libname
+    path = JALLIBS.get(jalfile)
+    locallib = os.path.join(os.path.dirname(buff.GetFileName()),jalfile)
+    if JALLIBS.get(jalfile):
+        return JALLIBS[jalfile]
+    elif os.path.exists(locallib):
+        # register/cache
+        JALLIBS[jalfile] = locallib
+        return locallib
+    else:
+        return None
+
 
 class Completer(completer.BaseCompleter):
     """Code completer provider"""
@@ -146,13 +162,9 @@ class Completer(completer.BaseCompleter):
         if libname is None:
             content = self.GetBufferContent()
         else:
-            jalfile = "%s.jal" % libname
-            # we'll look into current main file's directory for extra libraries
-            locallib = os.path.join(os.path.dirname(self.GetBuffer().GetFileName()),jalfile)
-            if JALLIBS.get(jalfile):
-                content = file(JALLIBS[jalfile]).readlines()
-            elif os.path.exists(locallib):
-                content = file(locallib).readlines()
+            libpath = GetLibraryPath(libname,self.GetBuffer())
+            if libpath:
+                content = file(libpath).readlines()
             else:
                 content = ""
                 self._log("[jaluino][warn] Unable to get JAL file for library '%s'" % libname)
@@ -259,6 +271,13 @@ class Completer(completer.BaseCompleter):
 
     def GetAPIs(self,chars,command):
         apis = [symbol_info for symbol_info in self._api_symbols.get(command,[]) if symbol_info[0] == chars.lower()]
+        if command == "include":
+            # enrich with local include, "chars"
+            libpath = GetLibraryPath(chars,self.GetBuffer())
+            if libpath:
+                content = file(libpath).readlines()
+                apidesc = jallib.api_parse_content(content,strict=False)
+                apis.append(apidesc)
         return apis
 
 

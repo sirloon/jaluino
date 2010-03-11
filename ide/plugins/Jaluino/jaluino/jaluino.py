@@ -548,7 +548,7 @@ class JaluinoWindow(eclib.ControlBox):
         upload_enabled = False
         # if jalv2 relared, enable compile + upload
         # and enable/disable Jaluino menu (not triggered by HEX related files)
-        if handler.GetName() != "Jalv2":
+        if not  handler.GetName().startswith("Jalv2"):
             util.Log("[jaluino][debug] Not jalv2 related, skip it")
             self._DisableCompileToolbar()
             EnableJaluinoMenu(self._mw,False)
@@ -671,6 +671,10 @@ class JaluinoWindow(eclib.ControlBox):
         path = handenv.get("PATH","")
         path = path + os.pathsep + os.pathsep.join([cfg.get('JALUINO_BIN',""),os.path.dirname(cfg.get('JALLIB_JALV2',""))])
         handenv['PATH'] = path
+        # same for PYTHON_PATH
+        pypath = handenv.get("PYTHONPATH","")
+        pypath = pypath + os.pathsep + cfg.get('JALLIB_PYPATH',"")
+        handenv['PYTHONPATH'] = pypath
         return handenv
 
     def GetMainFile(self):
@@ -835,12 +839,6 @@ class JaluinoWindow(eclib.ControlBox):
 
         """
         self._busy = running
-        ##if self._compile_worker and self._compile_worker.isAlive():
-        ##    origLabel = _("Compile")
-        ##    actionID = ID_COMPILE
-        ##elif self._upload_worker and self._upload_worker.isAlive():
-        ##    origLabel = _("Upload")
-        ##    actionID = ID_UPLOAD
         if self._config['lastactionid'] == ID_COMPILE:
             actionID = ID_COMPILE
             origLabel = _("Compile")
@@ -973,7 +971,6 @@ class JaluinoWindow(eclib.ControlBox):
 
         if len(txt) == 0:
             currentword = buff.GetWordFromPosition( buff.GetCurrentPos() )
-            print "CurrentWord is "
             txt = currentword[0]            
 
         # View <symbolname> code
@@ -1009,17 +1006,13 @@ class JaluinoWindow(eclib.ControlBox):
                     _,_,libfile,line,_ = api
                     wx.CallAfter(self.OpenLibrary,libfile,line)
  
-    def GetLibraryPath(self,libname):
-        jalfile = "%s.jal" % libname
-        path = jalcomp.JALLIBS.get(jalfile)
-        return path
-
     def OpenLibrary(self,libname,line=0):
         # deactivate history when loading dependency
         fhist = Profile_Get('FHIST_LVL')
         try:
             Profile_Set('FHIST_LVL', 0)
-            path = self.GetLibraryPath(libname)
+            buff = GetTextBuffer(self._mw)
+            path = jalcomp.GetLibraryPath(libname,buff)
             nb = self.GetMainWindow().GetNotebook()
             if not path and libname:
                 # maybe it's file path, not a libname ?
@@ -1028,6 +1021,8 @@ class JaluinoWindow(eclib.ControlBox):
                 nb.OpenPage(ebmlib.GetPathName(path),
                                     ebmlib.GetFileName(path),quiet=True)
                 nb.GoCurrentPage()
+            else:
+                util.Log(u"[jaluino][debug] No such library: '%s'" % libname)
             # we may stay in current buffer, still need to move to a line
             if line:
                 page = nb.GetCurrentPage()
@@ -1038,7 +1033,8 @@ class JaluinoWindow(eclib.ControlBox):
 
     def CloseLibrary(self,libname):
         nb = self.GetMainWindow().GetNotebook()
-        path = self.GetLibraryPath(libname)
+        buff = GetTextBuffer(self._mw)
+        path = jalcomp.GetLibraryPath(libname,buff)
         nb.GotoPage(path)
         # this won't close modified tabs because there's a "*" in label
         label = nb.GetCurrentPage().GetTabLabel()
@@ -1081,8 +1077,9 @@ class JaluinoWindow(eclib.ControlBox):
 
     def IdentidyDependencies(self,api):
         deps = []
+        buff = GetTextBuffer(self._mw)
         for libname in api['include']:
-            path = self.GetLibraryPath(libname['name'])
+            path = jalcomp.GetLibraryPath(libname['name'],buff)
             if path:
                 deps.append((libname['name'],path))
                 api = jallib.api_parse([path]).values()[0]

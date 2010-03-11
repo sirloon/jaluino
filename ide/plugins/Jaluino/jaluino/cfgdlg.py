@@ -775,13 +775,13 @@ class EnvironmentPanel(wx.Panel):
         libs.SetValue("\n".join(cfg.get("JALLIB_REPOS","").split(os.pathsep)))
         sboxsz.Add(libs,1,wx.EXPAND)
 
-        msg = _("Specify where jallib.py library can be found (JALLIB_PYPATH):")
+        msg = _("Specify where jallib.py library can be found\nand other python libraries to include (JALLIB_PYPATH):")
         txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
         txt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
         sboxsz.Add(txt)
-        execs = wx.TextCtrl(self, ID_JALLIB_PYPATH,u"",(0,0),(450,-1))
+        execs = wx.TextCtrl(self, ID_JALLIB_PYPATH,u"",style=wx.TE_MULTILINE,)
         execs.SetValue("\n".join(cfg.get("JALLIB_PYPATH","").split(os.pathsep)))
-        sboxsz.Add(execs)
+        sboxsz.Add(execs,1,wx.EXPAND)
 
         msg = _("Specify where executables (compiler wrappers, uploaders, etc...) can be found (JALUINO_BIN):")
         txt = wx.StaticText(self, label=msg,style=wx.ALIGN_LEFT)
@@ -827,7 +827,7 @@ class EnvironmentPanel(wx.Panel):
         elif e_id == ID_JALUINO_BIN:
             cfg['JALUINO_BIN'] = e_val
         elif e_id == ID_JALLIB_PYPATH:
-            cfg['JALLIB_PYPATH'] = e_val
+            cfg['JALLIB_PYPATH'] = os.pathsep.join(e_val.splitlines())
         elif e_id == ID_PYTHON_EXEC:
             cfg['PYTHON_EXEC'] = e_val
         elif e_id == ID_JALUINO_LAUNCH_FILE:
