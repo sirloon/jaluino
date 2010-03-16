@@ -11,12 +11,24 @@ mainboard/jaluino_medium_v13b_schematic.pdf
 mainboard/label_for_jaluino_medium.pdf
 
 # Shields
+#   Crumboard
 shields/crumboard/Crumboard_pcb.pdf
 shields/crumboard/Crumboard_schematic.pdf
 shields/crumboard/label_for_crumboard.pdf
+#   Styx
 shields/styx/jaluino_shield_styx_pcb_front.pdf
 shields/styx/jaluino_shield_styx_pcb.pdf
 shields/styx/jaluino_shield_styx.pdf
+###   Jallib ("Plug'n Learn" shield)
+##shields/jallib/jallib_shield_schematic.pdf
+##shields/jallib/jallib_shield_pcb.pdf
+##shields/jallib/dog-m_display_for_jallib_shield_schematic.pdf
+##shields/jallib/dog-m_display_for_jallib_shield_pcb.pdf
+#   Stepper shield
+shields/stepper/single_stepper_shield_schematic.pdf
+shields/stepper/single_stepper_shield_pcb.pdf
+shields/stepper/single_stepper_label.pdf
+#   Templates
 shields/template/jaluino_shield_template_eagle.zip
 shields/template/jaluino_shield_template_orcad.zip
 shields/template/jaluino_shield_template_layo1_pcb.zip
@@ -34,10 +46,40 @@ samples/crumboard_pintools.jal
 
 # 3rd party
 3rdparty/README
-3rdparty/tinybld2036.zip
+3rdparty/tinybld2039.zip
 
 # Bootloaders
 bootloaders/tinybl
+bootloaders/pdfusb/
+
+# IDE & tools
+install.py
+ide/plugins/Jaluino
+ide/plugins/JaluinoDebugger
+ide/plugins/Jaluino-0.1-py2.5.egg
+ide/plugins/Jaluino-0.1-py2.6.egg
+ide/conf/jal.edxml
+ide/conf/hex.edxml
+ide/conf/jaluino_launch.xml
+ide/conf/jaluino_launch_win.xml
+ide/conf/README
+bin/jaluino_svn
+bin/jaluino_svn.bat
+bin/pdfusb
+bin/pdfusb.bat
+bin/tinybl
+bin/tinybld2
+bin/tinybld2.exe
+bin/tinybld2w.exe
+bin/piccodes.ini
+bin/xwisp2
+bin/xwisp2u
+bin/xwisp2.exe
+bin/xwisp2w.exe
+bin/xwisp2.cfg
+bin/xwisp2_12.cfg
+bin/xwisp2_14.cfg
+bin/xwisp2_16.cfg
 
 # Misc
 3RD_PARTY

@@ -33,10 +33,17 @@ fi
 #########################
 # ENVIRONMENT VARIABLES #
 #########################
-# Path to the jallib root's repository (containing "tools", "samples", "lib", "3rdparty", ...)
-
-export JALLIB_ROOT="$RUNFROM/../3rdparty/jallib_svn"
 export JALUINO_ROOT="$RUNFROM/.."
+# Path to the jallib root's repository (containing "tools", "samples", "lib", "3rdparty", ...)
+# guess if running from SVN or from release package
+# Note: this won't work when "svn export"
+if test -d "$RUNFROM/.svn" 
+then
+    export JALLIB_ROOT="$RUNFROM/../3rdparty/jallib_svn"
+else
+    export JALLIB_ROOT=$JALUINO_ROOT
+fi
+
 # path to jallib root's samples.
 export JALLIB_SAMPLEDIR=$JALUINO_ROOT/samples
 # path to jallib root's libraries.

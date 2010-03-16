@@ -8,13 +8,15 @@
       <!-- List of commands that are available to the launcher
       default attribute specifies the default command to use
       -->
-      <commandlist default="Jaluino with Tiny">
+      <commandlist default="Jaluino with Tiny/18F">
          <!-- Commands that are available to be executed
          name attribute is the alias that will be shown in the dropdown list
          execute attribute is the actual command that will be run
          -->
-         <command name="Jaluino with PDFUSB" execute="jalv2 -no-fuse -loader18 2048"/>
-         <command name="Jaluino with Tiny" execute="jalv2 -loader18 4"/>
+         <command name="Jaluino with PDFUSB" execute="jaluino compile -loader18 2048 -no-fuse"/>
+         <command name="Jaluino with Tiny/18F" execute="jaluino compile -loader18 4"/>
+         <command name="Jaluino with Tiny/16F" execute="jaluino compile -long-start"/>
+         <command name="Jaluino without bootloader" execute="jaluino compile"/>
       </commandlist>
  
       <!-- Regular Expression patterns for highlighting error
@@ -33,8 +35,9 @@
 
    <handler name="Hex" id="ID_LANG_HEX">
       <commandlist default="Tiny Bootloader">
-         <command name="Tiny Bootloader ***" execute="tinybld2 -s 115200"/>
-         <command name="PDFUSB Bootloader" execute="pdfusb"/>
+         <command name="Tiny Bootloader" execute="%(JALUINO_BIN)s/tinybld2 -s %(serial.baudrate)s -p %(serial.port)s"/>
+         <command name="PDFUSB Bootloader" execute="%(PYTHON_EXEC)s %(JALUINO_ROOT)s/bootloaders/pdfusb/hostapp/UsbBootLoader.py -x write"/>
+         <command name="Wisp Programmer" execute="%(JALUINO_BIN)s/xwisp2u port %(serial.port)s go"/>
       </commandlist>
    </handler>
  

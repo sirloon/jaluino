@@ -1,6 +1,12 @@
 jaluino-next:
 ------------
 
+IDE: 
+  - added JaluinoIDE, an IDE for Jaluino, based on Editra,
+    with syntax highlighting, code browser, autocompletion,
+    pre-defined commands for compiler and bootloaders, code
+    validation, backup, and much more :)
+
 mainboard:
  - added pin numbers, updated labels
 
@@ -8,17 +14,18 @@ documentation:
  - updated to include pin numbers
 
 shields:
- - jallib shield: experiment most PIC features with this shield, and
-   learn to use jallib with: push buttons, PWM with power output, ADC,
-   I2C with RTC, LCD, 7-segment displays, ...
  - stepper shield: drive a stepper motor
 
 libraries:
  - jaluino_medium_pinmap.jal: mapping between PIC pins and numbers
  - firmata.jal: first implementation of Firmata protocol for Jaluino
 
+bootloaders:
+ - updated tinybd2
+ - added PDFUSB bootloade support
+
 samples
- - firmata demo, crumboard samples, ...
+ - more crumboard samples
 
 
 

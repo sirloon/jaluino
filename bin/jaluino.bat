@@ -26,9 +26,11 @@ rem call from something above, or directly called ?
 set RUNFROM=%CD%\..
 if defined JALUINO_ROOT set RUNFROM=%JALUINO_ROOT%
 
-rem Path to the jallib root's repository (containing "tools,"compiler","include" dirs)
-set JALLIB_ROOT=%RUNFROM%\3rdparty\jallib_svn
 set JALUINO_ROOT=%RUNFROM%
+rem Path to the jallib root's repository (containing "tools,"compiler","include" dirs)
+set JALLIB_ROOT=%RUNFROM%
+rem if running from SVN, adjust
+if exist %JALUINO_ROOT%\.svn set JALLIB_ROOT=%RUNFROM%\3rdparty\jallib_svn
 rem path to jallib root's samples.
 set JALLIB_SAMPLEDIR=%JALUINO_ROOT%\samples
 rem path to jallib root's libraries.

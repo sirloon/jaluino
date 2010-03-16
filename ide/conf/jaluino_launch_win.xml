@@ -8,15 +8,15 @@
       <!-- List of commands that are available to the launcher
       default attribute specifies the default command to use
       -->
-      <commandlist default="Jaluino SVN with Tiny/18F">
+      <commandlist default="Jaluino with Tiny/18F">
          <!-- Commands that are available to be executed
          name attribute is the alias that will be shown in the dropdown list
          execute attribute is the actual command that will be run
          -->
-         <command name="Jaluino SVN with PDFUSB" execute="%(JALUINO_BIN)s\jaluino_svn.bat compile -loader18 2048 -no-fuse"/>
-         <command name="Jaluino SVN with Tiny/18F" execute="%(JALUINO_BIN)s\jaluino_svn.bat compile -loader18 4"/>
-         <command name="Jaluino SVN with Tiny/16F" execute="%(JALUINO_BIN)s\jaluino_svn.bat compile -long-start"/>
-         <command name="Jaluino SVN without bootloader" execute="%(JALUINO_BIN)s\jaluino_svn.bat compile"/>
+         <command name="Jaluino with PDFUSB" execute="%(JALUINO_BIN)s\jaluino.bat compile -loader18 2048 -no-fuse"/>
+         <command name="Jaluino with Tiny/18F" execute="%(JALUINO_BIN)s\jaluino.bat compile -loader18 4"/>
+         <command name="Jaluino with Tiny/16F" execute="%(JALUINO_BIN)s\jaluino.bat compile -long-start"/>
+         <command name="Jaluino without bootloader" execute="%(JALUINO_BIN)s\jaluino.bat compile"/>
       </commandlist>
  
       <!-- Regular Expression patterns for highlighting error

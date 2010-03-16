@@ -15,10 +15,6 @@ import os, sys, re
 import weakref
 import cPickle
 
-import xml
-import xml.dom
-import xml.dom.minidom as minidom
-
 import wx.stc
 
 #--------------------------------------------------------------------------#

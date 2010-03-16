@@ -88,6 +88,9 @@ prepare:
 	# manually add needed device files
 	cp ../3rdparty/jallib_svn/include/device/18f4550.jal distrib/jaluino-${VERSION}/lib
 	cp ../3rdparty/jallib_svn/include/device/chipdef_jallib.jal distrib/jaluino-${VERSION}/lib
+	# same for some python libs
+	-mkdir -p distrib/jaluino-${VERSION}/tools
+	cp ../3rdparty/jallib_svn/toos/jallib.py distrib/jaluino-${VERSION}/tools
 	# get compiler from jallib
 	cd distrib/jaluino-export/3rdparty/jallib_svn/ && tar cfv - compiler | tar xfv - -C ../../../jaluino-${VERSION}
 	# TODO: wait for a jalapi DITA integration

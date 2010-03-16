@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-# This script try to guess some environment configuration
+# This script is aimed to automacally install Jaluino IDE
+# plugins and configuration files. Can be used either when 
+# Jaluino comes from SVN sources, or from a release package.
+#
+# It tries to guess some environment configuration
 # and generate a default configuration file used by Editra
 # and Jaluino IDE plugin to determine a default environment.
 # It also installs all Jaluino IDE related configuration and
@@ -17,15 +21,28 @@ import cPickle
 def common():
     runfrom = os.path.abspath(os.curdir)
     jaluino_root = runfrom
-    jallib_root = os.path.join(jaluino_root,"3rdparty","jallib_svn")
     jaluino_bin = os.path.join(jaluino_root,"bin")
+    # adjust if running from SVN or release package
+    jallib_root = None
+    jallib_respo = None
+    jaluino_svn = None
+    if os.path.exists(os.path.join(jaluino_root,".svn")):
+        jallib_root = os.path.join(jaluino_root,"3rdparty","jallib_svn")
+        jallib_repos = os.pathsep.join([os.path.join(jaluino_root,"lib"),
+                                        os.path.join(jallib_root,"include")])
+        jaluino_svn = 1
+    else:
+        jallib_root = jaluino_root  # all in "lib"
+        jallib_repos = os.path.join(jaluino_root,"lib")
+        jaluino_svn = 0
+
     return {'RUNFROM'       : runfrom,
             'JALUINO_ROOT'  : jaluino_root,
             'JALLIB_ROOT'   : jallib_root,
             'JALUINO_BIN'   : jaluino_bin,
-            'JALLIB_REPOS'  : os.pathsep.join([os.path.join(jaluino_root,"lib"),
-                                               os.path.join(jallib_root,"include")]),
-            'JALLIB_PYPATH' : os.pathsep.join([os.path.join(jallib_root,"tools")]),
+            'JALLIB_REPOS'  : jallib_repos,
+            'JALLIB_PYPATH' : os.path.join(jallib_root,"tools"),
+            'JALUINO_SVN'   : jaluino_svn,
            }
 
 def nix():
@@ -44,7 +61,7 @@ def nix():
         sys.exit(255)
 
     nix_env = {'PYTHON_EXEC'         : python_exec,
-               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch.xml",
+               'JALUINO_LAUNCH_FILE' : "jaluino_launch.xml",
                 'JALLIB_JALV2'       : os.path.join(common_env['JALLIB_ROOT'],"compiler","jalv2"),
               }
 
@@ -74,7 +91,7 @@ def win():
         sys.exit(255)
 
     win_env = {'PYTHON_EXEC'         : python_exec,
-               'JALUINO_LAUNCH_FILE' : "jaluino_svn_launch_win.xml",
+               'JALUINO_LAUNCH_FILE' : "jaluino_launch_win.xml",
                'JALLIB_JALV2'        : os.path.join(common_env['JALLIB_ROOT'],"compiler","jalv2.exe"),
               }
 
@@ -104,6 +121,9 @@ def install():
     print
 
     env = get_env()
+    print "Jaluino running from %s" % (env.get("JALUINO_SVN") and "SVN" or "release package")
+    print
+    print
 
     print "Jaluinoide env:" % env
     for k,v in env.items():
