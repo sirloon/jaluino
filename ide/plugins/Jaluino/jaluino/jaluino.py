@@ -134,7 +134,6 @@ class JaluinoWindow(eclib.ControlBox):
         self._mw = self.__FindMainWindow()
         self._buffer = OutputDisplay(self)
         self._fnames = list()
-        self._mainfile = None
         self._chFiles = None # Created in __DoLayout
         self._compile_worker = None
         self._upload_worker = None
@@ -472,9 +471,10 @@ class JaluinoWindow(eclib.ControlBox):
         self.UpdateCurrentFiles(ctrl.GetLangId())
         if hasattr(ctrl, 'GetFileName'):
             self.SetupControlBar(ctrl)
-        # TODO enable/disable menu items when jalv2 related or not
 
     def OnPageClosed(self,msg):
+        self._config['lang'] = GetLangIdFromMW(self._mw)
+        self.UpdateCurrentFiles(self._config['lang'])
         self.UpdateMainFile()
 
     def OnCompileMsg(self, msg):
@@ -484,13 +484,18 @@ class JaluinoWindow(eclib.ControlBox):
         if self.CanLaunch():
             shelf = self._mw.GetShelf()
             shelf.RaiseWindow(self)
-            self.StartStopCompile()
+            self._config['lastactionid'] = ID_COMPILE
+            tocompile = self._config['file']
+
+            self.StartStopCompile(tocompile)
 
     def OnUploadMsg(self, msg):
         if self.CanLaunch():
             shelf = self._mw.GetShelf()
             shelf.RaiseWindow(self)
-            self.StartStopUpload()
+            self._config['lastactionid'] = ID_UPLOAD
+            toupload = self._config['file']
+            self.StartStopUpload(toupload)
 
     def OnValidateMsg(self, msg):
         buff = GetTextBuffer(self._mw)
@@ -678,15 +683,15 @@ class JaluinoWindow(eclib.ControlBox):
         return handenv
 
     def GetMainFile(self):
-        return self._mainfile
+        return self._prefs['mainfile']
 
     def UpdateMainFile(self):
         # in case none selection, main is '', idx is -1...
         main = self._chFiles.GetStringSelection()
         idx = self._chFiles.GetSelection()
         if not main or idx < 0:
-            self._mainfile = self._config['file']
-            self._chFiles.SetStringSelection(os.path.basename(self._mainfile))
+            self._prefs['mainfile'] = self._config['file']
+            self._chFiles.SetStringSelection(os.path.basename(self._prefs['mainfile']))
         try:
             # look at fnames to have full path. even if tab is moved, order is the same
             # so we should get the correct index
@@ -695,14 +700,14 @@ class JaluinoWindow(eclib.ControlBox):
                 raise ValueError("Absolute path '%s' isn't related to '%s'..." % (abspath,main))
             main = abspath
         except Exception,e:
-            # failed to get correct path, back to original behavior
+            # failed to get correct path, reset main file so doesn't keep previous
             util.Log("[jaluino][info] Couldn't find absolute path for '%s': %s" % (main,e))
-            main = self._config['file']
+            main = None
         
-        self._mainfile = main
+        self._prefs['mainfile'] = main
 
     def SetMainFile(self,fname):
-        self._mainfile = fname
+        self._prefs['mainfile'] = fname
 
     def Compile(self, fname, cmd, args, ftype):
         """Run the given file
@@ -763,7 +768,7 @@ class JaluinoWindow(eclib.ControlBox):
         self._upload_worker = eclib.ProcessThread(self._buffer,cmd,fhex,args,path,env,use_shell=False)
         self._upload_worker.start()
 
-    def StartStopCompile(self):
+    def StartStopCompile(self,tocompile=None):
         if self._prefs.get('autoclear'):
             self._buffer.Clear()
 
@@ -776,14 +781,14 @@ class JaluinoWindow(eclib.ControlBox):
             cmd = handler.GetCommand(cmd)
             args = []
             self._config['largs'] = args
-            tocompile = self.GetMainFile()
+            tocompile = tocompile or self.GetMainFile()
             self.Compile(tocompile, cmd, args, self._config['lang'])
         else:
             util.Log("[jaluino][info] Abort compile")
             self._compile_worker.Abort()
             self._compile_worker = None
 
-    def StartStopUpload(self):
+    def StartStopUpload(self,toupload=None):
         if self._prefs.get('autoclear'):
             self._buffer.Clear()
 
@@ -796,7 +801,7 @@ class JaluinoWindow(eclib.ControlBox):
             cmd = handler.GetCommand(cmd)
             args = []
             self._config['largs'] = args
-            toupload = self.GetMainFile()
+            toupload = toupload or self.GetMainFile()
             self.Upload(toupload, cmd, args, self._config['lang'])
         else:
             util.Log("[jaluino][info] Abort upload")
@@ -811,7 +816,7 @@ class JaluinoWindow(eclib.ControlBox):
         # Set currently selected file
         self._config['file'] = fname
 
-        if ( ( len(fname) > 4 ) and ( fname[len(fname)-4:].lower() == ".jal" ) ):
+        if fname.lower().endswith(".jal"):
             util.Log("[jaluino][debug] SetFile, is a JALV2 file :%s:" % fname)
             for txt_ctrl in self._mw.GetNotebook().GetTextControls():
                 txt_ctrl.IsActiveJalFile = False
@@ -949,6 +954,8 @@ class JaluinoWindow(eclib.ControlBox):
         page = data.GetUserData('page')
         if page.GetLangId() != synglob.ID_LANG_JAL:
             return
+        # update current file when building context menu
+        self.SetFile(page.GetFileName())
         menu.AppendSeparator()
         BuildFileRelatedMenu(self._mw,menu)
 
