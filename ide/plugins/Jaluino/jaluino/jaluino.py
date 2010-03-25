@@ -683,7 +683,7 @@ class JaluinoWindow(eclib.ControlBox):
         return handenv
 
     def GetMainFile(self):
-        return self._prefs['mainfile']
+        return self._prefs.get('mainfile')
 
     def UpdateMainFile(self):
         # in case none selection, main is '', idx is -1...
