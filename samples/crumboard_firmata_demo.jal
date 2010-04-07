@@ -7,7 +7,74 @@
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
 -- Description: this program shows how to setup and use Firmata protocol
+-- You can use a simple serial console to send and receive raw Firmata commands,
+-- or use a dedicated GUI tools.
 --
+-- We'll use python serial... The following is more about testing guidelines.
+-- You can have a look, but expect raw information...
+-- 
+-- When PIC is powered, LED will blink version (typically, one strobe, then two
+-- strobes, that's version 2.1). It'll also send version through serial. Open
+-- a python terminal, like ipython, and type:
+-- >>> import serial
+-- >>> ser = serial.Serial(port="/dev/ttyUSB0",baudrate=115200)
+--  
+-- Now read 3 bytes:
+-- >>> ser.read(3)
+-- '\xf9\x02\x01'
+-- 
+-- '\xf9' is a special byte corresponding to FIRMATA_REPORT_VERSION. It means
+-- "what's following is about firmware version". '\x02\x01' is the actual
+-- version: 2.1
+-- 
+-- Now let's setup a pin as output and control a LED from serial comms.
+-- >>> ser.write('\xf4\x00\x01')
+-- '\xf4' corresponds to FIRMATA_SET_PIN_MODE, '\x00' means pin #0, and '\x01'
+-- means "output".
+--
+-- Let's turn on that LED
+-- >>> ser.write('\x90\x01\x00')
+-- '0x90' is coming from a sum: 0x90 + 0 = 0x90. This means 0x90 is the command
+-- and 0 is the port number (so that's the first port). '0x01' are LSB (0-6 bits)
+-- and '0x00' are MSB (7-13 bits). So we're basically saying "on PORT #0, turn on 
+-- pin #0 to high". Pin #0, because LSB 0x01 is 0b_0000_0001
+--
+-- Phew... Let's have a break.
+-- OK, now let's continue with analog messages. Start with flushing all chars
+-- >>> ser.flush()
+-- You'll see many chars, these are coming from previous commands we sent, as 
+-- echo, ACK or the like.
+--
+-- Setup a voltage divider for pin_A0. Don't forget to remove jumper JP1.
+-- Let's configure one ADC channel. This is actually tricky, because we're not
+-- specifying a pin number, as stated in Firmata protocol, but rather a number
+-- of active ADC channels. Why ? Because 18f4550 has dependent ADC channels, we
+-- can't select any pin.
+-- >>> ser.write('\xf4\x01\x02')
+-- Remember ? "Activate 1 ADC channel"
+-- 
+-- How to read this ? Well, we need to tell Firmata to report ADC value.
+-- >>> ser.write('\xC0\x01')
+-- Again, '\xC0' is a sum: command '\xC0' + ADC channel #0 = \xC0. '\x01' means
+-- "enable". So we're saying "enable reporting for ADC channel #0".
+--
+-- Now expect to get flood from serial... Let's turn off reporting, and check
+-- what PIC sent to us...
+-- >>> ser.write('\C0\x01')
+-- >>> ser.read(20)
+--
+-- You should get something like:
+-- '\xc0\x01\xe0|\x03' with '\xe0|\x03' repeated several times. What does
+-- this mean ? '\xe0' means "it's about ADC channel #0". Result is then coded
+-- with 2 * 7-bits "byte". LSB: "|" = 124, MSB: 3.
+-- So results is (3 << 7) + 124 = 508. Since ADC value is coded using 10 bits, 
+-- and since 2^10 = 1024, and since voltage divides by 2 (1K/1K), and since
+-- 508 =~ 1024/2 = 512, everything is working fine !...
+--
+--
+
+
+
 include jaluino_medium
 
 include delay
@@ -29,6 +96,12 @@ alias firmata_carrier is serial_hw_data
 -- (led1 is on pin_A0 => pin #0 according to jaluino_medium_pinmap.jal
 var byte firmata_version_blink_pinnum = 0
 
+-- setup dynamic ADC since Firmata will act on ADC channels at runtime
+const bit ADC_DYNAMIC = true
+var byte adc_nchannel = 0
+var bit adc_high_resolution = false
+var byte adc_nvref = 0
+include adc
 
 include firmata
 firmata_begin()
