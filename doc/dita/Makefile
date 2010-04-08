@@ -15,7 +15,7 @@ prepare:
 
 userguide-pdf: prepare
 	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/jaluino_medium_userguide.ditamap -Dprompt.output.type=pdf -Dprompt.output.directory=`pwd`/tmp -Dprompt.output.confirm=y
-	mv `pwd`/tmp/jaluino_medium_userguide.pdf `pwd`/tmp/Jaluino_User_Guide_${USERGUIDE_VERSION}.pdf
+	mv `pwd`/tmp/jaluino_medium_userguide.pdf `pwd`/tmp/User_Guide_${USERGUIDE_VERSION}.pdf
 
 userguide-html: prepare
 	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/jaluino_medium_userguide.ditamap -Dprompt.output.type=web -Dprompt.output.directory=`pwd`/tmp -Dprompt.output.confirm=y
@@ -38,7 +38,7 @@ publish-userguide-front: userguide-front
 
 starter-pdf: prepare
 	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/jaluino_medium_getting_started.ditamap -Dprompt.output.type=pdf -Dprompt.output.directory=`pwd`/tmp -Dprompt.output.confirm=y
-	mv `pwd`/tmp/jaluino_medium_getting_started.pdf `pwd`/tmp/Jaluino_Getting_Started_${STARTER_VERSION}.pdf
+	mv `pwd`/tmp/jaluino_medium_getting_started.pdf `pwd`/tmp/Getting_Started_${STARTER_VERSION}.pdf
 
 starter-html: prepare
 	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/jaluino_medium_getting_started.ditamap -Dprompt.output.type=web -Dprompt.output.directory=`pwd`/tmp -Dprompt.output.confirm=y
