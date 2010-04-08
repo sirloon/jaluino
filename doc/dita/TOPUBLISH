@@ -19,17 +19,22 @@
 
 # ditamap
 jaluino_medium_userguide.ditamap                japp_userguide_config.py      2010012702
+jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010040801
 
-# DITA xml (userguide)
+# User Guide
 mainboard/jaluino_intro.xml                     japp_userguide_config.py      2010012702
 mainboard/jaluino_medium_build.xml              japp_userguide_config.py      2010012701
 mainboard/jaluino_medium_description.xml        japp_userguide_config.py      2010012701
 mainboard/jaluino_medium_hardware_setup.xml     japp_userguide_config.py      2010012701
 mainboard/jaluino_medium_schematics.xml         japp_userguide_config.py      2010012701
 
-# DITA xml (shields)
+# Shields
 shields/connectors/jaluino_connectors.xml       japp_shields_config.py        2010012703
 shields/crumboard/jaluino_crumboard.xml         japp_shields_config.py        2010012701
 shields/styx/jaluino_styx.xml                   japp_shields_config.py        2010012701
 shields/jaluino_shields.xml                     japp_shields_config.py        2010012701
+
+# Getting Started
+starter/introduction.xml                        japp_starter_config.py        2010040801
+starter/installation.xml                        japp_starter_config.py        2010040801
 

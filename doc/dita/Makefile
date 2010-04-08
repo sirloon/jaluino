@@ -3,8 +3,8 @@
 USERGUIDE_VERSION=0.2
 STARTER_VERSION=0.1
 
-JAPPCONF_STARTER=japp_config_starter.py
-JAPPCONF_USERGUIDE=japp_config_userguide.py
+JAPPCONF_STARTER=japp_starter_config.py
+JAPPCONF_USERGUIDE=japp_userguide_config.py
 
 
 prepare:
@@ -32,7 +32,7 @@ userguide-front: userguide-html
 	cd ../../tools/japp && python2.5 htmlizer.py ${JAPPCONF_USERGUIDE} ../../doc/dita/tmp/front.html
 
 publish-userguide-front: userguide-front
-	cd ../../../tools/japp && python2.5 publish.py ${JAPPCONF_USERGUIDE} ../../doc/dita/tmp/topublish 
+	cd ../../tools/japp && python2.5 publish.py ${JAPPCONF_USERGUIDE} ../../doc/dita/tmp/topublish 
 
 # Getting Started
 
@@ -55,5 +55,5 @@ starter-front: starter-html
 	cd ../../tools/japp && python2.5 htmlizer.py ${JAPPCONF_STARTER} ../../doc/dita/tmp/front.html
 
 publish-starter-front: starter-front
-	cd ../../../tools/japp && python2.5 publish.py ${JAPPCONF_STARTER} ../../doc/dita/tmp/topublish 
+	cd ../../tools/japp && python2.5 publish.py ${JAPPCONF_STARTER} ../../doc/dita/tmp/topublish 
 

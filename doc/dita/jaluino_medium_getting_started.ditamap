@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE bookmap PUBLIC "-//OASIS//DTD DITA BookMap//EN" "bookmap.dtd" []>
+<bookmap id="bookmap-1">
+  <booktitle>
+    <mainbooktitle>Getting started with Jaluino</mainbooktitle>
+    <booktitlealt><image href="starter/images/startingblock.jpg" width="300" placement="break"/>Step-by-step guidelines to get started with Jaluino board</booktitlealt>
+  </booktitle>
+  <bookmeta>
+    <prodinfo>
+      <prodname>Jaluino Medium</prodname>
+      <vrmlist>
+        <vrm version="1.3"/>
+      </vrmlist>
+    </prodinfo>
+    <bookrights>
+      <copyrfirst>
+        <year>2009</year>
+      </copyrfirst>
+      <copyrlast>
+        <year>2010</year>
+      </copyrlast>
+      <bookowner>
+        <organization>Jaluino Group</organization>
+      </bookowner>
+      <summary>Downloading and installing Jaluino, blinking a LED, choosing a bootloader</summary>
+    </bookrights>
+  </bookmeta>
+  <frontmatter>
+    <booklists>
+      <toc/>
+    </booklists>
+  </frontmatter>
+  <chapter>
+    <topicref href="starter/introduction.xml"/>
+  </chapter>
+  <chapter>
+    <topicref href="starter/installation.xml"/>
+  </chapter>
+  <appendix navtitle="Appendix">
+    <topicref navtitle="License" href="misc/license.xml"/>
+  </appendix>
+</bookmap>

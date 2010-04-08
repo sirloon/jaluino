@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<topic id="template_id">
+  <title>Getting started with Jaluino</title>
+  <prolog>
+    <author>Sebastien Lelong</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <p><image href="images/startingblock.jpg" align="center" placement="break" width="300"/></p>
+    <section>
+      <title>
+        <b>Step-by-step guidelines to get started with Jaluino board</b>
+      </title>
+      <p><b>Downloading and installing Jaluino, blinking a LED, choosing a bootloader. Version @VERSION@.</b></p>
+    </section>
+    <p id="firstcontent">This is the online HTML version of &quot;Getting Started with Jaluino&quot; PDF version. You can also <xref href="http://jaluino.googlecode.com/files/Getting_Started_@VERSION@.pdf" format="html">download</xref> the PDF version from Jallib download <xref href="http://code.google.com/p/jaluino/downloads/list" format="html">section</xref>, where you&apos;ll also find all Jaluino packages.</p>
+    <p>The Jaluino  Team</p>
+    <section>
+      <title>Table of Content</title>
+<!--keep the following empty, this is a placeholder for generated TOC-->    </section>
+  </body>
+</topic>
