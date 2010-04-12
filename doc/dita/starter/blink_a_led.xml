@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<topic id="starter_blink">
+  <title>Blink a LED</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <p>So far so good, you&apos;ve been able to setup your Jaluino environment, it&apos;s now time to dive into this &quot;Blink a LED&quot; experiment. This will ensure your Jaluino board is working properly. At least to blink a LED...</p>
+    <section>
+      <title>How do you say &quot;Hello&quot; ?</title>
+      <p>Blinking a LED is somewhat the equivalent of a &quot;Hello World&quot; example, if you&apos;re familiar with software computing. It&apos;s supposed to be the simplest program, ever, which basically prints &quot;Hello World&quot;, claiming to the whole world it&apos;s alive.</p>
+      <p>Printing something on a screen with a microcontroller isn&apos;t that simple.</p>
+      <p>In microcontroller world, there&apos;s also an hardware part. So this &quot;Hello World&quot; example also has to be very simple on that side too. Blinking a LED seems to fit both hardware and software requirements of simplicity...</p>
+      <p>Careful though: even blinking a LED can be a hair-pulling generator. I hope you&apos;ll find enough information to pass this exam without getting bald.</p>
+    </section>
+    <section>
+      <title>Hardware setup</title>
+      <p>First let&apos;s get our parts together. You&apos;ll need:</p>
+      <p><ul>
+          <li>a Jaluino board</li>
+          <li>a breadboard</li>
+          <li>a LED, red is good</li>
+          <li>a resistor, from 330 to 1K</li>
+        </ul></p>
+      <p>Basically, as simple as it can be, we&apos;ll plug a LED and a resistor to one of the PIC output, as shown in the following schematic.</p>
+      <p><fig>
+          <title>Blinking a LED. Schematic only shows relevant components for this experiment.</title>
+          <image href="images/jaluino_blink_sch.png" placement="break"/>
+        </fig></p>
+      <p>When assembling Jaluino and all these components on a breadboard, you should get something like this:</p>
+      <p><fig>
+          <title>Blinking a LED, assembling the whole using a breadboard</title>
+          <image href="images/jaluino_blink_bb.png" placement="break" otherprops="clickable" width="200"/>
+        </fig></p>
+      <p>Double check LED pinout, be sure it&apos;s not inverted. The longest pin is the anode, it must be connected to pin RA0. The pin on the flat side is the cathode, it must be connected to the ground.</p>
+    </section>
+  </body>
+</topic>

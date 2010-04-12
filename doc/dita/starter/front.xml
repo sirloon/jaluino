@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
-<topic id="template_id">
+<topic id="starter_front">
   <title>Getting started with Jaluino</title>
   <prolog>
     <author>Sebastien Lelong</author>
     <publisher>Jaluino Group</publisher>
   </prolog>
   <body>
-    <p><image href="images/startingblock.jpg" align="center" placement="break" width="300"/></p>
+    <p><image href="images/startingblock.jpg" width="300" align="center" placement="break"/></p>
     <section>
       <title>
         <b>Step-by-step guidelines to get started with Jaluino board</b>

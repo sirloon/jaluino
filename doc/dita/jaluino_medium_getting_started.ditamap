@@ -36,6 +36,9 @@
   <chapter>
     <topicref href="starter/installation.xml"/>
   </chapter>
+  <chapter>
+    <topicref href="starter/blink_a_led.xml"/>
+  </chapter>
   <appendix navtitle="Appendix">
     <topicref navtitle="License" href="misc/license.xml"/>
   </appendix>
