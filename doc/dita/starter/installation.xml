@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_install">
   <title>Installation</title>
   <prolog>
@@ -24,8 +24,13 @@
       <p><ol>
           <li>JaluinoIDE is based on <xref href="http://editra.org" format="html">Editra</xref>, and it&apos;s actually an Editra plugin. Editra is a cross-platform IDE, running under Windows, OSX and Linux. First download Editra, and follow guidelines regarding OS used, described on this page: <xref href="http://editra.org/installation_guide" format="html">http://editra.org/installation_guide</xref>. Windows installer is a binary distribution containing every Editra&apos;s dependencies, like wxPython. Under Linux, running Editra may require you to install wxPython, but nowadays, wxPython is becoming more and more popular, it wouldn&apos;t be surprising you wouldn&apos;t have to.<note type="important">JaluinoIDE requires at least <b>Editra 0.5.51</b>. Don&apos;t use a older version, it just won&apos;t work !</note></li>
           <li>
-            <p>Several scripts used by JaluinoIDE are based on <b>python</b>. It&apos;s now time to install python. Go to <xref href="http://python.org" format="html">http://python.org</xref>, and download python, either in 2.5 or 2.6 version. If using Windows, installation is done through a classical wizard.</p>
+            <p>Several scripts used by JaluinoIDE are based on <b>python</b>. It&apos;s now time to install python. Go to <xref href="http://python.org" format="html">http://python.org</xref>, and download python: <fn>Editra for Windows, when installed from binaries (most of the time), is using python 2.5. Installing another version, like python 2.6, is possible, but installation procedure gets more complicated, particularly when installing dependency like pyserial</fn>.</p>
+            <ul>
+              <li>for Windows users, download python 2.5</li>
+              <li>for others, download either python 2.5 or 2.6</li>
+            </ul>
           </li>
+          <li>You&apos;ll sure need to access Jaluino through a serial link, either with a programmer or a bootloader. You need to install <b>pyserial</b>, available from <xref href="http://pyserial.sourceforge.net/" format="html">http://pyserial.sourceforge.net/</xref>. Windows users needs to install pyserial for python 2.5, others will choose version according to their installed python version.</li>
         </ol></p>
     </section>
     <section>
@@ -68,6 +73,15 @@
                 <title>Compiling our first sample</title>
               </fig><image href="images/jaluino_first_compile.png" width="400" placement="break" otherprops="clickable"/></p></li>
         </ol></p>
+    </section>
+    <section>
+      <title>Configuring JaluinoIDE</title>
+      <p>JaluinoIDE requires you to specify  information about serial link. Click on &quot;Settings&quot; icon (top left of Jaluino shelf) or navigate to &quot;Jaluino&quot; =&gt; &quot;Settings&quot; menu, then click on &quot;Serial/USB&quot; tab.</p>
+      <p><fig>
+          <title>Serial configuration tab<image href="images/jaluinoide_serial_conf.png" width="200" placement="break" otherprops="clickable"/></title>
+        </fig></p>
+      <p>Specify which port you&apos;ll use to program Jaluino, either with <xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">TinyBootloader</xref> or a programmer. You can also enter your own port on the text box. This is useful for Linux users for instance, when using a USB-to-serial adapter. In this case, you&apos;d typically specify &quot;<filepath>/dev/ttyUSB0</filepath>&quot;.</p>
+      <p>Also specify which baudrate is used. Usually 115200 when using default Jaluino  files.</p>
     </section>
     <p>Congratulations ! You&apos;ve just installed a fully functional Jaluino development environment<fn>Jaluino comes with JaluinoIDE, where environment is automatically configured, as much as possible. You&apos;re of course free to use any other IDE, like JalEdit (<xref href="http://jal.sunish.net/jaledit" format="html">http://jal.sunish.net/jaledit</xref>). Or even no IDE at all, if you&apos;re a commandline guy. If so, please report and share how you configured it, so this document can grow and let users choose different alternatives. That said, Jaluino documentation is based on JaluinoIDE, some functionalities may not be available in other IDEs.</fn>. It&apos;s now time to have fun with Jaluino board.</p>
   </body>

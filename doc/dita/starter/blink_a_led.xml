@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_blink">
   <title>Blink a LED</title>
   <prolog>
@@ -18,9 +17,12 @@
     </section>
     <section>
       <title>Hardware setup</title>
-      <p>First let&apos;s get our parts together. You&apos;ll need:</p>
+      <p>You have two options here:<ul>
+          <li>Option 1: use a breadboard and connect parts to Jaluino with wires</li>
+          <li>Option 2: use Crumboard shield and plug it over Jaluino board</li>
+        </ul></p>
+      <p>Option 1 will require several parts:</p>
       <p><ul>
-          <li>a Jaluino board</li>
           <li>a breadboard</li>
           <li>a LED, red is good</li>
           <li>a resistor, from 330 to 1K</li>
@@ -32,10 +34,45 @@
         </fig></p>
       <p>When assembling Jaluino and all these components on a breadboard, you should get something like this:</p>
       <p><fig>
-          <title>Blinking a LED, assembling the whole using a breadboard</title>
-          <image href="images/jaluino_blink_bb.png" placement="break" otherprops="clickable" width="200"/>
+          <title>Option 1: blinking a LED, assembling the whole using a breadboard</title>
+          <image href="images/jaluino_blink_bb.png" width="200" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Double check LED pinout, be sure it&apos;s not inverted. The longest pin is the anode, it must be connected to pin RA0. The pin on the flat side is the cathode, it must be connected to the ground.</p>
+      <p>As option 2, if you&apos;re a lucky owner of a <xref href="http://www.justanotherlanguage.org/content/jaluino/shields/jaluino_crumboard" format="html">Crumboard shield</xref>, you can simply plug it over Jaluino and enable LEDs by putting jumpers on JP1 and JP2. You&apos;ll get two blinking LEDs for the same price as one...</p>
+      <p><fig>
+          <title>Option 2: blinking two LEDs, using Crumboard shield</title>
+          <image href="images/crumboard_blink_bb.png" width="200" placement="break" otherprops="clickable"/>
+        </fig></p>
+    </section>
+    <section>
+      <title>Compiling and uploading software</title>
+      <p>Hardware is ready, let&apos;s compile some code to actually blink that LED (or those LEDs, lucky Crumboard owner). Launch Editra with JaluinoIDE open:<ul>
+          <li><xref href="http://code.google.com/p/jaluino/source/browse/trunk/samples/jaluino_medium_blink.jal" format="html">
+              <filepath>jaluino_medium_blink.jal</filepath>
+            </xref>, if you&apos;re using a breadboard (option 1)</li>
+          <li><xref href="http://code.google.com/p/jaluino/source/browse/trunk/samples/crumboard_blink.jal" format="html">
+              <filepath>crumboard_blink.jal</filepath>
+            </xref>, if you&apos;re using Crumboard shield (option 2)</li>
+        </ul></p>
+      <p>Select <i>Jaluino without bootloader</i> in compiling options, and compile sample. You should get the following output, notably &quot;<codeph>Exit Code: 0</codeph>&quot; which basically means &quot;success&quot; !</p>
+      <p><fig>
+          <title>Compilation output from Jaluino IDE</title>
+          <image placement="break" href="images/jaluino_compile_output.png" width="300" otherprops="clickable"/>
+        </fig></p>
+      <p>Amongst several files produced by jalv2 compiler is a  file having <filepath>*.hex</filepath> extension. This file has to be uploaded to Jaluino. You&apos;ll need to use a programmer for this step. As there are many PIC programmers out there, not all are described in this documentation. Because it&apos;s widely used in jalv2 community<fn>and because this is the one I have...</fn>, uploading with <xref href="http://www.voti.nl/wisp648/index.html" format="html">Wisp648</xref> programmer is explained in the following content<fn>If you&apos;re using another programmer, you can share your knowledge and post detailed instructions to the Jaluino Group, in order to improve this documentation.</fn>.</p>
+      <p>First plug your programmer to the ICSP connector on Jaluino board. ICSP has the following pin layout:<ol>
+          <li>Vpp</li>
+          <li>Vdd</li>
+          <li>GND</li>
+          <li>PGD</li>
+          <li>PGC</li>
+          <li>PGM</li>
+        </ol></p>
+      <p>This pin layout is rather common and is at least used by widely used PICKit2 and Wisp648. If your programmer shows the same pin layout, you can thus directly plug it:</p>
+      <p><fig>
+          <title>Wisp648 programmer directly plugged to Jaluino</title>
+        </fig></p>
+      <p>Use software wich comes with your programmer and upload HEX file. With Wisp648, we&apos;ll use xwisp2.</p>
     </section>
   </body>
 </topic>
