@@ -14,7 +14,7 @@
 # Jaluino IDE, it'll just overwrite some default files.
 #
 
-import os, sys, glob
+import os, sys, glob, re
 import subprocess
 import cPickle
 
@@ -41,7 +41,6 @@ def common():
             'JALLIB_ROOT'   : jallib_root,
             'JALUINO_BIN'   : jaluino_bin,
             'JALLIB_REPOS'  : jallib_repos,
-            'JALLIB_PYPATH' : os.path.join(jallib_root,"tools"),
             'JALUINO_SVN'   : jaluino_svn,
            }
 
@@ -62,7 +61,8 @@ def nix():
 
     nix_env = {'PYTHON_EXEC'         : python_exec,
                'JALUINO_LAUNCH_FILE' : "jaluino_launch.xml",
-                'JALLIB_JALV2'       : os.path.join(common_env['JALLIB_ROOT'],"compiler","jalv2"),
+               'JALLIB_JALV2'        : os.path.join(common_env['JALLIB_ROOT'],"compiler","jalv2"),
+               'JALLIB_PYPATH'       : os.path.join(common_env['JALLIB_ROOT'],"tools"),
               }
 
     # Editra configuration directories
@@ -90,9 +90,17 @@ def win():
         raw_input("Press a key to quit...")
         sys.exit(255)
 
+    # exception for windows, when Editra is bundled as binaries. We'll adjust PYTHONPATH to include
+    # python2.5 libraries
+    rootpylib = os.path.split(python_exec)[0]
+    rootpylib = re.sub("2\d","25",rootpylib)
+    pylib = os.path.join(rootpylib,"Lib")
+    pysite = os.path.join(pylib,"site-packages")
+
     win_env = {'PYTHON_EXEC'         : python_exec,
                'JALUINO_LAUNCH_FILE' : "jaluino_launch_win.xml",
                'JALLIB_JALV2'        : os.path.join(common_env['JALLIB_ROOT'],"compiler","jalv2.exe"),
+               'JALLIB_PYPATH'       : os.pathsep.join([pylib,pysite,os.path.join(common_env['JALLIB_ROOT'],"tools")]),
               }
 
     # Editra configuration directories

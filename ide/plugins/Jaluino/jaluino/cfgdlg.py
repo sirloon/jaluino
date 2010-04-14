@@ -664,9 +664,13 @@ class SerialUSBPanel(wx.Panel):
         except ImportError,e:
             noserial = wx.StaticText(self,-1,_("Python serial module is not installed, you can download it from:\n\nhttp://pyserial.sourceforge.net\n\n"))
             noserial.SetForegroundColour(wx.RED)
-            noserial2 = wx.StaticText(self,-1,_("Error was:\n%s" % e))
+            noserial2 = wx.StaticText(self,-1,_("Error was:\n%s\n\n" % e))
+            # here we're guessing which Python version Editra is using. Should be sync'ed with install.py...
+            pyver = ".".join(map(str,sys.version_info[:2]))
+            noserial3 = wx.StaticText(self,-1,_("You need install pyserial for python %s" % pyver))
             msizer.Add(noserial)
             msizer.Add(noserial2)
+            msizer.Add(noserial3)
             
             
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
