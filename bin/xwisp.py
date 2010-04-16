@@ -7619,7 +7619,7 @@ class Analyser():
 # serial monitor!
 
 class XWisp_GUI( Wisp_Line, Frame ):
-   def __init__( self, StartFile = None ):
+   def __init__( self, StartFile = None, Line = None ):
          
       #TempName = 'd:/wouter/xwisp/xwisptemp.ico'
       #self.iconImage=Tkinter.PhotoImage(master=self, data=icon)
@@ -7630,7 +7630,7 @@ class XWisp_GUI( Wisp_Line, Frame ):
       # tk.iconbitmap(default=self.iconImage)
       # tk.iconbitmap(default='d:/wouter/xwisp/wesp1.ico')
       
-      Wisp_Line.__init__( self, Console = self )      
+      Wisp_Line.__init__( self, Console = self)      
       Frame.__init__( self )
       self.pack( expand = YES, fill = BOTH )
       self.master.title( 'XWisp ' + Version )
@@ -7723,6 +7723,8 @@ class XWisp_GUI( Wisp_Line, Frame ):
       self.FirstLine = 1
       self.StartFile = StartFile
       self.LogLine = 0
+      
+      self.Interpret(Line[:-1], Line_Mode = 0)
                         
    def Main( self ):
       # get config file location
@@ -7784,14 +7786,14 @@ class XWisp_GUI( Wisp_Line, Frame ):
          self.Config.Target_Name = self.Target_Name
       self.Config.PortName = self.PortName      
       
-      # try to save the configuration
-      f = open( self.ConfigFile, 'w' )
-      try:
-         pickle.dump( self.Config, f )
-      except:
-         f.close()
-         raise
-      f.close()      
+#      # try to save the configuration
+#      f = open( self.ConfigFile, 'w' )
+#      try:
+#         pickle.dump( self.Config, f )
+#      except:
+#         f.close()
+#         raise
+#      f.close()      
       
    def SetFileName( self, T ):
       S = 'file : ' + T
@@ -8128,7 +8130,7 @@ def XWisp_Main():
    elif len( Line ) == 0:
       Wisp_Line().Interpret()
    else:
-      File = Line[ 0 ]
+      File = Line[ -1 ]
       Dummy, Extension = os.path.splitext( File.upper())
       # print File.upper(), Dummy, Extension
       if Dummy == 'BUTTON':
@@ -8145,7 +8147,7 @@ def XWisp_Main():
       elif ( Dummy == 'GUI' ):
          Wisp = XWisp_GUI().Main()
       elif ( Extension == '.HEX' ):
-         Wisp = XWisp_GUI( StartFile = File ).Main()
+         Wisp = XWisp_GUI( StartFile = File, Line = Line ).Main()
       elif Extension == '.XWISP':
          Wisp = Wisp_Window()
          Wisp.Run_File_If_Exists( Global_Config_File_Name() )
@@ -8157,3 +8159,4 @@ def XWisp_Main():
          
 if __name__ == '__main__':
    XWisp_Main()
+
