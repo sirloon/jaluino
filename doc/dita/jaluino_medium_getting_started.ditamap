@@ -3,7 +3,7 @@
 <bookmap id="bookmap-1">
   <booktitle>
     <mainbooktitle>Getting started with Jaluino</mainbooktitle>
-    <booktitlealt><image href="starter/images/startingblock.jpg" width="300" placement="break"/>Step-by-step guidelines to get started with Jaluino board</booktitlealt>
+    <booktitlealt><image href="starter/images/startingblock.jpg" width="420" placement="break"/>Step-by-step guidelines to get started with Jaluino board</booktitlealt>
   </booktitle>
   <bookmeta>
     <prodinfo>

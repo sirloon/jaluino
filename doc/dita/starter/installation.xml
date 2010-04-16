@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
 <topic id="starter_install">
   <title>Installation</title>
   <prolog>
@@ -10,10 +10,10 @@
     <p/>
     <section>
       <title>Downloading Jaluino</title>
-      <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code download section. Installation on its own is rather easy: just unzip the archive.</p>
+      <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code <xref href="http://code.google.com/p/jallib/downloads/list" format="html">download section</xref>. Installation on its own is rather easy: just unzip the archive.</p>
       <p><fig>
           <title>Typical Jaluino archive content</title>
-          <image href="images/jaluino_archive_content.png" width="300" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_archive_content.png" width="535" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Content is quite explicit. Beside usual licenses &amp; readme files, you&apos;ll find every content related to  <filepath>mainboard</filepath> and <filepath>shields</filepath>, in order for you to manufacture them, and refer to them as needed. <filepath>bin</filepath> contains jalv2 compiler binaries (for each platform) and several wrapper scripts (or helpers) that hopefully simplify every day tasks. <filepath>lib</filepath> and <filepath>samples</filepath> contains jalv2 libraries (mostly based on jallib) and jaluino samples, ready-to-compile and program. <filepath>bootloaders</filepath> is where you&apos;ll soon choose the program (HEX file) to upload to your Jaluino board. <filepath>doc</filepath> is the first place you should search when looking for a specific Jaluino information, and <filepath>ide</filepath> contains JaluinoIDE and other several related plugins you can install in order to setup a fully functional programming environment. Other locations are rarely used for every day usage.</p>
       <p><note>you can also get Jaluino from sources, accessing Google Code SVN repository. This can be useful when you want to access lastest librairies and others related tools. Content looks the same, there are few differences regarding libraries and documentation though. All in all, you should get your feet on the ground easily. Retrieving Jaluino from SVN can be done following instructions detailed in this page: <xref href="http://code.google.com/p/jaluino/source/checkout" format="html">http://code.google.com/p/jaluino/source/checkout</xref>.</note><note>third party programs are located into <filepath>3rdparty</filepath> directory, they have their own licenses, Jaluino licenses don&apos;t apply to them.</note></p>
@@ -46,7 +46,7 @@
             <p>You should get a window like this:</p>
             <p><fig>
                 <title>Editra IDE</title>
-                <image href="images/jaluino_editra.png" width="300" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_editra.png" width="799" placement="break" otherprops="clickable"/>
               </fig></p>
           </li>
           <li>Now close Editra, and go back to Jaluino directory. <b>Run installation script</b>:<ul>
@@ -55,30 +55,30 @@
               <li>OSX: double-click on <filepath>install.py</filepath></li>
             </ul><p><fig>
                 <title>Installation script opens a terminal and talks a little about it does</title>
-                <image href="images/jaluino_install_output.png" width="300" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_install_output.png" width="668" placement="break" otherprops="clickable"/>
               </fig></p><p>Installation script copied several files to Editra, like plugins and configuration files. It also detect several parameters specific to your system, like where Jaluino has been unzipped, Editra installed, path to your python installation, etc... Should you change  a parameter you can safely run this script several times.</p></li>
           <li>Now <b>open Editra again</b>. So far nothing has happened, go to the <i>Tools</i> and open <i>Plugin Manager</i> and Enable Jaluino IDE plugin.<p><fig>
                 <title>Editra&apos;s Plugin Manager lists all available plugins, including JaluinoIDE previously installed</title>
-                <image href="images/jaluino_plugin_manager.png" width="300" otherprops="clickable"/>
+                <image href="images/jaluino_plugin_manager.png" width="548" otherprops="clickable"/>
               </fig></p></li>
           <li>Close Plugin Manager window, and restart Editra as stated. I swear this is the last time :). You should now see a <i>Jaluino</i> menu entry. Content is grayed, this is normal as we did not open a jalv2 file yet.<p><fig>
                 <title>&quot;Jaluino&quot; menu entry, JaluinoIDE plugin is correctly installed !</title>
-                <image href="images/jaluino_menu_entry.png" placement="break"/>
+                <image href="images/jaluino_menu_entry.png" width="221" placement="break"/>
               </fig></p></li>
           <li>Now go to <i>View</i>, <i>Shelf</i> and enable <i>Jaluino</i> shelf. This opens a window on the bottom part of Editra. This is where you&apos;ll mostly operate when compiling and uploading program.<p><fig>
                 <title>JaluinoIDE shelf. Compilation and upload output will be displayed in this window.</title>
-                <image href="images/jaluino_shelf.png" width="400" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_shelf.png" width="825" placement="break" otherprops="clickable"/>
               </fig></p></li>
           <li>As a final check, open <filepath>jaluino_medium_blink.jal</filepath> sample, which can be found in <filepath>samples</filepath> directory. Select &quot;Jaluino without bootloader&quot; in Compile&apos;s dropdown list and click on <i>Compile</i> icon on the right. Check there&apos;s no error in output window.<p><fig>
                 <title>Compiling our first sample</title>
-              </fig><image href="images/jaluino_first_compile.png" width="400" placement="break" otherprops="clickable"/></p></li>
+              </fig><image href="images/jaluino_first_compile.png" width="827" placement="break" otherprops="clickable"/></p></li>
         </ol></p>
     </section>
     <section>
       <title>Configuring JaluinoIDE</title>
       <p>JaluinoIDE requires you to specify  information about serial link. Click on &quot;Settings&quot; icon (top left of Jaluino shelf) or navigate to &quot;Jaluino&quot; =&gt; &quot;Settings&quot; menu, then click on &quot;Serial/USB&quot; tab.</p>
       <p><fig>
-          <title>Serial configuration tab<image href="images/jaluinoide_serial_conf.png" width="200" placement="break" otherprops="clickable"/></title>
+          <title>Serial configuration tab<image href="images/jaluinoide_serial_conf.png" width="550" placement="break" otherprops="clickable"/></title>
         </fig></p>
       <p>Specify which port you&apos;ll use to program Jaluino, either with <xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">TinyBootloader</xref> or a programmer. You can also enter your own port on the text box. This is useful for Linux users for instance, when using a USB-to-serial adapter. In this case, you&apos;d typically specify &quot;<filepath>/dev/ttyUSB0</filepath>&quot;.</p>
       <p>Also specify which baudrate is used. Usually 115200 when using default Jaluino  files.</p>

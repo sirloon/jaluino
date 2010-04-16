@@ -6,7 +6,7 @@
     <section>
       <title>Jaluino boards and shields</title>
       <p id="firstcontent">Following Arduino&apos;s original licensing, Jaluino reference designs for boards and shields, including schematics and PCBs, are released under <xref href="http://creativecommons.org/licenses/by-sa/3.0/" format="html">Creative Common Attribution-Share Alike 3.0 </xref> license.</p>
-      <p><image href="images/cc_by_sa.png" align="center" placement="break"/></p>
+      <p><image href="images/cc_by_sa.png" width="88" align="center" placement="break"/></p>
       <p>Basically (and repeating what&apos;s on Creative Common website), you are free:<ul>
           <li><b>to Share</b> - to copy, distribute, and transmit the work</li>
           <li><b>to Remix</b> - to adapt the work</li>
@@ -21,7 +21,7 @@
     <section>
       <title>Jaluino books and documentation</title>
       <p>Jaluino user guide, tutorials and documentation in general is released under a more restrictive license related to commercial usage, the  <xref href="http://creativecommons.org/licenses/by-nc-sa/3.0/" format="html">Creative Common Attribution-Noncommercial-Share Alike 3.0 </xref>license.</p>
-      <p><image href="images/cc_by_nc_sa.png" align="center" placement="break"/></p>
+      <p><image href="images/cc_by_nc_sa.png" width="88" align="center" placement="break"/></p>
       <p>Basically (and repeating what&apos;s on Creative Common website), you are free:<ul>
           <li><b>to Share</b> - to copy, distribute, and transmit the work</li>
           <li><b>to Remix</b> - to adapt the work</li>

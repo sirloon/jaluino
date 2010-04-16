@@ -17,8 +17,8 @@
       <title>Prerequisites</title>
       <p>Before sweetly diving into Jaluino, you first have to:</p>
       <p><ol>
-          <li><i>find a Jaluino board</i>: either you&apos;ll have to build it from scratch, or you can also order a PCB. Please refer to <b>Where to buy Jaluino board &amp; shields?</b> for more. You don&apos;t necessarily need any shield, but having at least a Crumboard shield with a breadboard can help, as it is specifically designed to help you prototyping simple designs.</li>
-          <li><i>own a PIC programmer</i>: in the process of getting started, we&apos;ll soon choose and program Jaluino PIC 18F4550 with a bootloader. In order to do this, you&apos;ll need a PIC programmer. You have plenty programmers out there, like PICKit 2, Wisp648, etc... You can even build your own for free.</li>
+          <li><i>find a Jaluino board</i>: either you&apos;ll have to build it from scratch, or you can also order a PCB. Please refer to <b>Where to buy Jaluino board &amp; shields?</b> for more. You don&apos;t necessarily need any shield, but having at least a Crumboard shield with a breadboard can help, as it is specifically designed to help you follow some tutorials and prototype simple designs.</li>
+          <li><i>own a PIC programmer</i>: in the process of getting started, we&apos;ll soon choose and program Jaluino PIC 18F4550 with a bootloader. In order to do this, you&apos;ll need a PIC programmer, at least once. You have plenty programmers out there, like PICKit 2, Wisp648, etc... You can even build your own for free.</li>
           <li><i>get few parts</i>: like a LED and a resistor (1K for instance). This will be the climax of this guide, the ultimate goal to reach, that is, &quot;Blink A LED&quot; !</li>
           <li><i>power on a computer</i>: either a PC under Windows, Mac OSX or Linux. Depending on selected bootloader, a RS-232 serial port will be needed. Either find a PC with a DB-9 serial connector, or use a USB-to-serial converter.</li>
         </ol></p>
