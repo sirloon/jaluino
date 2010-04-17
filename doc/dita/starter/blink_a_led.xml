@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_blink">
   <title>Blink a LED</title>
   <prolog>
@@ -13,7 +14,7 @@
       <p>Blinking a LED is somewhat the equivalent of a &quot;Hello World&quot; example, if you&apos;re familiar with software computing and programming language. &quot;Hellow World&quot; is supposed to be the simplest program, ever, which basically prints &quot;Hello World&quot;, claiming to the whole world it&apos;s alive.</p>
       <p>Printing something on a screen with a microcontroller isn&apos;t that simple.</p>
       <p>In microcontrollers world, there&apos;s also a hardware part. So this &quot;Hello World&quot; example also has to be very simple on that side too. Blinking a LED seems to fit both hardware and software requirements of simplicity...</p>
-      <p>Careful though: even blinking a LED can be a hair-pulling generator<fn>Have you correctly inserted the LED, respecting pin layout ? Do you know your LED as a working one ? What about your board ? Any bad contacts ? Any power supply issue ? Was your program correctly programmed ? Did you compile and upload the correct sample ? Did you forgot to setup pin direction as output ? Does it blink too fast ? Too slow ? Irregularly ? Does it blink only when you touch the board ? Do you have to switch off lights in the room to make it blink ? Is your LED on strike ? Do you think you&apos;re victim of sabotage from your wife ? Worse, your cat ? Are you tired trying to make this LED blink for five hours ? Do you need a beer ?...</fn>. I hope you&apos;ll find enough information to pass this exam without getting bald.</p>
+      <p>Careful though: even blinking a LED can be a hair-pulling generator<fn>Have you correctly inserted the LED, respecting pin layout ? Do you know your LED as a working one ? What about your board ? Any bad contacts ? Any power supply issue ? Was your program correctly uploaded ? Did you compile and upload the correct sample ? Did you forgot to setup pin direction as output ? Does it blink too fast ? Too slow ? Irregularly ? Does it blink only when you touch the board ? Do you have to switch off lights in the room to make it blink ? Is your LED on strike ? Do you think you&apos;re victim of sabotage from your wife ? Worse, your cat ? Are you tired trying to make this LED blink for five hours ? Do you badly need a drink ?...</fn>. I hope you&apos;ll find enough information to pass this exam without getting bald.</p>
     </section>
     <section>
       <title>Hardware setup</title>
@@ -81,12 +82,12 @@
           <image href="images/jaluino_xwisp_setup.png" width="793" placement="break" otherprops="clickable"/>
         </fig><fig>
           <title>XWisp application opened, HEX file loaded</title>
-          <image href="images/jaluino_xwisp_open.png" width="667" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_xwisp_open.png" width="650" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>In the opened XWisp window, press &quot;<i>Go</i>&quot; button, your HEX file will get programmed.</p>
       <p><fig>
           <title>HEX file has been uploaded to Jaluino</title>
-          <p>TODO: Xwisp screen shot</p>
+          <image placement="break" href="images/jaluino_xwisp_upload.png" otherprops="clickable" width="650"/>
         </fig></p>
       <p>Few words about XWisp2. If you&apos;re a command line guy, or if you just want to give a try, you can also use XWisp2. Usage is simple. Open a console/terminal, nagivate to your Jaluino installation directory, and go to <filepath>bin</filepath> directory. You&apos;ll see different XWisp2 binaries:<ul>
           <li><cmdname>xwisp2u</cmdname>: Linux binary</li>
@@ -95,8 +96,25 @@
         </ul></p>
       <p>Select XWisp2 binary accorsing to your platform, and type (eg. Linux):</p>
       <p><screen>$ ./xwisp2u PORT /dev/ttyS0 GO ../samples/jaluino_medium_blink.hex
-# TODO: xwisp2 output</screen></p>
-      <p>Replace <filepath>/dev/ttyS0</filepath> with your serial device file path, like <filepath>/dev/ttyUSB0</filepath> if using a USB-to-serial adapter undex Linux, or <filepath>COM1</filepath> if under Windows.</p>
+ xwisp2 version 1.9.6 for Linux (Dec 11 2008, Open Watcom C/C++ 1.70)
+File ../samples/jaluino_medium_blink.hex loaded and is Intel Hex format conforming
+Detected programmer: Wisp648, firmware version 1.29
+Target: 18F4550 revision 06 (ID=1206)
+Target erased
+Transferring program to 18F4550 via Wisp648
+Transferring program memory...100%
+Verifying program memory......100%
+Transferring data memory......100%
+Verifying data memory.........100%
+Transferring ID memory........100%
+Verifying ID memory...........100%
+Transferring fuses memory.....100%
+Verifying fuses memory........100%
+Write-Verify operation terminated successfully in 1.63 seconds
+Putting target in run mode
+xwisp2 terminated successfully in 2.00 seconds
+</screen></p>
+      <p>Replace <filepath>/dev/ttyS0</filepath> with your serial device file path, like <filepath>/dev/ttyUSB0</filepath> if using a USB-to-serial adapter undex Linux, or <filepath>COM1</filepath> if under Windows. If XWisp2 complains about not being able to detect target, or ends with some timeouts, unplug Wisp648 power supply for ~10secs, plug it and try again.</p>
       <p>So  HEX file has been uploaded to Jaluino, now can you see the LED blinking ? Congratulations, you&apos;ve been able to correctly setup your Jaluino board !</p>
       <p>Using a programmer can sometime  not be that convenient, even with ICSP connection (for instance, you always have to let it plugged into Jaluino board). Using a bootloader, you can get rid of PIC programmer, and directly upload your HEX file through a serial or USB link. This is our next and final step.</p>
     </section>
