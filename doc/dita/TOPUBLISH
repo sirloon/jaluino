@@ -19,7 +19,7 @@
 
 # ditamap
 jaluino_medium_userguide.ditamap                japp_userguide_config.py      2010012702
-jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010041701
+jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010041702
 
 # User Guide
 mainboard/jaluino_intro.xml                     japp_userguide_config.py      2010012702
