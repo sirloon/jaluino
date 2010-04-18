@@ -58,7 +58,7 @@
       <p>Select <i>Jaluino without bootloader</i> in compiling options, and compile sample. You should get the following output, notably &quot;<codeph>Exit Code: 0</codeph>&quot; which basically means &quot;success&quot; !</p>
       <p><fig>
           <title>Compilation output from Jaluino IDE</title>
-          <image href="images/jaluino_compile_output.png" width="818" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_compile_output.png" width="600" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Amongst several files produced by jalv2 compiler is a  file having <filepath>*.hex</filepath> extension. This file has to be uploaded to Jaluino. You&apos;ll need to use a programmer for this step. As there are many PIC programmers out there, not all are described in this documentation. Because it&apos;s widely used in jalv2 community<fn>and because this is the one I have...</fn>, uploading with <xref href="http://www.voti.nl/wisp648/index.html" format="html">Wisp648</xref> programmer is explained in the following content<fn>If you&apos;re using another programmer, you can share your knowledge and post detailed instructions to the Jaluino Group, in order to improve this documentation.</fn>.</p>
       <p>First plug your programmer to the ICSP connector on Jaluino board. ICSP has the following pin layout:<ol>
@@ -72,22 +72,22 @@
       <p>This pin layout is rather common and is at least used by widely used PICKit2 and Wisp648. If your programmer shows the same pin layout, you can thus directly plug it:</p>
       <p><fig>
           <title>Wisp648 programmer directly plugged to Jaluino</title>
-          <image href="images/jaluino_wisp_icsp.jpg" width="640" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_wisp_icsp.jpg" width="600" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Use software  which comes with your programmer and upload HEX file.</p>
       <p>With Wisp648, we&apos;ll use <xref href="http://www.voti.nl/xwisp/index_1.html" format="html">xwisp</xref><fn>We&apos;re actually using a modified version of original xwisp program. This modified version removes windows specific dependencies and improve parameters handling. Don&apos;t use original version, you may face troubles. </fn> (GUI graphical frontend). You can also use  <xref href="http://www.robh.nl/picsoft.php#xwisp2" format="html">xwisp2</xref> (command line tool), you&apos;ll have to bypass Jaluino IDE and type commands from within a terminal or console.</p>
       <p>Using xwisp and with Jaluino IDE, just select &quot;<i>XWisp programmer</i>&quot; and click on &quot;<i>Upload</i>&quot;. XWisp interface will show up.</p>
       <p><fig>
           <title>Selecting XWisp programmer</title>
-          <image href="images/jaluino_xwisp_setup.png" width="793" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_xwisp_setup.png" width="600" placement="break" otherprops="clickable"/>
         </fig><fig>
           <title>XWisp application opened, HEX file loaded</title>
-          <image href="images/jaluino_xwisp_open.png" width="650" placement="break" otherprops="clickable"/>
+          <image href="images/jaluino_xwisp_open.png" width="600" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>In the opened XWisp window, press &quot;<i>Go</i>&quot; button, your HEX file will get programmed.</p>
       <p><fig>
           <title>HEX file has been uploaded to Jaluino</title>
-          <image placement="break" href="images/jaluino_xwisp_upload.png" otherprops="clickable" width="650"/>
+          <image placement="break" href="images/jaluino_xwisp_upload.png" otherprops="clickable" width="600"/>
         </fig></p>
       <p>Few words about XWisp2. If you&apos;re a command line guy, or if you just want to give a try, you can also use XWisp2. Usage is simple. Open a console/terminal, nagivate to your Jaluino installation directory, and go to <filepath>bin</filepath> directory. You&apos;ll see different XWisp2 binaries:<ul>
           <li><cmdname>xwisp2u</cmdname>: Linux binary</li>

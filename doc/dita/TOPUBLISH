@@ -36,6 +36,6 @@ shields/jaluino_shields.xml                     japp_shields_config.py        20
 
 # Getting Started
 starter/introduction.xml                        japp_starter_config.py        2010041701
-starter/installation.xml                        japp_starter_config.py        2010041701
-starter/blink_a_led.xml                         japp_starter_config.py        2010041701
+starter/installation.xml                        japp_starter_config.py        2010041801
+starter/blink_a_led.xml                         japp_starter_config.py        2010041801
 

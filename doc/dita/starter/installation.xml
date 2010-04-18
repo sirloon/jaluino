@@ -46,7 +46,7 @@
             <p>You should get a window like this:</p>
             <p><fig>
                 <title>Editra IDE</title>
-                <image href="images/jaluino_editra.png" width="799" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_editra.png" width="600" placement="break" otherprops="clickable"/>
               </fig></p>
           </li>
           <li>Now close Editra, and go back to Jaluino directory. <b>Run installation script</b>:<ul>
@@ -55,7 +55,7 @@
               <li>OSX: double-click on <filepath>install.py</filepath></li>
             </ul><p><fig>
                 <title>Installation script opens a terminal and talks a little about it does</title>
-                <image href="images/jaluino_install_output.png" width="668" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_install_output.png" width="600" placement="break" otherprops="clickable"/>
               </fig></p><p>Installation script copied several files to Editra, like plugins and configuration files. It also detect several parameters specific to your system, like where Jaluino has been unzipped, Editra installed, path to your python installation, etc... Should you change  a parameter you can safely run this script several times.</p></li>
           <li>Now <b>open Editra again</b>. So far nothing has happened, go to the <i>Tools</i> and open <i>Plugin Manager</i> and Enable Jaluino IDE plugin.<p><fig>
                 <title>Editra&apos;s Plugin Manager lists all available plugins, including JaluinoIDE previously installed</title>
@@ -67,11 +67,11 @@
               </fig></p></li>
           <li>Now go to <i>View</i>, <i>Shelf</i> and enable <i>Jaluino</i> shelf. This opens a window on the bottom part of Editra. This is where you&apos;ll mostly operate when compiling and uploading program.<p><fig>
                 <title>JaluinoIDE shelf. Compilation and upload output will be displayed in this window.</title>
-                <image href="images/jaluino_shelf.png" width="825" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_shelf.png" width="600" placement="break" otherprops="clickable"/>
               </fig></p></li>
           <li>As a final check, open <filepath>jaluino_medium_blink.jal</filepath> sample, which can be found in <filepath>samples</filepath> directory. Select &quot;Jaluino without bootloader&quot; in Compile&apos;s dropdown list and click on <i>Compile</i> icon on the right. Check there&apos;s no error in output window.<p><fig>
                 <title>Compiling our first sample</title>
-              </fig><image href="images/jaluino_first_compile.png" width="827" placement="break" otherprops="clickable"/></p></li>
+              </fig><image href="images/jaluino_first_compile.png" width="600" placement="break" otherprops="clickable"/></p></li>
         </ol></p>
     </section>
     <section>
