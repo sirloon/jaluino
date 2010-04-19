@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="starter_bootloaders">
+  <title>Choosing a bootloader</title>
+  <prolog>
+    <author>Sébastien Lelong</author>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <section>
+      <title>What is a bootloader ? Why do I need it ?</title>
+      <p>A bootloader is a PIC program used to upload code directly to the PIC memory, without having to deal with a PIC programmer.</p>
+      <p>A bootloader lives in microcontroller&apos;s memory. When powered, it is lauchned and it tries to contact a host, typically a PC host, and gets some code. This code is then recorded to PIC program memory. The way bootloader reaches host can be through a serial link or USB for instance.</p>
+      <p>This implies several requirements:<ul>
+          <li>PIC must be self-writable, or self-programming: it must be able to write some code into its own memory while running</li>
+          <li>PIC must handle serial or USB communications</li>
+          <li>there should be enough memory to write user program</li>
+        </ul></p>
+      <p>When using a bootloader, there&apos;s actually two programs within your PIC: the bootloader itself and user&apos;s program. So, how does the PIC knows which to run ? Usually, bootloader lives near the end of PIC memory. User program, when compiled, adds a special instruction which tells the PIC to jump to bootloader program. This instruction is executed at the very beginning<fn>Since it&apos;s part of user&apos;s program, this jump instruction will be written by the bootloader. Pitfall ahead !</fn>. When bootloader is launched, it waits for some instructions coming from PC host. This is where user&apos;s program is sent, bootloader writing bytes of code at the beginning of memory. If no instructions was received for a given amount of time, it timeouts and jump back to the beginning of PIC memory. User&apos;s program is being executed.</p>
+      <p>Why do you need this anyway ? Actually there&apos;s no need, you can safely skip this part and continue to use PIC programmers. Some even prefer this way, as there are <xref href="#starter_bootloaders/pitfalls">common pitfalls</xref> when using bootloaders, pitfalls you may face some day or another... So, does it worth it ?</p>
+      <p>Using a bootloader can simplify your life. For instance, you may not always have your PIC programmer around,  you may not even own one. For instance, you may have access to a programmer, at a friend&apos;s or your robotic club&apos;s. Will you have to go there every time you need to program your PIC, and loose friends ? You&apos;d better want to program a bootloader once, then safely have fun by programming your PIC at home, using your serial port or USB.</p>
+      <p>In addition, as there&apos;s no need for high voltage programming, as when using a PIC programmer, there&apos;s no need for yet another power supply. Programming is easier, and usually also faster (programmers can be slow). And because bootloaders use common communication links, you could be able to program your PIC through the air, using for instance a bluetooth-to-serial adapter.</p>
+    </section>
+    <section>
+      <title>How to choose a bootloader ?</title>
+      <p>There are plenty bootloaders, if you ask Google, you&apos;d be amazed. Jaluino Medium, 18F4550 based, probably can use many out there, but comes with two bootloaders, having their own specificities:<ul>
+          <li><xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">Tiny Bootloader</xref>: this is a famous one, probably because it claims to be the smallest (less than 100 words, or 200 bytes), leaving plenty of space for user&apos;s program. Tinybld uses a serial link to communicate with PC host, you&apos;ll thus need to have a proper serial module connected to Jaluino. One interesting feature is Tinybld can reset PIC using RTS line. You don&apos;t even have to press reset button to get your PIC programmed, making programming cycles really fast.</li>
+          <li><xref href="http://code.google.com/p/jallib/source/browse/#svn/trunk/project/pic18f14k50_usb_io/bootloader" format="html">PDFUSB bootloader</xref>: coming from <xref href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en021940&amp;part=DM163025" format="html">Microchip PICDEM FS USB board</xref>, this one uses USB connection. No need for a serial module. It is also much bigger, closed to 2KB. While this sounds really heavy, remember you&apos;ll still have 30KB memory remaining. This is usually enough... Implementation is been made by Albert Faber, using <xref href="http://casadeyork.com/jalv2/" format="html">jalv2</xref> and <xref href="http://jallib.googlecode.com" format="html">jallib</xref>. This is a 100% Jal bootloader ! When launched, bootloader identifies itself to PC host, using USB protocol </li>
+        </ul></p>
+      <p>Jaluino comes with bootloaders&apos; sources, in case you need to modify them. This is an <xref href="http://code.google.com/p/tinybootloaderfiles/source/browse/trunk/18f/18f4550/tinybld18f4550_20mhz_external_48mhz_pll_115k.asm" format="html">ASM file</xref> (PIC assembler) for Tinybld, and a <xref href="http://code.google.com/p/jaluino/source/browse/trunk/bootloaders/pdfusb/18f4550_usb_bootloader_autostart.jal" format="html">Jal file</xref> for PDFUSB.</p>
+      <p>Which one to choose ? There&apos;s no definite answer, you may need to switch between both depending on your project. The only restriction is about serial: if you don&apos;t have any serial module, you&apos;ll clearly have to use PDFUSB.</p>
+      <p>The following matrix sums up main features for both bootloaders, this may help you make your choice.</p>
+      <p><table frame="all" pgwide="1">
+          <title/>
+          <tgroup cols="3" colsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <colspec colname="c3"/>
+            <thead>
+              <row>
+                <entry>Features</entry>
+                <entry>Tinybld</entry>
+                <entry>PDFUSB</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>Size</entry>
+                <entry>100 words, or 200 bytes</entry>
+                <entry>~2000 bytes</entry>
+              </row>
+              <row>
+                <entry>Timeout</entry>
+                <entry>1 second</entry>
+                <entry>~10 seconds</entry>
+              </row>
+              <row>
+                <entry>Communication link</entry>
+                <entry>Serial</entry>
+                <entry>USB</entry>
+              </row>
+              <row>
+                <entry>Serial adapter needed</entry>
+                <entry>Yes</entry>
+                <entry>No</entry>
+              </row>
+              <row>
+                <entry>Can reset PIC</entry>
+                <entry>Yes, via RTS</entry>
+                <entry>No</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></p>
+    </section>
+    <section>
+      <title>Tinybld installation and configuration</title>
+      <p>Soon...</p>
+    </section>
+    <section>
+      <title>PDFUSB installation and configuration</title>
+      <p>Soon...</p>
+    </section>
+    <section>
+      <title id="pitfalls">Common pitfalls...</title>
+      <p>Using bootloaders can sometime be surprising, if not frustrating. Keep the following in mind while using them.<ul>
+          <li><b>Registers and fuses with Tinybld</b>: when writing a program, you usually specify clock speed and type, and other parameters like selecting which pin carry PWM signals, etc<fn>when using jaluino_medium.jal library, as in all Jaluino samples, some are already set and hidden to users for simplicity, like clock speed and type</fn>... These should have impacts on PIC registers, but when using a bootloader, these registers won&apos;t get programmed as you may think, as bootloader is the one which first has defined these. <i>What you specified in your code isn&apos;t actually what was programmed !</i> For instance, Tinybld by default has been configure to run @48MHz. If you use another speed within your code, it won&apos;t be considered<fn>18F4550 is able to self-write its registers. Using PC host program Tinybld2, you can specify whether you want to write registers with your own defined. This option is not active by default: if incorrect registers are specificed (wrong clock, wrong baudrate), it&apos;ll just break the bootloader: it just won&apos;t work anymore...</fn>.</li>
+          <li><b>Registers and fuses with PDFUSB</b>: programs aimed to be used with this bootloader must be compiled with <cmdname>no-fuse</cmdname> option. Should you miss this option, registers will get overwritten and will break bootloader... You&apos;ll need to program it again.</li>
+          <li><b>Compilation options</b>: beside -no-fuse for PDFUSB, you also need to specify how &quot;far&quot; it should jump. <cmdname>-loader18 4</cmdname> with Tinybld<fn>PC host Tinybld2 is smart enough to detect with program was compiled without <cmdname>-loader18 4</cmdname> option. Clever.</fn>, <cmdname>-loader18 2048</cmdname> with PDFUSB. Don&apos;t forget it ! Because if you do, bootloader will never get frist executed anymore. You&apos;ll have to program it again.</li>
+          <li><b>Serial baudrate</b>: when using Tinybld coming with Jaluino, bootloader expects to communicate through a serial link @115200 bds. This is bootloader&apos;s speed, not user program&apos;s speed. <i>Bootloader&apos;s and user program&apos;s speeds are independent</i>, you can choose the one you need.</li>
+        </ul></p>
+      <p>These sound scary, isn&apos;t ? Using Jaluino IDE default compilation commands, &quot;<cmdname>Jaluino with Tiny/18F</cmdname>&quot; and &quot;<cmdname>Jaluino with PDFUSB</cmdname>&quot;, will ensure you&apos;re using correct options.</p>
+      <p>And, at the end, breaking a bootloader isn&apos;t that bad, you&apos;ll have a nice reason to visit your friends !</p>
+    </section>
+  </body>
+</topic>

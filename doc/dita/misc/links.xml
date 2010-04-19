@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="links">
+  <title>Links</title>
+  <body>
+    <p>Following are hopefully useful links to several important websites and documentation related to Jaluino.<ul>
+        <li><xref href="http://jaluino.org/" format="html">http://jaluino.org</xref>: Jaluino website, where you access online documentations, tutorials, downloads, etc...</li>
+        <li><xref href="http://jaluino.googlecode.com" format="html">http://jaluino.googlecode.com</xref>: source code SVN repository, downloads, issue tracker</li>
+        <li><xref href="http://groups.google.com/group/jaluino" format="html">http://groups.google.com/group/jaluino</xref>: Jaluino discussion group. Having troubles with Jaluino ? Having suggestions, ideas ? Post a message on this list.</li>
+        <li><xref href="http://justanotherlanguage.org" format="html">http://justanotherlanguage.org</xref>: Jal starting point, with many tutorials, projects, and more links !</li>
+        <li><xref href="http://code.google.com/p/jallib" format="html">http://code.google.com/p/jallib</xref>: Jaluino libraries are mainly based on Jallib, a set of libraries for jalv2 compiler</li>
+        <li><xref href="http://groups.google.com/group/jallib" format="html">http://groups.google.com/group/jallib</xref>: Jallib discussion group, everything related to jallib libraries.</li>
+        <li><xref href="http://www.casadeyork.com/jalv2" format="html">http://www.casadeyork.com/jalv2</xref>: jalv2 compiler home page</li>
+        <li><xref href="http://www.microchip.com" format="html">http://www.microchip.com</xref>: Microchip website, go there at least once to download datasheets.</li>
+        <li><xref href="http://jal.sunish.net/jaledit" format="html">http://jal.sunish.net/jaledit</xref>: JalEdit home page, a Jal IDE for windows</li>
+        <li><xref href="http://arduino.cc" format="html">http://arduino.cc</xref>: original Arduino home page. No copycat here :)</li>
+      </ul></p>
+  </body>
+</topic>

@@ -19,7 +19,7 @@
 
 # ditamap
 jaluino_medium_userguide.ditamap                japp_userguide_config.py      2010012702
-jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010041702
+jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010041901
 
 # User Guide
 mainboard/jaluino_intro.xml                     japp_userguide_config.py      2010012702
@@ -38,4 +38,11 @@ shields/jaluino_shields.xml                     japp_shields_config.py        20
 starter/introduction.xml                        japp_starter_config.py        2010041701
 starter/installation.xml                        japp_starter_config.py        2010041801
 starter/blink_a_led.xml                         japp_starter_config.py        2010041801
+starter/bootloaders.xml                         japp_starter_config.py        2010041901
+starter/epilogue.xml                            japp_starter_config.py        2010041901
 
+# Misc
+misc/license.xml                                japp_userguide_config.py      2010041901
+misc/license.xml                                japp_starter_config.py        2010041901
+misc/links.xml                                  japp_userguide_config.py      2010041901
+misc/links.xml                                  japp_starter_config.py        2010041901

@@ -41,7 +41,7 @@
             <p>As a first step, if not already done, <b>run Editra once</b>.<ul>
                 <li>Windows: click on Editra icon</li>
                 <li>Linux: type <cmdname>Editra</cmdname> in a terminal</li>
-                <li>OSX: probably click on Editra icon<fn>I don&apos;t have access to an OSX box around there, so I wasn&apos;t been able to test. If you&apos;re a lucky OSX owner, please report so this documentation will be completed as needed.</fn></li>
+                <li>OSX: probably cli/ck on Editra icon<fn>I don&apos;t have access to an OSX box around there, so I wasn&apos;t been able to test. If you&apos;re a lucky OSX owner, please report so this documentation will be completed as needed.</fn></li>
               </ul></p>
             <p>You should get a window like this:</p>
             <p><fig>

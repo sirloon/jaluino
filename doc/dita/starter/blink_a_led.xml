@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
 <topic id="starter_blink">
   <title>Blink a LED</title>
   <prolog>
@@ -87,7 +86,7 @@
       <p>In the opened XWisp window, press &quot;<i>Go</i>&quot; button, your HEX file will get programmed.</p>
       <p><fig>
           <title>HEX file has been uploaded to Jaluino</title>
-          <image placement="break" href="images/jaluino_xwisp_upload.png" otherprops="clickable" width="600"/>
+          <image href="images/jaluino_xwisp_upload.png" width="600" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Few words about XWisp2. If you&apos;re a command line guy, or if you just want to give a try, you can also use XWisp2. Usage is simple. Open a console/terminal, nagivate to your Jaluino installation directory, and go to <filepath>bin</filepath> directory. You&apos;ll see different XWisp2 binaries:<ul>
           <li><cmdname>xwisp2u</cmdname>: Linux binary</li>
