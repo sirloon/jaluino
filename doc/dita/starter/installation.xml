@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_install">
   <title>Installation</title>
   <prolog>
@@ -74,7 +75,7 @@
               </fig><image href="images/jaluino_first_compile.png" width="600" placement="break" otherprops="clickable"/></p></li>
         </ol></p>
     </section>
-    <section>
+    <section id="configure">
       <title>Configuring JaluinoIDE</title>
       <p>JaluinoIDE requires you to specify  information about serial link. Click on &quot;Settings&quot; icon (top left of Jaluino shelf) or navigate to &quot;Jaluino&quot; =&gt; &quot;Settings&quot; menu, then click on &quot;Serial/USB&quot; tab.</p>
       <p><fig>

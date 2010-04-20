@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_bootloaders">
   <title>Choosing a bootloader</title>
   <prolog>
@@ -25,7 +25,7 @@
       <title>How to choose a bootloader ?</title>
       <p>There are plenty bootloaders, if you ask Google, you&apos;d be amazed. Jaluino Medium, 18F4550 based, probably can use many out there, but comes with two bootloaders, having their own specificities:<ul>
           <li><xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">Tiny Bootloader</xref>: this is a famous one, probably because it claims to be the smallest (less than 100 words, or 200 bytes), leaving plenty of space for user&apos;s program. Tinybld uses a serial link to communicate with PC host, you&apos;ll thus need to have a proper serial module connected to Jaluino. One interesting feature is Tinybld can reset PIC using RTS line. You don&apos;t even have to press reset button to get your PIC programmed, making programming cycles really fast.</li>
-          <li><xref href="http://code.google.com/p/jallib/source/browse/#svn/trunk/project/pic18f14k50_usb_io/bootloader" format="html">PDFUSB bootloader</xref>: coming from <xref href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en021940&amp;part=DM163025" format="html">Microchip PICDEM FS USB board</xref>, this one uses USB connection. No need for a serial module. It is also much bigger, closed to 2KB. While this sounds really heavy, remember you&apos;ll still have 30KB memory remaining. This is usually enough... Implementation is been made by Albert Faber, using <xref href="http://casadeyork.com/jalv2/" format="html">jalv2</xref> and <xref href="http://jallib.googlecode.com" format="html">jallib</xref>. This is a 100% Jal bootloader ! When launched, bootloader identifies itself to PC host, using USB protocol </li>
+          <li><xref href="http://code.google.com/p/jallib/source/browse/#svn/trunk/project/pic18f14k50_usb_io/bootloader" format="html">PDFUSB bootloader</xref>: coming from <xref href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en021940&amp;part=DM163025" format="html">Microchip PICDEM FS USB board</xref>, this one uses USB connection. No need for a serial module. It is also much bigger, closed to 2KB. While this sounds really heavy, remember you&apos;ll still have 30KB memory remaining. This is usually enough... This bootloader has been implementated by Albert Faber, using <xref href="http://casadeyork.com/jalv2/" format="html">jalv2</xref> and <xref href="http://jallib.googlecode.com" format="html">jallib</xref>. This is a 100% Jal bootloader! When launched, bootloader identifies itself to PC host, using USB protocol </li>
         </ul></p>
       <p>Jaluino comes with bootloaders&apos; sources, in case you need to modify them. This is an <xref href="http://code.google.com/p/tinybootloaderfiles/source/browse/trunk/18f/18f4550/tinybld18f4550_20mhz_external_48mhz_pll_115k.asm" format="html">ASM file</xref> (PIC assembler) for Tinybld, and a <xref href="http://code.google.com/p/jaluino/source/browse/trunk/bootloaders/pdfusb/18f4550_usb_bootloader_autostart.jal" format="html">Jal file</xref> for PDFUSB.</p>
       <p>Which one to choose ? There&apos;s no definite answer, you may need to switch between both depending on your project. The only restriction is about serial: if you don&apos;t have any serial module, you&apos;ll clearly have to use PDFUSB.</p>
@@ -75,11 +75,41 @@
     </section>
     <section>
       <title>Tinybld installation and configuration</title>
-      <p>Soon...</p>
+      <p>In order to get a fully functional Tiny bootloader, you&apos;ll need to act on several parts of Jaluino environment.</p>
+      <p>First, you need to program the <b>bootloader</b> itself. Follow instruction in previous <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section, and upload Tinybootloader HEX file <filepath>bootloaders/tinybl/18f4550/tinybld18f4550_20mhz_external_48mhz_pll_115k.hex</filepath> available in downloaded archive, or from Tiny booloader files <xref href="http://code.google.com/p/tinybootloaderfiles/source/browse/trunk/18f/18f4550/" format="html">SVN repository</xref>.</p>
+      <p>If you want to use <b>Reset via RTS</b> feature, you also need to put a jumper J7, on Jaluino mainboard. Please refer <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/front" format="html">Jaluino User Guide</xref>, section <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/jaluino_medium_hardware_setup" format="html">Hardware Setup</xref>. If you don&apos;t use this (leave J7 without any jumper or jumper on the right, to activate RTS line for hardware flowcontrol), you&apos;ll need to push Reset button each you upload a program.</p>
+      <p><fig>
+          <title>Reset-via-RTS feature is enabled with a jumper on J7</title>
+          <image placement="break" href="images/jaluinoide_tiny_rts.png" width="400" otherprops="clickable"/>
+        </fig></p>
+      <p>Finally, Jaluino IDE needs to be configured. Because serial link will be used to upload program to the microcontroller, you need to specify <b>serial port</b> and <b>baudrate</b>. Please refer to <xref href="installation.xml#starter_install/configure">Jaluino IDE configuration</xref> and serial setup. If you didn&apos;t change any parameter in bootloader, you&apos;ll use 115200 bauds as speed. Serial port should be setup accordingly to your system.</p>
+      <p>Compilation and Upload default commands should be set. You&apos;ll then avoid common pitfalls, like compiling with wrong parameters. Open Jaluino IDE settings, and click on &quot;<i>General</i>&quot; tab. This is where you associate commands with file types. Select &quot;<i>Jalv2</i>&quot; file type, and choose &quot;<i>Jaluino with Tiny/18F</i>&quot; command as default. Just close the window in order your new settings to be saved.</p>
+      <p><fig>
+          <title>Select &quot;Jaluino with Tiny/18F&quot; as default compilation command</title>
+          <image href="images/jaluinoide_tiny_compile.png" width="400" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>Proceed the same about produced HEX files being uploaded to Jaluino. Select &quot;<i>Hex</i>&quot; file type, and choose &quot;<i>Tiny bootloader</i>&quot;</p>
+      <p><fig>
+          <title>Select &quot;Tiny bootloader&quot; as default upload command</title>
+          <image href="images/jaluinoide_tiny_upload.png" width="400" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>Except if you forced and specified other options in IDE, this  setup will be used by default.</p>
     </section>
     <section>
       <title>PDFUSB installation and configuration</title>
-      <p>Soon...</p>
+      <p>Closed to what done with Tiny bootloader, using PDFUSB requires you to act both on hardware and software sides.</p>
+      <p>First program the <b>bootloader</b> itself. HEX file can be found in archive, as <filepath>bootloaders/pdfusb/18f4550_usb_bootloader_autostart.hex</filepath>. You can also retrieve from Jaluino <xref href="http://code.google.com/p/jaluino/source/browse/#svn/trunk/bootloaders/pdfusb" format="html">SVN repository</xref>. You can follow instructions detailed in <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section, in order to upload this file using a programmer.</p>
+      <p>Once done, you should configure default commands in Jaluino IDE, both for compilation and upload steps. Open Jaluino settings window, and click on &quot;<i>General</i>&quot; tab. Select &quot;<i>Jalv2</i>&quot; file type, and choose &quot;<i>Jaluino with PDFUSB</i>&quot; as default command.</p>
+      <p><fig>
+          <title>Select &quot;Jaluino with PDFUSB&quot; as default compilation command</title>
+          <image href="images/jaluinoide_pdfusb_compile.png" width="400" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>Proceed the same with default upload command. Select &quot;<i>Hex</i>&quot; file type, and choose &quot;<i>PDFUSB bootloader</i>&quot; as default command. Close window to save new settings.</p>
+      <p><fig>
+          <title>Select &quot;PDFUSB bootloader&quot; as default upload command</title>
+          <image href="images/jaluinoide_pdfusb_upload.png" width="400" placement="break" otherprops="clickable"/>
+        </fig></p>
+      <p>PDFUSB is now configured. As it doesn&apos;t use a serial link, there&apos;s no for serial configuration, as with Tiny bootloader. Remember PDFUSB can&apos;t reset a PIC which runs user&apos;s program: in order to upload a HEX file, you&apos;ll need to push Reset button. </p>
     </section>
     <section>
       <title id="pitfalls">Common pitfalls...</title>

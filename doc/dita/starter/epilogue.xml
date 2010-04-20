@@ -1,11 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_intro">
   <title>Epilogue</title>
   <body>
     <p>Are you there ? Then... <b>Congratulations</b> !</p>
     <p>Your Jaluino board and environment are now ready for further experiments. I hope you have enjoyed this first step, as much as I had writing and illustrating it...</p>
     <p>See you soon and, in the mean time, have  fun !</p>
-    <p><image href="images/podium.jpg" width="607" align="center" placement="break"/></p>
+    <p><image href="images/podium.jpg" width="433" align="center" placement="break"/></p>
   </body>
 </topic>

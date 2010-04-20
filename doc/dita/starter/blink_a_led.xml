@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_blink">
   <title>Blink a LED</title>
   <prolog>
@@ -44,7 +45,7 @@
           <image href="images/crumboard_blink_bb.png" width="282" placement="break" otherprops="clickable"/>
         </fig></p>
     </section>
-    <section>
+    <section id="upload">
       <title>Compiling and uploading software</title>
       <p>Hardware is ready, let&apos;s compile some code to actually blink that LED (or those LEDs, lucky Crumboard owner). Launch Editra with JaluinoIDE open:<ul>
           <li><xref href="http://code.google.com/p/jaluino/source/browse/trunk/samples/jaluino_medium_blink.jal" format="html">
