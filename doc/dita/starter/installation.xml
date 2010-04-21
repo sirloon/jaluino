@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_install">
   <title>Installation</title>
   <prolog>
@@ -11,43 +10,43 @@
     <p/>
     <section>
       <title>Downloading Jaluino</title>
-      <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code <xref href="http://code.google.com/p/jallib/downloads/list" format="html">download section</xref>. Installation on its own is rather easy: just unzip the archive.</p>
+      <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code <xref href="http://code.google.com/p/jallib/downloads/list" format="html">download section</xref>. Actual installation  is rather easy: just unzip the archive.</p>
       <p><fig>
           <title>Typical Jaluino archive content</title>
           <image href="images/jaluino_archive_content.png" width="535" placement="break" otherprops="clickable"/>
         </fig></p>
-      <p>Content is quite explicit. Beside usual licenses &amp; readme files, you&apos;ll find every content related to  <filepath>mainboard</filepath> and <filepath>shields</filepath>, in order for you to manufacture them, and refer to them as needed. <filepath>bin</filepath> contains jalv2 compiler binaries (for each platform) and several wrapper scripts (or helpers) that hopefully simplify every day tasks. <filepath>lib</filepath> and <filepath>samples</filepath> contains jalv2 libraries (mostly based on jallib) and jaluino samples, ready-to-compile and program. <filepath>bootloaders</filepath> is where you&apos;ll soon choose the program (HEX file) to upload to your Jaluino board. <filepath>doc</filepath> is the first place you should search when looking for a specific Jaluino information, and <filepath>ide</filepath> contains JaluinoIDE and other several related plugins you can install in order to setup a fully functional programming environment. Other locations are rarely used for every day usage.</p>
-      <p><note>you can also get Jaluino from sources, accessing Google Code SVN repository. This can be useful when you want to access lastest librairies and others related tools. Content looks the same, there are few differences regarding libraries and documentation though. All in all, you should get your feet on the ground easily. Retrieving Jaluino from SVN can be done following instructions detailed in this page: <xref href="http://code.google.com/p/jaluino/source/checkout" format="html">http://code.google.com/p/jaluino/source/checkout</xref>.</note><note>third party programs are located into <filepath>3rdparty</filepath> directory, they have their own licenses, Jaluino licenses don&apos;t apply to them.</note></p>
+      <p>Beside usual licenses and readme files, you&apos;ll find every content related to  Jaluino <filepath>mainboard</filepath> and <filepath>shields</filepath>, in order for you to manufacture them, and refer to schematics and diagrams as needed. <filepath>bin</filepath> contains jalv2 compiler binaries (for each platform) and several wrapper scripts, or helpers, that hopefully simplify every day tasks. <filepath>lib</filepath> and <filepath>samples</filepath> contains jalv2 libraries (mostly based on jallib) and jaluino samples, ready to compile and program. <filepath>bootloaders</filepath> is where you&apos;ll soon choose the program (HEX file) to upload to your Jaluino board. <filepath>doc</filepath> is the first place you should search when looking for a specific Jaluino information, and <filepath>ide</filepath> contains JaluinoIDE and other several related plugins you can install in order to setup a fully functional programming environment. Other locations are rarely used for every day usage.</p>
+      <p><note>you can also get Jaluino from sources, accessing Google Code SVN repository. This can be useful when you want to access lastest librairies and others related tools. Content looks the same, there are few differences regarding libraries and documentation though. All in all, you should get your feet on the ground easily. Retrieving Jaluino from SVN can be done following instructions detailed in this page: <xref href="http://code.google.com/p/jaluino/source/checkout" format="html">http://code.google.com/p/jaluino/source/checkout</xref>.</note><note>third party programs are located into <filepath>3rdparty</filepath> directory, under their own licenses. Jaluino licenses obviously don&apos;t apply to them.</note></p>
     </section>
     <section>
       <title>Installing Jaluino IDE dependencies</title>
-      <p>Jaluino project comes with an IDE, an Integrated Development Environment. This IDE, <b>JaluinoIDE</b>, is here to help you by providing default commands to compile, upload your programs. It also provides features like a code browser, code completion, calltips, ... This IDE can be used as a generic Jalv2 IDE.</p>
+      <p>Jaluino project comes with an IDE, an Integrated Development Environment. This IDE, <b>JaluinoIDE</b>, is here to help you, by providing default commands to compile and upload your programs. It also provides features like a code browser, code completion, calltips, ... It can be used as a generic Jalv2 IDE.</p>
       <p><ol>
-          <li>JaluinoIDE is based on <xref href="http://editra.org" format="html">Editra</xref>, and it&apos;s actually an Editra plugin. Editra is a cross-platform IDE, running under Windows, OSX and Linux. First download Editra, and follow guidelines regarding OS used, described on this page: <xref href="http://editra.org/installation_guide" format="html">http://editra.org/installation_guide</xref>. Windows installer is a binary distribution containing every Editra&apos;s dependencies, like wxPython. Under Linux, running Editra may require you to install wxPython, but nowadays, wxPython is becoming more and more popular, it wouldn&apos;t be surprising you wouldn&apos;t have to.<note type="important">JaluinoIDE requires at least <b>Editra 0.5.51</b>. Don&apos;t use a older version, it just won&apos;t work !</note></li>
+          <li>JaluinoIDE is based on <xref href="http://editra.org" format="html">Editra</xref>, and it&apos;s actually an Editra plugin. Editra is a cross-platform IDE, running under Windows, OSX and Linux. First download Editra, and follow guidelines regarding OS used, described on this page: <xref href="http://editra.org/installation_guide" format="html">http://editra.org/installation_guide</xref>. Windows installer is a binary distribution containing every Editra&apos;s dependencies, like wxPython. Under Linux, running Editra may require you to install wxPython, but nowadays, it is becoming more and more popular, it wouldn&apos;t be surprising you wouldn&apos;t have to.<note type="important">JaluinoIDE requires at least <b>Editra 0.5.51</b>. Don&apos;t use a older version, it just won&apos;t work !</note></li>
           <li>
-            <p>Several scripts used by JaluinoIDE are based on <b>python</b>. It&apos;s now time to install python. Go to <xref href="http://python.org" format="html">http://python.org</xref>, and download python: <fn>Editra for Windows, when installed from binaries (most of the time), is using python 2.5. Installing another version, like python 2.6, is possible, but installation procedure gets more complicated, particularly when installing dependency like pyserial</fn>.</p>
+            <p>Several scripts used by JaluinoIDE are based on <b>python</b>. It&apos;s now time to install python. Go to <xref href="http://python.org" format="html">http://python.org</xref>, and download python. Editra for Windows, when installed from binaries (most of the time), is using python 2.5. Installing another version, like python 2.6, is possible, but installation procedure gets more complicated, particularly when installing dependency like pyserial.</p>
             <ul>
               <li>for Windows users, download python 2.5</li>
               <li>for others, download either python 2.5 or 2.6</li>
             </ul>
           </li>
-          <li>You&apos;ll sure need to access Jaluino through a serial link, either with a programmer or a bootloader. You need to install <b>pyserial</b>, available from <xref href="http://pyserial.sourceforge.net/" format="html">http://pyserial.sourceforge.net/</xref>. Windows users needs to install pyserial for python 2.5, others will choose version according to their installed python version.</li>
+          <li>You&apos;ll sure need to access Jaluino through a serial link, either with a programmer or a bootloader. You need to install <b>pyserial</b>, available from <xref href="http://pyserial.sourceforge.net/" format="html">http://pyserial.sourceforge.net/</xref>. Windows users need to install pyserial for python 2.5, others will choose version following installed python version.</li>
         </ol></p>
     </section>
     <section>
       <title>Installing Jaluino IDE</title>
-      <p>Once dependencies are installed, you can safely install Jaluino IDE. JaluinoIDE will be installed and deployed in several Editra&apos;s directory, so Editra can detect it and enable it. As a first step, if not already done, run Editra once so these directories will be created:</p>
+      <p>Once dependencies are installed, you can safely install Jaluino IDE. JaluinoIDE will be installed and deployed in several Editra&apos;s directories, so Editra can detect it and enable it. Since Editra is cross-platform, you can use it under Windows, OSX<fn>I don&apos;t have access to an OSX box around there, so I wasn&apos;t been able to test. If you&apos;re a lucky OSX owner, please report so this documentation will be completed as needed.</fn> and Linux.</p>
       <p><ol>
           <li>
-            <p>As a first step, if not already done, <b>run Editra once</b>.<ul>
+            <p>As a first step, if not already done, <b>run Editra once</b>, so default directories will be created<ul>
                 <li>Windows: click on Editra icon</li>
                 <li>Linux: type <cmdname>Editra</cmdname> in a terminal</li>
-                <li>OSX: probably cli/ck on Editra icon<fn>I don&apos;t have access to an OSX box around there, so I wasn&apos;t been able to test. If you&apos;re a lucky OSX owner, please report so this documentation will be completed as needed.</fn></li>
+                <li>OSX: probably click on Editra icon</li>
               </ul></p>
             <p>You should get a window like this:</p>
             <p><fig>
                 <title>Editra IDE</title>
-                <image href="images/jaluino_editra.png" width="600" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_editra.png" width="500" placement="break" otherprops="clickable"/>
               </fig></p>
           </li>
           <li>Now close Editra, and go back to Jaluino directory. <b>Run installation script</b>:<ul>
@@ -56,9 +55,9 @@
               <li>OSX: double-click on <filepath>install.py</filepath></li>
             </ul><p><fig>
                 <title>Installation script opens a terminal and talks a little about it does</title>
-                <image href="images/jaluino_install_output.png" width="600" placement="break" otherprops="clickable"/>
-              </fig></p><p>Installation script copied several files to Editra, like plugins and configuration files. It also detect several parameters specific to your system, like where Jaluino has been unzipped, Editra installed, path to your python installation, etc... Should you change  a parameter you can safely run this script several times.</p></li>
-          <li>Now <b>open Editra again</b>. So far nothing has happened, go to the <i>Tools</i> and open <i>Plugin Manager</i> and Enable Jaluino IDE plugin.<p><fig>
+                <image href="images/jaluino_install_output.png" width="500" placement="break" otherprops="clickable"/>
+              </fig></p><p>Installation script copied several files to Editra, like plugins and configuration files. It also detect several parameters specific to your system, like where Jaluino has been unzipped, Editra installed, path to your python installation, etc... Should you change  a parameter you can safely run this script again.</p></li>
+          <li>Now <b>open Editra again</b>. So far nothing has happened, go to the <i>Tools</i>, open <i>Plugin Manager</i> and Enable Jaluino IDE plugin.<p><fig>
                 <title>Editra&apos;s Plugin Manager lists all available plugins, including JaluinoIDE previously installed</title>
                 <image href="images/jaluino_plugin_manager.png" width="548" otherprops="clickable"/>
               </fig></p></li>
@@ -68,11 +67,11 @@
               </fig></p></li>
           <li>Now go to <i>View</i>, <i>Shelf</i> and enable <i>Jaluino</i> shelf. This opens a window on the bottom part of Editra. This is where you&apos;ll mostly operate when compiling and uploading program.<p><fig>
                 <title>JaluinoIDE shelf. Compilation and upload output will be displayed in this window.</title>
-                <image href="images/jaluino_shelf.png" width="600" placement="break" otherprops="clickable"/>
+                <image href="images/jaluino_shelf.png" width="500" placement="break" otherprops="clickable"/>
               </fig></p></li>
           <li>As a final check, open <filepath>jaluino_medium_blink.jal</filepath> sample, which can be found in <filepath>samples</filepath> directory. Select &quot;Jaluino without bootloader&quot; in Compile&apos;s dropdown list and click on <i>Compile</i> icon on the right. Check there&apos;s no error in output window.<p><fig>
                 <title>Compiling our first sample</title>
-              </fig><image href="images/jaluino_first_compile.png" width="600" placement="break" otherprops="clickable"/></p></li>
+              </fig><image href="images/jaluino_first_compile.png" width="500" placement="break" otherprops="clickable"/></p></li>
         </ol></p>
     </section>
     <section id="configure">
@@ -81,9 +80,9 @@
       <p><fig>
           <title>Serial configuration tab<image href="images/jaluinoide_serial_conf.png" width="550" placement="break" otherprops="clickable"/></title>
         </fig></p>
-      <p>Specify which port you&apos;ll use to program Jaluino, either with <xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">TinyBootloader</xref> or a programmer. You can also enter your own port on the text box. This is useful for Linux users for instance, when using a USB-to-serial adapter. In this case, you&apos;d typically specify &quot;<filepath>/dev/ttyUSB0</filepath>&quot;.</p>
-      <p>Also specify which baudrate is used. Usually 115200 when using default Jaluino  files.</p>
+      <p>Specify which port you&apos;ll use to program Jaluino, either with <xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">TinyBootloader</xref> or a programmer. You can also enter your own port on the text box. This is useful for Linux users for instance, when using a USB-to-serial adapter. In this case, you&apos;d typically enter &quot;<filepath>/dev/ttyUSB0</filepath>&quot;.</p>
+      <p>Also specify which baudrate is used. Usually <i>115200</i> when using default Jaluino  files.</p>
     </section>
-    <p>Congratulations ! You&apos;ve just installed a fully functional Jaluino development environment<fn>Jaluino comes with JaluinoIDE, where environment is automatically configured, as much as possible. You&apos;re of course free to use any other IDE, like JalEdit (<xref href="http://jal.sunish.net/jaledit" format="html">http://jal.sunish.net/jaledit</xref>). Or even no IDE at all, if you&apos;re a commandline guy. If so, please report and share how you configured it, so this document can grow and let users choose different alternatives. That said, Jaluino documentation is based on JaluinoIDE, some functionalities may not be available in other IDEs.</fn>. It&apos;s now time to have fun with Jaluino board.</p>
+    <p>Congratulations ! You&apos;ve just installed a fully functional Jaluino development environment<fn>Jaluino comes with JaluinoIDE, where environment is automatically configured, as much as possible. Of course, you&apos;re free to use any other IDE, like JalEdit (<xref href="http://jal.sunish.net/jaledit" format="html">http://jal.sunish.net/jaledit</xref>). Or even no IDE at all, if you&apos;re a commandline guy. If so, please report and share how you configured it, so this document can grow and let users choose different alternatives. That said, Jaluino documentation is based on JaluinoIDE, some functionalities may not be available in other IDEs.</fn>. It&apos;s now time to have fun with Jaluino board.</p>
   </body>
 </topic>

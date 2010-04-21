@@ -1,37 +1,33 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_bootloaders">
-  <title>Choosing a bootloader</title>
-  <prolog>
-    <author>Sébastien Lelong</author>
-    <publisher>Jaluino Group</publisher>
-  </prolog>
+  <title>Bootloaders</title>
   <body>
     <section>
       <title>What is a bootloader ? Why do I need it ?</title>
       <p>A bootloader is a PIC program used to upload code directly to the PIC memory, without having to deal with a PIC programmer.</p>
-      <p>A bootloader lives in microcontroller&apos;s memory. When powered, it is lauchned and it tries to contact a host, typically a PC host, and gets some code. This code is then recorded to PIC program memory. The way bootloader reaches host can be through a serial link or USB for instance.</p>
+      <p>A bootloader lives in microcontroller&apos;s memory. When powered, it is launched and it tries to contact a host, typically a PC host, and gets some code. This code is then recorded to PIC program memory. The way bootloader reaches host is typically through a serial link or USB.</p>
       <p>This implies several requirements:<ul>
-          <li>PIC must be self-writable, or self-programming: it must be able to write some code into its own memory while running</li>
+          <li>PIC must be self-writable (self-programming): it must be able to write some code into its own memory while running</li>
           <li>PIC must handle serial or USB communications</li>
           <li>there should be enough memory to write user program</li>
         </ul></p>
-      <p>When using a bootloader, there&apos;s actually two programs within your PIC: the bootloader itself and user&apos;s program. So, how does the PIC knows which to run ? Usually, bootloader lives near the end of PIC memory. User program, when compiled, adds a special instruction which tells the PIC to jump to bootloader program. This instruction is executed at the very beginning<fn>Since it&apos;s part of user&apos;s program, this jump instruction will be written by the bootloader. Pitfall ahead !</fn>. When bootloader is launched, it waits for some instructions coming from PC host. This is where user&apos;s program is sent, bootloader writing bytes of code at the beginning of memory. If no instructions was received for a given amount of time, it timeouts and jump back to the beginning of PIC memory. User&apos;s program is being executed.</p>
-      <p>Why do you need this anyway ? Actually there&apos;s no need, you can safely skip this part and continue to use PIC programmers. Some even prefer this way, as there are <xref href="#starter_bootloaders/pitfalls">common pitfalls</xref> when using bootloaders, pitfalls you may face some day or another... So, does it worth it ?</p>
-      <p>Using a bootloader can simplify your life. For instance, you may not always have your PIC programmer around,  you may not even own one. For instance, you may have access to a programmer, at a friend&apos;s or your robotic club&apos;s. Will you have to go there every time you need to program your PIC, and loose friends ? You&apos;d better want to program a bootloader once, then safely have fun by programming your PIC at home, using your serial port or USB.</p>
+      <p>When using a bootloader, there&apos;s actually two programs within your PIC: the bootloader itself and user&apos;s program. So, how does the PIC knows which to run ? Usually, bootloader lives near the end of PIC memory. User program, when compiled, adds a special instruction which tells the PIC to jump to bootloader program. This instruction is executed at the very beginning<fn>Since it&apos;s part of user&apos;s program, this jump instruction will be written by the bootloader. Pitfall ahead !</fn>. When bootloader is launched, it waits for some instructions coming from PC host. This is where user&apos;s program is sent, bootloader writing bytes of code at the beginning of memory. If no instructions was received for a given amount of time, it timeouts and jump back to the beginning of PIC memory. User&apos;s program is  executed.</p>
+      <p>Why do you need this anyway ? There&apos;s no actual need, you can safely skip this part and continue to use PIC programmers. Some even prefer this way, as there are <xref href="#starter_bootloaders/pitfalls">common pitfalls</xref> when using bootloaders, pitfalls you may face some day or another... So, does it worth it ?</p>
+      <p>Using a bootloader can simplify your life. For instance, you may not always have your PIC programmer around,  you may not even own one. You may have access to a programmer, at a friend&apos;s or your robotic club&apos;s. Will you have to go there every time you need to program your PIC ? And possibly loose friends ?... You&apos;d better want to program a bootloader once, then  go back home and safely have fun by programming your PIC using your serial port or USB.</p>
       <p>In addition, as there&apos;s no need for high voltage programming, as when using a PIC programmer, there&apos;s no need for yet another power supply. Programming is easier, and usually also faster (programmers can be slow). And because bootloaders use common communication links, you could be able to program your PIC through the air, using for instance a bluetooth-to-serial adapter.</p>
     </section>
     <section>
       <title>How to choose a bootloader ?</title>
       <p>There are plenty bootloaders, if you ask Google, you&apos;d be amazed. Jaluino Medium, 18F4550 based, probably can use many out there, but comes with two bootloaders, having their own specificities:<ul>
-          <li><xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">Tiny Bootloader</xref>: this is a famous one, probably because it claims to be the smallest (less than 100 words, or 200 bytes), leaving plenty of space for user&apos;s program. Tinybld uses a serial link to communicate with PC host, you&apos;ll thus need to have a proper serial module connected to Jaluino. One interesting feature is Tinybld can reset PIC using RTS line. You don&apos;t even have to press reset button to get your PIC programmed, making programming cycles really fast.</li>
-          <li><xref href="http://code.google.com/p/jallib/source/browse/#svn/trunk/project/pic18f14k50_usb_io/bootloader" format="html">PDFUSB bootloader</xref>: coming from <xref href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en021940&amp;part=DM163025" format="html">Microchip PICDEM FS USB board</xref>, this one uses USB connection. No need for a serial module. It is also much bigger, closed to 2KB. While this sounds really heavy, remember you&apos;ll still have 30KB memory remaining. This is usually enough... This bootloader has been implementated by Albert Faber, using <xref href="http://casadeyork.com/jalv2/" format="html">jalv2</xref> and <xref href="http://jallib.googlecode.com" format="html">jallib</xref>. This is a 100% Jal bootloader! When launched, bootloader identifies itself to PC host, using USB protocol </li>
+          <li><xref href="http://www.etc.ugal.ro/cchiculita/software/picbootloader.htm" format="html">Tiny Bootloader</xref>: this is a famous one, probably because it claims to be the smallest (less than 100 words, or 200 bytes), leaving plenty of space for user&apos;s program. Tinybld uses a serial link to communicate with PC host, you&apos;ll thus need to have a proper serial module connected to Jaluino. One interesting feature is it can reset PIC using RTS line. You don&apos;t even have to press reset button to get your PIC programmed, making programming cycles really fast.</li>
+          <li><xref href="http://code.google.com/p/jallib/source/browse/#svn/trunk/project/pic18f14k50_usb_io/bootloader" format="html">PDFUSB bootloader</xref>: coming from <xref href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1406&amp;dDocName=en021940&amp;part=DM163025" format="html">Microchip PICDEM FS USB board</xref>, this one uses USB connection. No need for a serial module. It is also much bigger, closed to 2KB. While this sounds really heavy, remember you&apos;ll still have 30KB memory remaining. This is usually enough... This bootloader has been implemented by Albert Faber, using <xref href="http://casadeyork.com/jalv2/" format="html">jalv2</xref> and <xref href="http://jallib.googlecode.com" format="html">jallib</xref>. This is a 100% Jal bootloader! When launched, bootloader identifies itself to PC host, using USB protocol </li>
         </ul></p>
       <p>Jaluino comes with bootloaders&apos; sources, in case you need to modify them. This is an <xref href="http://code.google.com/p/tinybootloaderfiles/source/browse/trunk/18f/18f4550/tinybld18f4550_20mhz_external_48mhz_pll_115k.asm" format="html">ASM file</xref> (PIC assembler) for Tinybld, and a <xref href="http://code.google.com/p/jaluino/source/browse/trunk/bootloaders/pdfusb/18f4550_usb_bootloader_autostart.jal" format="html">Jal file</xref> for PDFUSB.</p>
-      <p>Which one to choose ? There&apos;s no definite answer, you may need to switch between both depending on your project. The only restriction is about serial: if you don&apos;t have any serial module, you&apos;ll clearly have to use PDFUSB.</p>
+      <p>Which one to choose ? There&apos;s no definite answer, you may need to switch between both, depending on your project. The only restriction is about serial: if you don&apos;t have any serial module, you&apos;ll clearly have to use PDFUSB...</p>
       <p>The following matrix sums up main features for both bootloaders, this may help you make your choice.</p>
       <p><table frame="all" pgwide="1">
-          <title/>
+          <title>Comparing Tinybld and PDFUSB bootloaders</title>
           <tgroup cols="3" colsep="1">
             <colspec colname="c1"/>
             <colspec colname="c2"/>
@@ -77,28 +73,39 @@
       <title>Tinybld installation and configuration</title>
       <p>In order to get a fully functional Tiny bootloader, you&apos;ll need to act on several parts of Jaluino environment.</p>
       <p>First, you need to program the <b>bootloader</b> itself. Follow instruction in previous <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section, and upload Tinybootloader HEX file <filepath>bootloaders/tinybl/18f4550/tinybld18f4550_20mhz_external_48mhz_pll_115k.hex</filepath> available in downloaded archive, or from Tiny booloader files <xref href="http://code.google.com/p/tinybootloaderfiles/source/browse/trunk/18f/18f4550/" format="html">SVN repository</xref>.</p>
-      <p>If you want to use <b>Reset via RTS</b> feature, you also need to put a jumper J7, on Jaluino mainboard. Please refer <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/front" format="html">Jaluino User Guide</xref>, section <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/jaluino_medium_hardware_setup" format="html">Hardware Setup</xref>. If you don&apos;t use this (leave J7 without any jumper or jumper on the right, to activate RTS line for hardware flowcontrol), you&apos;ll need to push Reset button each you upload a program.</p>
+      <p>If you want to use <b>Reset via RTS</b> feature, you also need to put a jumper on J7, on Jaluino mainboard. This jumper must be put on the two most left connectors. Please refer <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/front" format="html">Jaluino User Guide</xref>, section <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/jaluino_medium_hardware_setup" format="html">Hardware Setup</xref>. If you don&apos;t use this (leave J7 without any jumper, or jumper on the right connectors to activate RTS line), you&apos;ll need to push Reset button each you upload a program.</p>
       <p><fig>
           <title>Reset-via-RTS feature is enabled with a jumper on J7</title>
-          <image placement="break" href="images/jaluinoide_tiny_rts.png" width="400" otherprops="clickable"/>
+          <image href="images/jaluinoide_tiny_rts.png" width="400" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Finally, Jaluino IDE needs to be configured. Because serial link will be used to upload program to the microcontroller, you need to specify <b>serial port</b> and <b>baudrate</b>. Please refer to <xref href="installation.xml#starter_install/configure">Jaluino IDE configuration</xref> and serial setup. If you didn&apos;t change any parameter in bootloader, you&apos;ll use 115200 bauds as speed. Serial port should be setup accordingly to your system.</p>
-      <p>Compilation and Upload default commands should be set. You&apos;ll then avoid common pitfalls, like compiling with wrong parameters. Open Jaluino IDE settings, and click on &quot;<i>General</i>&quot; tab. This is where you associate commands with file types. Select &quot;<i>Jalv2</i>&quot; file type, and choose &quot;<i>Jaluino with Tiny/18F</i>&quot; command as default. Just close the window in order your new settings to be saved.</p>
+      <p>Compilation and Upload default commands should also be set. You&apos;ll  avoid common pitfalls, like compiling with wrong parameters. Open Jaluino IDE settings, and click on &quot;<i>General</i>&quot; tab. This is where you associate commands with file types. Select &quot;<i>Jalv2</i>&quot; file type, and choose &quot;<i>Jaluino with Tiny/18F</i>&quot; command as default. Just close the window in order your new settings to be saved.</p>
       <p><fig>
           <title>Select &quot;Jaluino with Tiny/18F&quot; as default compilation command</title>
           <image href="images/jaluinoide_tiny_compile.png" width="400" placement="break" otherprops="clickable"/>
         </fig></p>
-      <p>Proceed the same about produced HEX files being uploaded to Jaluino. Select &quot;<i>Hex</i>&quot; file type, and choose &quot;<i>Tiny bootloader</i>&quot;</p>
+      <p>Proceed the same about produced HEX files, uploaded to Jaluino. Select &quot;<i>Hex</i>&quot; file type, and choose &quot;<i>Tiny bootloader</i>&quot;</p>
       <p><fig>
           <title>Select &quot;Tiny bootloader&quot; as default upload command</title>
           <image href="images/jaluinoide_tiny_upload.png" width="400" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Except if you forced and specified other options in IDE, this  setup will be used by default.</p>
+      <p>Let&apos;s try this by uploading our &quot;Blink a LED&quot; sample with Tinybld. Select appropriate sample following guidelines detailed in <xref href="blink_a_led.xml#starter_blink/upload">previous section</xref>. Make sure &quot;<cmdname>Jaluino with Tiny/18F</cmdname>&quot; is your compilation command, and click on &quot;<i>Compile</i>&quot;. Jaluino IDE has generated appropriate command line, generated HEX file is ready to be uploaded.</p>
+      <p><fig>
+          <title>Sample was compiled with appropriate parameters, compatible with Tinybld</title>
+          <image placement="break" href="images/jaluinoide_tiny_compile_output.png" width="500" otherprops="clickable"/>
+        </fig></p>
+      <p>Sample is ready to be uploaded, make sure &quot;<cmdname>Tiny Bootloader</cmdname>&quot; is selected in upload commands, and press &quot;Upload&quot; button. If <b>Reset-via-RTS</b> feature has been enabled, Jaluino will automatically reset and Tinybld2 will send program. If not, just press and release Reset button.</p>
+      <p><fig>
+          <title>Tinybld has uploaded program.</title>
+          <p>TODO: screenshot</p>
+        </fig></p>
+      <p>Once uploaded, your program is immediatly executed, you should see your LED blinking.</p>
     </section>
     <section>
       <title>PDFUSB installation and configuration</title>
       <p>Closed to what done with Tiny bootloader, using PDFUSB requires you to act both on hardware and software sides.</p>
-      <p>First program the <b>bootloader</b> itself. HEX file can be found in archive, as <filepath>bootloaders/pdfusb/18f4550_usb_bootloader_autostart.hex</filepath>. You can also retrieve from Jaluino <xref href="http://code.google.com/p/jaluino/source/browse/#svn/trunk/bootloaders/pdfusb" format="html">SVN repository</xref>. You can follow instructions detailed in <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section, in order to upload this file using a programmer.</p>
+      <p>First program the <b>bootloader</b> itself. HEX file can be found in archive, as <filepath>bootloaders/pdfusb/18f4550_usb_bootloader_autostart.hex</filepath>. You can also retrieve it from Jaluino <xref href="http://code.google.com/p/jaluino/source/browse/#svn/trunk/bootloaders/pdfusb" format="html">SVN repository</xref>. Follow instructions detailed in <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section, in order to upload this file using a programmer.</p>
       <p>Once done, you should configure default commands in Jaluino IDE, both for compilation and upload steps. Open Jaluino settings window, and click on &quot;<i>General</i>&quot; tab. Select &quot;<i>Jalv2</i>&quot; file type, and choose &quot;<i>Jaluino with PDFUSB</i>&quot; as default command.</p>
       <p><fig>
           <title>Select &quot;Jaluino with PDFUSB&quot; as default compilation command</title>
@@ -109,18 +116,29 @@
           <title>Select &quot;PDFUSB bootloader&quot; as default upload command</title>
           <image href="images/jaluinoide_pdfusb_upload.png" width="400" placement="break" otherprops="clickable"/>
         </fig></p>
-      <p>PDFUSB is now configured. As it doesn&apos;t use a serial link, there&apos;s no for serial configuration, as with Tiny bootloader. Remember PDFUSB can&apos;t reset a PIC which runs user&apos;s program: in order to upload a HEX file, you&apos;ll need to push Reset button. </p>
+      <p>PDFUSB is now configured. As it doesn&apos;t use a serial link, there&apos;s no for serial configuration. Remember PDFUSB can&apos;t reset a PIC running  user&apos;s program: in order to upload a HEX file, you&apos;ll need to push Reset button.</p>
+      <p>Now, let&apos;s blink again our LED, this time using PDFUSB bootloader. Refer to <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section and open sample. Ensure &quot;<cmdname>Jaluino with PDFUSB</cmdname>&quot; is selected as compilation command, and click on &quot;<i>Compile</i>&quot; button. Notice the generated command line has changed and includes appropriate parameters.</p>
+      <p><fig>
+          <title>Command line is automatically generated to support PDFUSB bootloader.</title>
+          <image placement="break" href="images/jaluinoide_pdfusb_compile_output.png" width="500" otherprops="clickable"/>
+        </fig></p>
+      <p>&quot;<cmdname>PDFUSB Bootloader</cmdname>&quot; should be selected in upload commands. Click on &quot;<i>Upload</i>&quot; button. Jaluino needs to reset to activate bootloader, so press Reset push button on  board. Wait for a while, you should get PDFUSB output, claiming it has flashed your program. If you get an error, try again by pushing and maintaining Reset button, then click on &quot;<i>Upload</i>&quot;, then release Reset<fn>USB timeline can sometime be tricky (observed under Linux), This sequence has been proved to work better.</fn>.</p>
+      <p><fig>
+          <title>Program has been flashed</title>
+          <p>TODO: screenshot</p>
+        </fig></p>
+      <p>Using <cmdname>-x</cmdname> option, PDFUSB automatically resets and run user&apos;s program. You should see your LED blinking as soon as program was flashed. Note the next time  Jaluino is turned on, you&apos;ll need to wait PDFUSB timeout (approx. 10 seconds) before your program is executed.</p>
     </section>
     <section>
       <title id="pitfalls">Common pitfalls...</title>
       <p>Using bootloaders can sometime be surprising, if not frustrating. Keep the following in mind while using them.<ul>
-          <li><b>Registers and fuses with Tinybld</b>: when writing a program, you usually specify clock speed and type, and other parameters like selecting which pin carry PWM signals, etc<fn>when using jaluino_medium.jal library, as in all Jaluino samples, some are already set and hidden to users for simplicity, like clock speed and type</fn>... These should have impacts on PIC registers, but when using a bootloader, these registers won&apos;t get programmed as you may think, as bootloader is the one which first has defined these. <i>What you specified in your code isn&apos;t actually what was programmed !</i> For instance, Tinybld by default has been configure to run @48MHz. If you use another speed within your code, it won&apos;t be considered<fn>18F4550 is able to self-write its registers. Using PC host program Tinybld2, you can specify whether you want to write registers with your own defined. This option is not active by default: if incorrect registers are specificed (wrong clock, wrong baudrate), it&apos;ll just break the bootloader: it just won&apos;t work anymore...</fn>.</li>
+          <li><b>Registers and fuses with Tinybld</b>: when writing a program, you usually specify clock speed and type (internal, crystal, resonator...) and other parameters like selecting which pin carry PWM signals, watchdog, etc... (when using <codeph>jaluino_medium.jal</codeph> library, as in all Jaluino samples, some registers are already set and hidden to users for simplicity, like clock speed and type). These should have impacts on PIC registers, but when using a bootloader, these registers won&apos;t get programmed as you may think, as bootloader is the one which first has defined these. <i>What you specified in your code isn&apos;t actually what was programmed !</i> For instance, Tinybld by default has been configure to run @48MHz. If you use another speed within your code, it won&apos;t be considered. That said, 18F4550 is able to self-write its registers. Using PC host program Tinybld2, you can specify whether you want to write registers with your own defined. This option is not active by default: if incorrect registers are specificed (wrong clock, wrong baudrate), it&apos;ll just break the bootloader: it just won&apos;t work anymore....</li>
           <li><b>Registers and fuses with PDFUSB</b>: programs aimed to be used with this bootloader must be compiled with <cmdname>no-fuse</cmdname> option. Should you miss this option, registers will get overwritten and will break bootloader... You&apos;ll need to program it again.</li>
-          <li><b>Compilation options</b>: beside -no-fuse for PDFUSB, you also need to specify how &quot;far&quot; it should jump. <cmdname>-loader18 4</cmdname> with Tinybld<fn>PC host Tinybld2 is smart enough to detect with program was compiled without <cmdname>-loader18 4</cmdname> option. Clever.</fn>, <cmdname>-loader18 2048</cmdname> with PDFUSB. Don&apos;t forget it ! Because if you do, bootloader will never get frist executed anymore. You&apos;ll have to program it again.</li>
-          <li><b>Serial baudrate</b>: when using Tinybld coming with Jaluino, bootloader expects to communicate through a serial link @115200 bds. This is bootloader&apos;s speed, not user program&apos;s speed. <i>Bootloader&apos;s and user program&apos;s speeds are independent</i>, you can choose the one you need.</li>
+          <li><b>Compilation options</b>: beside <cmdname>-no-fuse</cmdname> for PDFUSB, you also need to specify how &quot;far&quot; it should jump. <cmdname>-loader18 4</cmdname> with TinybldPC host, <cmdname>-loader18 2048</cmdname> with PDFUSB. Don&apos;t forget it ! Because if you do, bootloader will never get executed first anymore. You&apos;ll have to program it again. As for Tinybld2, it is smart enough to detect program which was compiled without <cmdname>-loader18 4</cmdname> option. Clever.</li>
+          <li><b>Serial baudrate</b>: when using Tinybld coming with Jaluino, bootloader expects to communicate through a serial link @115200 bds. This is bootloader&apos;s speed, not user program&apos;s speed. <i>Bootloader&apos;s and user program&apos;s speeds are independent</i>, you can choose the one you need on your own program.</li>
         </ul></p>
-      <p>These sound scary, isn&apos;t ? Using Jaluino IDE default compilation commands, &quot;<cmdname>Jaluino with Tiny/18F</cmdname>&quot; and &quot;<cmdname>Jaluino with PDFUSB</cmdname>&quot;, will ensure you&apos;re using correct options.</p>
-      <p>And, at the end, breaking a bootloader isn&apos;t that bad, you&apos;ll have a nice reason to visit your friends !</p>
+      <p>This sounds scary, isn&apos;t ? Luckily, using Jaluino IDE default compilation commands, &quot;<cmdname>Jaluino with Tiny/18F</cmdname>&quot; and &quot;<cmdname>Jaluino with PDFUSB</cmdname>&quot;, will ensure you&apos;re using correct options.</p>
+      <p>And, at the end, breaking a bootloader isn&apos;t that bad, you&apos;ll have a good reason to visit your friends !</p>
     </section>
   </body>
 </topic>

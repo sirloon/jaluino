@@ -3,7 +3,7 @@
 <bookmap id="bookmap-1">
   <booktitle>
     <mainbooktitle>Getting started with Jaluino</mainbooktitle>
-    <booktitlealt><image href="starter/images/startingblock.jpg" width="420" placement="break"/>Step-by-step guidelines to setup Jaluino environment</booktitlealt>
+    <booktitlealt><image href="starter/images/startingblock.jpg" width="420" placement="break"/>How to setup your Jaluino environment</booktitlealt>
   </booktitle>
   <bookmeta>
     <prodinfo>
@@ -23,7 +23,7 @@
         <person>Sebastien Lelong</person>
         <organization>Jaluino Group</organization>
       </bookowner>
-      <summary>Downloading and installing Jaluino, blinking a LED, choosing a bootloader</summary>
+      <summary>Download and install Jaluino, blink a LED, choose a bootloader and celebrate</summary>
     </bookrights>
   </bookmeta>
   <frontmatter>
@@ -43,11 +43,11 @@
   <chapter>
     <topicref href="starter/bootloaders.xml"/>
   </chapter>
+  <chapter>
+    <topicref href="starter/epilogue.xml"/>
+  </chapter>
   <appendix navtitle="Appendix">
     <topicref href="misc/links.xml"/>
     <topicref navtitle="License" href="misc/license.xml" locktitle="yes"/>
   </appendix>
-  <backmatter>
-    <topicref href="starter/epilogue.xml"/>
-  </backmatter>
 </bookmap>

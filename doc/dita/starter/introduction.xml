@@ -1,28 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_intro">
   <title>Introduction</title>
-  <prolog>
-    <author>Sébastien Lelong</author>
-    <publisher>Jaluino Group</publisher>
-  </prolog>
   <body>
     <p>The following guide is here to hopefully assist you in getting started with Jaluino board. Jaluino is made of two major ingredients:<ol>
         <li><i>hardware</i> : Jaluino is an electronic board, an Arduino-like board, based on Microchip PIC 18F4550, on which you can plug several daughter board named &quot;shields&quot;</li>
-        <li><i>software</i>: Jaluino is also an IDE (Integrated Developement Environment), uses jalv2 high level language and jallib libraries.</li>
+        <li><i>software</i>: Jaluino is also an IDE (Integrated Developement Environment), uses jalv2 high level language, jallib libraries and provides sample programs</li>
       </ol></p>
-    <p>This Getting Started document is about how to setup the whole in order to get a fully functionnal platform, ready to have fun with.</p>
-    <p>Because Jaluino is opened, you&apos;ll sometime have to make choice. You&apos;ll  find enough information to make appropriate choices, according to what you need, what you have, what you can and the  mood-of-the-day.</p>
+    <p>This Getting Started document is about how to setup both these parts to get a fully functionnal platform, ready to have fun with.</p>
+    <p>Because Jaluino is opened, you&apos;ll sometime have to make choices. You&apos;ll  find enough information to make appropriate decisions, according to what you need, what you have, what you can and   &quot;mood-of-the-day&quot;.</p>
     <section>
       <title>Prerequisites</title>
       <p>Before sweetly diving into Jaluino, you first have to:</p>
       <p><ol>
-          <li><i>find a Jaluino board</i>: either you&apos;ll have to build it from scratch, or you can also order a PCB. Please refer to <b>Where to buy Jaluino board &amp; shields?</b> for more. You don&apos;t necessarily need any shield, but having at least a Crumboard shield with a breadboard can help, as it is specifically designed to help you follow some tutorials and prototype simple designs.</li>
-          <li><i>own a PIC programmer</i>: in the process of getting started, we&apos;ll soon choose and program Jaluino PIC 18F4550 with a bootloader. In order to do this, you&apos;ll need a PIC programmer, at least once. You have plenty programmers out there, like PICKit 2, Wisp648, etc... You can even build your own for free.</li>
-          <li><i>get few parts</i>: like a LED and a resistor (1K for instance). This will be the climax of this guide, the ultimate goal to reach, that is, &quot;Blink A LED&quot; !</li>
+          <li><i>find a Jaluino board</i>: either you&apos;ll have to build it from scratch, or you can also order a PCB. Please go to <xref href="http://www.justanotherlanguage.org/content/jaluino/shop" format="html">Jaluino shop</xref> for more. You don&apos;t necessarily need any shield, but having at least a Crumboard shield with a breadboard can help, as it is specifically designed to help you follow some tutorials and prototype simple designs.</li>
+          <li><i>have access to a PIC programmer</i>: in the process of getting started, we&apos;ll soon choose and program onboard PIC 18F4550 microcontroller, with a bootloader. In order to do this, you&apos;ll need a PIC programmer, at least once. You have plenty programmers out there, like PICKit 2, Wisp648, etc... You can even build your own for free.</li>
+          <li><i>get few parts</i>: a LED and a resistor (1K for instance). This will be the climax of this guide, the ultimate goal to reach, that is, &quot;Blink A LED&quot; !</li>
           <li><i>power on a computer</i>: either a PC under Windows, Mac OSX or Linux. Depending on selected bootloader, a RS-232 serial port will be needed. Either find a PC with a DB-9 serial connector, or use a USB-to-serial converter.</li>
         </ol></p>
     </section>
-    <p>Once you&apos;re ready, take a deep breath. Let&apos;s go...</p>
+    <p>Once you&apos;re ready, take a deep breath.</p>
+    <p>Let&apos;s go...</p>
   </body>
 </topic>

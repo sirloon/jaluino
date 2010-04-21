@@ -3,18 +3,14 @@
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="starter_blink">
   <title>Blink a LED</title>
-  <prolog>
-    <author>Sébastien Lelong</author>
-    <publisher>Jaluino Group</publisher>
-  </prolog>
   <body>
     <p>So far so good, you&apos;ve been able to setup your Jaluino environment, let&apos;s now dive into this &quot;Blink a LED&quot; experiment. This will ensure your Jaluino board is working properly. At least to blink a LED...</p>
     <section>
       <title>How do you say &quot;Hello&quot; ?</title>
       <p>Blinking a LED is somewhat the equivalent of a &quot;Hello World&quot; example, if you&apos;re familiar with software computing and programming language. &quot;Hellow World&quot; is supposed to be the simplest program, ever, which basically prints &quot;Hello World&quot;, claiming to the whole world it&apos;s alive.</p>
       <p>Printing something on a screen with a microcontroller isn&apos;t that simple.</p>
-      <p>In microcontrollers world, there&apos;s also a hardware part. So this &quot;Hello World&quot; example also has to be very simple on that side too. Blinking a LED seems to fit both hardware and software requirements of simplicity...</p>
-      <p>Careful though: even blinking a LED can be a hair-pulling generator<fn>Have you correctly inserted the LED, respecting pin layout ? Do you know your LED as a working one ? What about your board ? Any bad contacts ? Any power supply issue ? Was your program correctly uploaded ? Did you compile and upload the correct sample ? Did you forgot to setup pin direction as output ? Does it blink too fast ? Too slow ? Irregularly ? Does it blink only when you touch the board ? Do you have to switch off lights in the room to make it blink ? Is your LED on strike ? Do you think you&apos;re victim of sabotage from your wife ? Worse, your cat ? Are you tired trying to make this LED blink for five hours ? Do you badly need a drink ?...</fn>. I hope you&apos;ll find enough information to pass this exam without getting bald.</p>
+      <p>In microcontrollers world, there&apos;s also a hardware part. So this &quot;Hello World&quot; example also has to be very simple on that side too. Blinking a LED seems to fit both hardware and software requirements of simplicity: not much parts, easy to build, easy to program, easy to check. Claiming to the world it&apos;s alive isn&apos;t as explicit as printing &quot;Hello World&quot; but watching a blinking  LED should be enough.</p>
+      <p>Careful though: even blinking a LED can be a hair-pulling generator<fn>Have you correctly inserted the LED, respecting pin layout ? Do you know your LED as a working one ? Are you sure ? What about your board ? Any bad contacts ? Any power supply issue ? Was your program correctly uploaded ? Did you compile and upload the correct sample ? Did you forget to setup pin direction as output ? Does it blink too fast ? Too slow ? Irregularly ? Does it blink only when you touch the board ? Do you have to switch off lights in the room to make it blink ? Switch on ? Is your LED on strike ? Do you think you&apos;re victim of sabotage from your wife ? Worse, your cat ? Are you tired trying to make this LED blink for five hours ? Do you badly need a drink ?...</fn>. I hope you&apos;ll find enough information to pass this exam without getting bald.</p>
     </section>
     <section>
       <title>Hardware setup</title>
@@ -25,12 +21,12 @@
       <p>Option 1 will require several parts:</p>
       <p><ul>
           <li>a breadboard</li>
-          <li>a LED, red is good</li>
+          <li>a LED, a red one is good</li>
           <li>a resistor, from 330 to 1K</li>
         </ul></p>
-      <p>Basically, as simple as it can be, we&apos;ll plug a LED and a resistor to one of the PIC output, as shown in the following schematic.</p>
+      <p>Basically, as simple as it can be, we&apos;ll plug a LED and a resistor to one of  PIC outputs, as shown in the following schematic<fn> Schematic only shows relevant components for this experiment. Full Jaluino schematic is available at <xref href="http://www.justanotherlanguage.org/content/jaluino/user_guide/jaluino_medium_schematics" format="html">http://www.justanotherlanguage.org/content/jaluino/user_guide/jaluino_medium_schematics</xref></fn>.</p>
       <p><fig>
-          <title>Blinking a LED. Schematic only shows relevant components for this experiment.</title>
+          <title>Blinking a LED.</title>
           <image href="images/jaluino_blink_sch.png" width="218" placement="break"/>
         </fig></p>
       <p>When assembling Jaluino and all these components on a breadboard, you should get something like this:</p>
@@ -38,8 +34,8 @@
           <title>Option 1: blinking a LED, assembling the whole using a breadboard</title>
           <image href="images/jaluino_blink_bb.png" width="372" placement="break" otherprops="clickable"/>
         </fig></p>
-      <p>Double check LED pin layout, be sure it&apos;s not inverted. The longest pin is the anode, it must be connected to pin RA0. The pin on the flat side is the cathode, it must be connected to the ground.</p>
-      <p>As option 2, if you&apos;re a lucky owner of a <xref href="http://www.justanotherlanguage.org/content/jaluino/shields/jaluino_crumboard" format="html">Crumboard shield</xref>, you can simply plug it over Jaluino and enable LEDs by putting jumpers on JP1 and JP2. You&apos;ll get two blinking LEDs for the same price...</p>
+      <p>Double check LED pin layout, be sure it&apos;s not inverted. Longest pin is the anode, it must be connected to pin RA0. Pin on the flat side is the cathode, it must be connected to the ground.</p>
+      <p>As option 2, if you&apos;re a lucky <xref href="http://www.justanotherlanguage.org/content/jaluino/shields/jaluino_crumboard" format="html">Crumboard shield</xref> owner, you can simply plug it over Jaluino and enable LEDs by putting jumpers on JP1 and JP2. You&apos;ll get two blinking LEDs for the same price...</p>
       <p><fig>
           <title>Option 2: blinking two LEDs, using Crumboard shield</title>
           <image href="images/crumboard_blink_bb.png" width="282" placement="break" otherprops="clickable"/>
@@ -47,7 +43,7 @@
     </section>
     <section id="upload">
       <title>Compiling and uploading software</title>
-      <p>Hardware is ready, let&apos;s compile some code to actually blink that LED (or those LEDs, lucky Crumboard owner). Launch Editra with JaluinoIDE open:<ul>
+      <p>Hardware is ready, let&apos;s compile some code to actually blink that LED (or those LEDs, lucky Crumboard owner). Launch Editra with JaluinoIDE and open one of the following program, available in <filepath>samples</filepath> directory:<ul>
           <li><xref href="http://code.google.com/p/jaluino/source/browse/trunk/samples/jaluino_medium_blink.jal" format="html">
               <filepath>jaluino_medium_blink.jal</filepath>
             </xref>, if you&apos;re using a breadboard (option 1)</li>
@@ -69,14 +65,14 @@
           <li>PGC</li>
           <li>PGM</li>
         </ol></p>
-      <p>This pin layout is rather common and is at least used by widely used PICKit2 and Wisp648. If your programmer shows the same pin layout, you can thus directly plug it:</p>
+      <p>This pin layout is rather common and is at least used by widely used PICKit2 and Wisp648. If your programmer shows the same pin layout, you can  directly plug it. If not, you&apos;ll need to use wires in order to connect correct pins together.</p>
       <p><fig>
           <title>Wisp648 programmer directly plugged to Jaluino</title>
           <image href="images/jaluino_wisp_icsp.jpg" width="600" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Use software  which comes with your programmer and upload HEX file.</p>
-      <p>With Wisp648, we&apos;ll use <xref href="http://www.voti.nl/xwisp/index_1.html" format="html">xwisp</xref><fn>We&apos;re actually using a modified version of original xwisp program. This modified version removes windows specific dependencies and improve parameters handling. Don&apos;t use original version, you may face troubles. </fn> (GUI graphical frontend). You can also use  <xref href="http://www.robh.nl/picsoft.php#xwisp2" format="html">xwisp2</xref> (command line tool), you&apos;ll have to bypass Jaluino IDE and type commands from within a terminal or console.</p>
-      <p>Using xwisp and with Jaluino IDE, just select &quot;<i>XWisp programmer</i>&quot; and click on &quot;<i>Upload</i>&quot;. XWisp interface will show up.</p>
+      <p>With Wisp648, we&apos;ll use <xref href="http://www.voti.nl/xwisp/index_1.html" format="html">xwisp</xref><fn>We&apos;re actually using a modified version of original xwisp program. This modified version removes Windows specific dependencies and improve parameters handling. Don&apos;t use original version, you may face troubles. </fn> (GUI graphical frontend). You can also use  <xref href="http://www.robh.nl/picsoft.php#xwisp2" format="html">xwisp2</xref> (command line tool), you&apos;ll have to bypass Jaluino IDE and type commands from within a terminal or console.</p>
+      <p>Using xwisp through Jaluino IDE, just select &quot;<i>XWisp programmer</i>&quot; and click on &quot;<i>Upload</i>&quot;. XWisp interface will show up.</p>
       <p><fig>
           <title>Selecting XWisp programmer</title>
           <image href="images/jaluino_xwisp_setup.png" width="600" placement="break" otherprops="clickable"/>
@@ -91,7 +87,7 @@
         </fig></p>
       <p>Few words about XWisp2. If you&apos;re a command line guy, or if you just want to give a try, you can also use XWisp2. Usage is simple. Open a console/terminal, nagivate to your Jaluino installation directory, and go to <filepath>bin</filepath> directory. You&apos;ll see different XWisp2 binaries:<ul>
           <li><cmdname>xwisp2u</cmdname>: Linux binary</li>
-          <li><cmdname>xwisp2w.exe</cmdname>: Windows binary (note the &quot;w&quot; as windows)</li>
+          <li><cmdname>xwisp2w.exe</cmdname>: Windows binary (note the letter &quot;w&quot; as Windows)</li>
           <li><cmdname>xwisp2.exe</cmdname>: OS/2 binary</li>
         </ul></p>
       <p>Select XWisp2 binary accorsing to your platform, and type (eg. Linux):</p>
@@ -115,8 +111,7 @@ Putting target in run mode
 xwisp2 terminated successfully in 2.00 seconds
 </screen></p>
       <p>Replace <filepath>/dev/ttyS0</filepath> with your serial device file path, like <filepath>/dev/ttyUSB0</filepath> if using a USB-to-serial adapter undex Linux, or <filepath>COM1</filepath> if under Windows. If XWisp2 complains about not being able to detect target, or ends with some timeouts, unplug Wisp648 power supply for ~10secs, plug it and try again.</p>
-      <p>So  HEX file has been uploaded to Jaluino, now can you see the LED blinking ? Congratulations, you&apos;ve been able to correctly setup your Jaluino board !</p>
-      <p>Using a programmer can sometime  not be that convenient, even with ICSP connection (for instance, you always have to let it plugged into Jaluino board). Using a bootloader, you can get rid of PIC programmer, and directly upload your HEX file through a serial or USB link. This is our next and final step.</p>
+      <p>So  HEX file has been uploaded to Jaluino, now can you see the LED blinking ? Is it alive ? Congratulations, you&apos;ve been able to correctly setup your Jaluino board !</p>
     </section>
   </body>
 </topic>
