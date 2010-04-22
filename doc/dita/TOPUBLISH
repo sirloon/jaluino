@@ -19,7 +19,7 @@
 
 # ditamap
 jaluino_medium_userguide.ditamap                japp_userguide_config.py      2010012702
-jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010041901
+jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010042201
 
 # User Guide
 mainboard/jaluino_intro.xml                     japp_userguide_config.py      2010012702
@@ -27,6 +27,8 @@ mainboard/jaluino_medium_build.xml              japp_userguide_config.py      20
 mainboard/jaluino_medium_description.xml        japp_userguide_config.py      2010012701
 mainboard/jaluino_medium_hardware_setup.xml     japp_userguide_config.py      2010012701
 mainboard/jaluino_medium_schematics.xml         japp_userguide_config.py      2010012701
+misc/links.xml                                  japp_userguide_config.py      2010042201
+misc/license.xml                                japp_userguide_config.py      2010041901
 
 # Shields
 shields/connectors/jaluino_connectors.xml       japp_shields_config.py        2010012703
@@ -35,14 +37,11 @@ shields/styx/jaluino_styx.xml                   japp_shields_config.py        20
 shields/jaluino_shields.xml                     japp_shields_config.py        2010012701
 
 # Getting Started
-starter/introduction.xml                        japp_starter_config.py        2010041701
-starter/installation.xml                        japp_starter_config.py        2010042001
-starter/blink_a_led.xml                         japp_starter_config.py        2010042001
-starter/bootloaders.xml                         japp_starter_config.py        2010042001
-starter/epilogue.xml                            japp_starter_config.py        2010042001
-
-# Misc
-misc/license.xml                                japp_userguide_config.py      2010041901
+starter/introduction.xml                        japp_starter_config.py        2010042201
+starter/installation.xml                        japp_starter_config.py        2010042201
+starter/blink_a_led.xml                         japp_starter_config.py        2010042201
+starter/bootloaders.xml                         japp_starter_config.py        2010042201
+starter/epilogue.xml                            japp_starter_config.py        2010042201
 misc/license.xml                                japp_starter_config.py        2010041901
-misc/links.xml                                  japp_userguide_config.py      2010041901
-misc/links.xml                                  japp_starter_config.py        2010041901
+misc/links.xml                                  japp_starter_config.py        2010042201
+

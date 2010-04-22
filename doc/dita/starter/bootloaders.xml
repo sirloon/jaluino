@@ -93,12 +93,12 @@
       <p>Let&apos;s try this by uploading our &quot;Blink a LED&quot; sample with Tinybld. Select appropriate sample following guidelines detailed in <xref href="blink_a_led.xml#starter_blink/upload">previous section</xref>. Make sure &quot;<cmdname>Jaluino with Tiny/18F</cmdname>&quot; is your compilation command, and click on &quot;<i>Compile</i>&quot;. Jaluino IDE has generated appropriate command line, generated HEX file is ready to be uploaded.</p>
       <p><fig>
           <title>Sample was compiled with appropriate parameters, compatible with Tinybld</title>
-          <image placement="break" href="images/jaluinoide_tiny_compile_output.png" width="500" otherprops="clickable"/>
+          <image href="images/jaluinoide_tiny_compile_output.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>Sample is ready to be uploaded, make sure &quot;<cmdname>Tiny Bootloader</cmdname>&quot; is selected in upload commands, and press &quot;Upload&quot; button. If <b>Reset-via-RTS</b> feature has been enabled, Jaluino will automatically reset and Tinybld2 will send program. If not, just press and release Reset button.</p>
       <p><fig>
           <title>Tinybld has uploaded program.</title>
-          <p>TODO: screenshot</p>
+          <image href="images/jaluinoide_tiny_upload_output.png" placement="break" width="500" otherprops="clickable"/>
         </fig></p>
       <p>Once uploaded, your program is immediatly executed, you should see your LED blinking.</p>
     </section>
@@ -120,12 +120,12 @@
       <p>Now, let&apos;s blink again our LED, this time using PDFUSB bootloader. Refer to <xref href="blink_a_led.xml#starter_blink/upload">Blink a LED</xref> section and open sample. Ensure &quot;<cmdname>Jaluino with PDFUSB</cmdname>&quot; is selected as compilation command, and click on &quot;<i>Compile</i>&quot; button. Notice the generated command line has changed and includes appropriate parameters.</p>
       <p><fig>
           <title>Command line is automatically generated to support PDFUSB bootloader.</title>
-          <image placement="break" href="images/jaluinoide_pdfusb_compile_output.png" width="500" otherprops="clickable"/>
+          <image href="images/jaluinoide_pdfusb_compile_output.png" width="500" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>&quot;<cmdname>PDFUSB Bootloader</cmdname>&quot; should be selected in upload commands. Click on &quot;<i>Upload</i>&quot; button. Jaluino needs to reset to activate bootloader, so press Reset push button on  board. Wait for a while, you should get PDFUSB output, claiming it has flashed your program. If you get an error, try again by pushing and maintaining Reset button, then click on &quot;<i>Upload</i>&quot;, then release Reset<fn>USB timeline can sometime be tricky (observed under Linux), This sequence has been proved to work better.</fn>.</p>
       <p><fig>
           <title>Program has been flashed</title>
-          <p>TODO: screenshot</p>
+          <image href="images/jaluinoide_pdfusb_upload_output.png" placement="break" width="500" otherprops="clickable"/>
         </fig></p>
       <p>Using <cmdname>-x</cmdname> option, PDFUSB automatically resets and run user&apos;s program. You should see your LED blinking as soon as program was flashed. Note the next time  Jaluino is turned on, you&apos;ll need to wait PDFUSB timeout (approx. 10 seconds) before your program is executed.</p>
     </section>
