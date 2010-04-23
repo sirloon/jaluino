@@ -3,7 +3,6 @@
 <topic id="starter_install">
   <title>Installation</title>
   <body>
-    <p/>
     <section>
       <title>Downloading Jaluino</title>
       <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code <xref href="http://code.google.com/p/jallib/downloads/list" format="html">download section</xref>. Actual installation  is rather easy: just unzip the archive.</p>
@@ -20,24 +19,25 @@
       <p><ol>
           <li>JaluinoIDE is based on <xref href="http://editra.org" format="html">Editra</xref>, and it&apos;s actually an Editra plugin. Editra is a cross-platform IDE, running under Windows, OSX and Linux. First download Editra, and follow guidelines regarding OS used, described on this page: <xref href="http://editra.org/installation_guide" format="html">http://editra.org/installation_guide</xref>. Windows installer is a binary distribution containing every Editra&apos;s dependencies, like wxPython. Under Linux, running Editra may require you to install wxPython, but nowadays, it is becoming more and more popular, it wouldn&apos;t be surprising you wouldn&apos;t have to.<note type="important">JaluinoIDE requires at least <b>Editra 0.5.51</b>. Don&apos;t use a older version, it just won&apos;t work !</note></li>
           <li>
-            <p>Several scripts used by JaluinoIDE are based on <b>python</b>. It&apos;s now time to install python. Go to <xref href="http://python.org" format="html">http://python.org</xref>, and download python. Editra for Windows, when installed from binaries (most of the time), is using python 2.5. Installing another version, like python 2.6, is possible, but installation procedure gets more complicated, particularly when installing dependency like pyserial.</p>
+            <p>Several scripts used by JaluinoIDE are based on <b>python</b>. It&apos;s now time to install python. Go to <xref href="http://python.org" format="html">http://python.org</xref>, and download python<xref href="#starter_install/fn_editrawin"/>.</p>
             <ul>
               <li>for Windows users, download python 2.5</li>
               <li>for others, download either python 2.5 or 2.6</li>
             </ul>
           </li>
           <li>You&apos;ll sure need to access Jaluino through a serial link, either with a programmer or a bootloader. You need to install <b>pyserial</b>, available from <xref href="http://pyserial.sourceforge.net/" format="html">http://pyserial.sourceforge.net/</xref>. Windows users need to install pyserial for python 2.5, others will choose version following installed python version.</li>
-        </ol></p>
+        </ol><fn id="fn_editrawin">Editra for Windows, when installed from binaries (most of the time), is using python 2.5. Installing another version, like python 2.6, is possible, but installation procedure gets more complicated, particularly when installing dependency like pyserial.</fn></p>
     </section>
     <section>
       <title>Installing Jaluino IDE</title>
-      <p>Once dependencies are installed, you can safely install Jaluino IDE. JaluinoIDE will be installed and deployed in several Editra&apos;s directories, so Editra can detect it and enable it. Since Editra is cross-platform, you can use it under Windows, OSX<fn>I don&apos;t have access to an OSX box around there, so I wasn&apos;t been able to test. If you&apos;re a lucky OSX owner, please report so this documentation will be completed as needed.</fn> and Linux.</p>
+      <p>Once dependencies are installed, you can safely install Jaluino IDE. JaluinoIDE will be installed and deployed in several Editra&apos;s directories, so Editra can detect it and enable it. Since Editra is cross-platform, you can use it under Windows, OSX and Linux.</p>
+      <fn id="fn_noosx">I don&apos;t have access to an OSX box around there, so I&apos;m not able to to test. If you&apos;re a lucky OSX owner, please report so this documentation will be completed as needed.</fn>
       <p><ol>
           <li>
             <p>As a first step, if not already done, <b>run Editra once</b>, so default directories will be created<ul>
                 <li>Windows: click on Editra icon</li>
                 <li>Linux: type <cmdname>Editra</cmdname> in a terminal</li>
-                <li>OSX: probably click on Editra icon</li>
+                <li>OSX: probably click on Editra icon<xref href="#starter_install/fn_noosx"/></li>
               </ul></p>
             <p>You should get a window like this:</p>
             <p><fig>

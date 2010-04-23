@@ -90,7 +90,7 @@
           <li><cmdname>xwisp2w.exe</cmdname>: Windows binary (note the letter &quot;w&quot; as Windows)</li>
           <li><cmdname>xwisp2.exe</cmdname>: OS/2 binary</li>
         </ul></p>
-      <p>Select XWisp2 binary accorsing to your platform, and type (eg. Linux):</p>
+      <p>Select XWisp2 binary according to your platform, and type (eg. Linux):</p>
       <p><screen>$ ./xwisp2u PORT /dev/ttyS0 GO ../samples/jaluino_medium_blink.hex
  xwisp2 version 1.9.6 for Linux (Dec 11 2008, Open Watcom C/C++ 1.70)
 File ../samples/jaluino_medium_blink.hex loaded and is Intel Hex format conforming
