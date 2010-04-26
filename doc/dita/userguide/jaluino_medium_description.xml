@@ -65,15 +65,16 @@
         </table></p>
       <p><fig>
           <title>Jaluino Medium with Crumboard shield plugged, showing board and shield size differences</title>
-          <image href="images/medium_crumboard_topview.JPG" width="300" placement="break"/>
+          <image href="images/jaluino_with_crumboard_top_view.JPG" width="300" placement="break"/>
         </fig></p>
     </section>
     <section>
       <title>Exposed pins through shield connectors</title>
       <p>The following diagram shows 18F4550 pin layout, beside Jaluino shield connector. This is an important diagram, as it shows relation between PIC&apos;s pins and connectors, which pins is exposed<fn>&quot;Exposed&quot; means pin available on shields.</fn>, which is not.</p>
+      <p>Jaluino Medium also exposes its pins as arbitrary number, following connect J1 to J4. Pins can then be accessed within code as number is necessary.</p>
       <p><fig>
-          <title>Jaluino Medium pin layout mapping related to shield connectors</title>
-          <image href="images/jaluino_medium_pin_layout.png" width="500" placement="break" otherprops="clickable"/>
+          <title>Jaluino Medium pin layout mapping related to shield connectors, with arbitrary numbering scheme</title>
+          <image href="images/jaluino_medium_pin_layout.png" width="550" placement="break" otherprops="clickable"/>
         </fig></p>
     </section>
     <section>

@@ -3,7 +3,7 @@
 <bookmap id="bookmap-1">
   <booktitle>
     <mainbooktitle>Jaluino Medium User Guide</mainbooktitle>
-    <booktitlealt><image href="mainboard/images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" placement="break"/>A PIC based Arduino-like board, powered by Jalv2 and Jallib </booktitlealt>
+    <booktitlealt><image href="userguide/images/jaluino_map.jpg" width="390" placement="break" otherprops="clickable"/>A PIC based Arduino-like board, powered by Jalv2 and Jallib </booktitlealt>
   </booktitle>
   <bookmeta>
     <prodinfo>
@@ -16,10 +16,13 @@
       <copyrfirst>
         <year>2009</year>
       </copyrfirst>
+      <copyrlast>
+        <year>2010</year>
+      </copyrlast>
       <bookowner>
         <organization>Jaluino Group</organization>
       </bookowner>
-      <summary>User guide describing and explaining how to setup Jaluino Medium board. Version 0.2</summary>
+      <summary>User guide describing Jaluino Medium board. Version 0.3</summary>
     </bookrights>
   </bookmeta>
   <frontmatter>
@@ -27,19 +30,23 @@
       <toc/>
     </booklists>
   </frontmatter>
-  <chapter navtitle="Jaluino Mainboard" href="mainboard/jaluino_intro.xml">
-    <topicref href="mainboard/jaluino_medium_description.xml"/>
-    <topicref href="mainboard/jaluino_medium_schematics.xml"/>
-    <topicref href="mainboard/jaluino_medium_hardware_setup.xml"/>
-    <topicref href="mainboard/jaluino_medium_build.xml"/>
+  <chapter>
+    <topicref navtitle="Introduction" href="userguide/jaluino_intro.xml" locktitle="yes"/>
   </chapter>
-  <chapter navtitle="Jaluino Shields" href="shields/jaluino_shields.xml">
-    <topicref navtitle="Crumboard" href="shields/crumboard/jaluino_crumboard.xml"/>
-    <topicref navtitle="Styx" href="shields/styx/jaluino_styx.xml"/>
-    <topicref href="shields/connectors/jaluino_connectors.xml"/>
-    <topicref navtitle="Building your own shield"/>
+  <chapter>
+    <topicref href="userguide/jaluino_medium_description.xml"/>
   </chapter>
-  <part>
-    <topicref href="misc/license.xml"/>
-  </part>
+  <chapter>
+    <topicref href="userguide/jaluino_medium_schematics.xml"/>
+  </chapter>
+  <chapter>
+    <topicref href="userguide/jaluino_medium_hardware_setup.xml"/>
+  </chapter>
+  <chapter>
+    <topicref href="userguide/jaluino_medium_build.xml"/>
+  </chapter>
+  <appendix navtitle="Appendix">
+    <topicref href="misc/links.xml"/>
+    <topicref navtitle="License" href="misc/license.xml" locktitle="yes"/>
+  </appendix>
 </bookmap>
