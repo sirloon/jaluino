@@ -8,7 +8,7 @@
     <publisher>Jaluino Group</publisher>
   </prolog>
   <body>
-    <p><image href="images/Jaluino_medium_v13b_with_label_on_pcb.JPG" width="300" align="center" placement="break"/></p>
+    <p><image href="images/jaluino_map.jpg" width="390" align="center" placement="break" otherprops="clickable"/></p>
     <section>
       <title>
         <b>A PIC based Arduino-like board, powered by Jalv2 and Jallib</b>
