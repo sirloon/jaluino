@@ -26,7 +26,7 @@ def common():
     jallib_root = None
     jallib_respo = None
     jaluino_svn = None
-    if os.path.exists(os.path.join(jaluino_root,".svn")):
+    if os.path.exists(os.path.join(jaluino_root,"3rdparty","jallib_svn")):
         jallib_root = os.path.join(jaluino_root,"3rdparty","jallib_svn")
         jallib_repos = os.pathsep.join([os.path.join(jaluino_root,"lib"),
                                         os.path.join(jallib_root,"include")])
@@ -42,6 +42,7 @@ def common():
             'JALUINO_BIN'   : jaluino_bin,
             'JALLIB_REPOS'  : jallib_repos,
             'JALUINO_SVN'   : jaluino_svn,
+            'SYSTEM'        : sys.platform,
            }
 
 def nix():
