@@ -20,6 +20,7 @@
 # ditamap
 jaluino_medium_userguide.ditamap                japp_userguide_config.py      2010042602
 jaluino_medium_getting_started.ditamap          japp_starter_config.py        2010042301
+jaluino_medium_shields.ditamap                  japp_shields_config.py        2010042701
 
 # User Guide
 userguide/jaluino_intro.xml                     japp_userguide_config.py      2010042602
@@ -31,10 +32,10 @@ misc/links.xml                                  japp_userguide_config.py      20
 misc/license.xml                                japp_userguide_config.py      2010042601
 
 # Shields
-shields/connectors/jaluino_connectors.xml       japp_shields_config.py        2010012703
-shields/crumboard/jaluino_crumboard.xml         japp_shields_config.py        2010012701
-shields/styx/jaluino_styx.xml                   japp_shields_config.py        2010012701
-shields/jaluino_shields.xml                     japp_shields_config.py        2010012701
+shields/connectors/jaluino_connectors.xml       japp_shields_config.py        2010042701
+shields/crumboard/jaluino_crumboard.xml         japp_shields_config.py        2010042701
+shields/styx/jaluino_styx.xml                   japp_shields_config.py        2010042701
+shields/jaluino_shields.xml                     japp_shields_config.py        2010042701
 
 # Getting Started
 starter/introduction.xml                        japp_starter_config.py        2010042201

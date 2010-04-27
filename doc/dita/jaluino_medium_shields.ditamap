@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE bookmap PUBLIC "-//OASIS//DTD DITA BookMap//EN" "bookmap.dtd" []>
+<bookmap id="bookmap-1">
+  <booktitle>
+    <mainbooktitle>Jaluino shields</mainbooktitle>
+    <booktitlealt><image href="shields/images/jaluino_shields.jpg" width="420" placement="break"/>Available shields compatible with Jaluino Medium</booktitlealt>
+  </booktitle>
+  <bookmeta>
+    <prodinfo>
+      <prodname>Jaluino shields</prodname>
+      <vrmlist>
+        <vrm version="1.3"/>
+      </vrmlist>
+    </prodinfo>
+    <bookrights>
+      <copyrfirst>
+        <year>2009</year>
+      </copyrfirst>
+      <copyrlast>
+        <year>2010</year>
+      </copyrlast>
+      <bookowner>
+        <organization>Jaluino Group</organization>
+      </bookowner>
+      <summary>Version 0.10</summary>
+    </bookrights>
+  </bookmeta>
+  <frontmatter>
+    <booklists>
+      <toc/>
+    </booklists>
+  </frontmatter>
+  <chapter>
+    <topicref navtitle="Overview" href="shields/jaluino_shields.xml" locktitle="yes"/>
+  </chapter>
+  <chapter>
+    <topicref href="shields/crumboard/jaluino_crumboard.xml"/>
+  </chapter>
+  <chapter>
+    <topicref href="shields/styx/jaluino_styx.xml"/>
+  </chapter>
+  <chapter>
+    <topicref href="shields/connectors/jaluino_connectors.xml"/>
+  </chapter>
+  <appendix navtitle="Appendix">
+    <topicref href="misc/links.xml"/>
+    <topicref navtitle="License" href="misc/license.xml" locktitle="yes"/>
+  </appendix>
+</bookmap>

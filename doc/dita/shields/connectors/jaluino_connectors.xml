@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
 <topic id="jaluino_connectors">
   <title>About shield connectors...</title>
   <prolog>
@@ -18,7 +17,7 @@
       <p>Just like Arduino, Jaluino uses two type of stackable headers: 8-pins and 6-pins. You&apos;ll have to get both types.</p>
       <p><fig>
           <title>Vendors such as Sparkfun sell Arduino&apos;s specific connectors, for few bucks.</title>
-          <image href="images/stackable_header.jpg" width="250" placement="break"/>
+          <image href="images/stackable_header.jpg" width="200" placement="break"/>
         </fig></p>
       <p><i>Pros</i> are obvious: this is the simplest way to get your shield built. <i>Cons</i> are also obvious: it may not be the cheapest solution. No, not the cheapest... Also, by plugging/unplugging shields, such connectors will eventually get &quot;tired&quot;, won&apos;t perform their job anymore and you may soon have to completely replace it...</p>
       <p><note type="attention">another issue with this ready-to-use connectors, which may definitely discard them... Some (the one I bought) have rectangular pins, not squared. This means they don&apos;t properly connect on all sides when plugged into female connectors, producing unreliable electric contacts... Be careful, if you can, check these properly fit to female headers, or you&apos;ll get lots of troubles when playing with shields. Also check for the following option 2.</note></p>
@@ -28,12 +27,12 @@
       <p>Another option is build them by yourself. This is the <i>cheap-way</i>, something we rather like at Jaluino... So, how does it work ? Female connectors with long pins exist for IC, this is quite standard and easy-to-find connectors. Combining them with classical pin headers and you&apos;ll get nice Jaluino connectors !</p>
       <p><fig>
           <title>Building your own specific connectors, with IC dedicated pin headers</title>
-          <image href="images/connectors_seperate.JPG" width="250" placement="break"/>
+          <image href="images/connectors_seperate.JPG" width="300" placement="break"/>
         </fig></p>
       <p>The main advantage is the price: despite the greater number of pieces, since they are standard, the whole is cheaper than some Arduino&apos;s specific connectors. Also, if connectors on top get damaged, you can easily replace them without having to unsolder your shield and change others. Drawbacks might be top connectors may not get easily plugged on IC headers, or get removed unintentionally...</p>
       <p><fig>
           <title>Home-made connectors in action !</title>
-          <image href="images/connectors_on_breadboard_shield.JPG" width="200" placement="break"/>
+          <image href="images/connectors_on_breadboard_shield.JPG" width="250" placement="break"/>
         </fig></p>
     </section>
   </body>

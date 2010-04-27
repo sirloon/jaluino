@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
 <topic id="jaluino_crumboard">
   <title>Crumboard shield</title>
   <prolog>
@@ -18,7 +17,7 @@
           <tbody>
             <row>
               <entry>
-                <image href="images/jaluino_with_crumboard_all_connectors.JPG" width="200" align="left" placement="break"/>
+                <image href="images/jaluino_with_crumboard_all_connectors.JPG" width="300" align="left" placement="break"/>
               </entry>
               <entry id="global_desc">
                 <p><b>Crumboard</b> shield is a prototyping shield designed for Jaluino. It embeds a small breadboard (thus the name, crumb-board...), two LEDs and two Push-buttons.</p>
@@ -34,7 +33,7 @@
       <p>Crumboard includes two LEDs and two push-buttons, as exposed in the following  schematic:</p>
       <p><fig>
           <title>Crumboard shield schematic</title>
-          <image href="images/crumboard_schematic.png" width="350" placement="break" otherprops="clickable"/>
+          <image href="images/crumboard_schematic.png" width="450" placement="break" otherprops="clickable"/>
         </fig></p>
       <p>LEDs and push-buttons can be activated using jumpers JP1, JP2, JP3 and JP4.</p>
       <p>PCB shouldn&apos;t be a problem to build. You can access 1:1 scale Crumboard <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/Crumboard_pcb.pdf" format="pdf">PCB</xref>  PDF format, on <xref href="http://code.google.com/p/jaluino/source/browse/trunk/shields/crumboard/" format="html">Jaluino SVN repository</xref>. You can also use Crumboard labels (as <xref href="http://jaluino.googlecode.com/svn/trunk/shields/crumboard/label_for_crumboard.pdf" format="pdf">PDF</xref> version), to stick on the board, in order to get a nice board as shown on photos (TODO: link to labels howto tutorial).</p>
@@ -48,13 +47,13 @@
                 <tbody>
                   <row>
                     <entry>
-                      <image href="images/Crumboard_pcb.png" width="150" placement="break" otherprops="clickable"/>
+                      <image href="images/Crumboard_pcb.png" width="200" placement="break" otherprops="clickable"/>
                     </entry>
                     <entry>
-                      <image href="images/Crumboard_pcb_front.png" width="150" placement="break" otherprops="clickable"/>
+                      <image href="images/Crumboard_pcb_front.png" width="200" placement="break" otherprops="clickable"/>
                     </entry>
                     <entry>
-                      <image href="images/label_for_crumboard.png" width="150" placement="break" otherprops="clickable"/>
+                      <image href="images/label_for_crumboard.png" width="200" placement="break" otherprops="clickable"/>
                     </entry>
                   </row>
                 </tbody>
@@ -73,7 +72,7 @@
           <tbody>
             <row>
               <entry>
-                <image href="images/breadboard_conrad.JPG" width="200"/>
+                <image href="images/breadboard_conrad.JPG" width="250"/>
               </entry>
               <entry>
                 <p>As first step, you&apos;ll have to find a breadboard like the one shown on the photo. It&apos;s a very common model. Be sure it can be cut.</p>
@@ -81,43 +80,43 @@
             </row>
             <row>
               <entry>
-                <image href="images/cutting_line_on_breadboard.JPG" width="200"/>
+                <image href="images/cutting_line_on_breadboard.JPG" width="250"/>
               </entry>
               <entry>Start to draw a line with a black paper. This is where you&apos;ll cut the breadboard. You need to get a length of about 2,7&quot; (6,8cm), just measure what you need on the board itself.</entry>
             </row>
             <row>
               <entry>
-                <image href="images/breadboard_sawing.JPG" width="200"/>
+                <image href="images/breadboard_sawing.JPG" width="250"/>
               </entry>
               <entry>Cut the breadboard, using a metal saw. Cutting is easy, just make sure it&apos;s straight.</entry>
             </row>
             <row>
               <entry>
-                <image href="images/breadboard_sawing_closup.JPG" width="200"/>
+                <image href="images/breadboard_sawing_closup.JPG" width="250"/>
               </entry>
               <entry>As shown on the photo (and as drawn with pen), cut on a holes row.</entry>
             </row>
             <row>
               <entry>
-                <image href="images/breadboard_short.JPG" width="200"/>
+                <image href="images/breadboard_short.JPG" width="250"/>
               </entry>
               <entry>Once cut, you should have something like this.</entry>
             </row>
             <row>
               <entry>
-                <image href="images/breadboard_remove_powerpart.JPG" width="200"/>
+                <image href="images/breadboard_remove_powerpart.JPG" width="250"/>
               </entry>
               <entry>Depending on your breadboard model, you may need to remove one power lines part. Usually, you have two of them, on the left and right. Keeping both may give a breadboard too large top fit within shield connectors. </entry>
             </row>
             <row>
               <entry>
-                <image href="images/breadboard_removed_powerpart.JPG" width="200"/>
+                <image href="images/breadboard_removed_powerpart.JPG" width="250"/>
               </entry>
               <entry>With one power lines part removed, breadboard will fit perfectly... Make sure to also remove the small remaining plastic part to get a clean surface.</entry>
             </row>
             <row>
               <entry>
-                <image href="images/two_crumboard_out_of_one_breadboard.JPG" width="200"/>
+                <image href="images/two_crumboard_out_of_one_breadboard.JPG" width="250"/>
               </entry>
               <entry>
                 <p>You&apos;re done, just stick it between shield connectors. Some breadboards have a sticky surface, but it not, just use some strong glue.</p>
@@ -139,10 +138,10 @@
           <tbody>
             <row>
               <entry>
-                <image href="images/Jaluino_and_shield-side_view.JPG" width="200"/>
+                <image href="images/Jaluino_and_shield-side_view.JPG" width="250"/>
               </entry>
               <entry>
-                <image href="images/Square_hole_of_connector_visable.JPG" width="200"/>
+                <image href="images/jaluino_with_bluetooth_on_crumboard.JPG" width="250"/>
               </entry>
             </row>
           </tbody>

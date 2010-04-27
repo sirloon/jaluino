@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<topic id="starter_front">
+  <title>Jaluino Shields</title>
+  <prolog>
+    <publisher>Jaluino Group</publisher>
+  </prolog>
+  <body>
+    <p><image href="images/jaluino_shields.jpg" width="300" align="center" placement="break"/></p>
+    <section>
+      <title>
+        <b>Overview of available shields compatible with Jaluino Medium board</b>
+      </title>
+      <p><b>Version @VERSION@.</b></p>
+    </section>
+    <p id="firstcontent">This is the online HTML version of &quot;Jaluino Shields&quot; PDF version. You can also <xref href="http://jaluino.googlecode.com/files/Jaluino_Shields_@VERSION@.pdf" format="html">download</xref> the PDF version from Jallib download <xref href="http://code.google.com/p/jaluino/downloads/list" format="html">section</xref>, where you&apos;ll also find all Jaluino packages.</p>
+    <p>The Jaluino  Team</p>
+    <section>
+      <title>Table of Content</title>
+<!--keep the following empty, this is a placeholder for generated TOC-->    </section>
+  </body>
+</topic>
