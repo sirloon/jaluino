@@ -68,8 +68,6 @@ export:
 	# prepare distrib dir
 	mkdir distrib
 	mkdir distrib/jaluino-${VERSION}
-	mkdir -p distrib/jaluino-${VERSION}/doc/html
-	mkdir -p distrib/jaluino-${VERSION}/doc/pdf
 	# generate VERSION file for each
 	echo ${VERSION} > distrib/jaluino-${VERSION}/VERSION
 	# get clean source from repos
@@ -79,18 +77,18 @@ export:
 prepare:
 	# process 2 TORELEASE files:
 	#  1. jaluino TORELEASE
-	cd  .. && cat TORELEASE | sed "s#\r##" | grep -v ^\# | tar cfv - -T - | tar xfv - -C tools/distrib/jaluino-${VERSION}
+	cd  distrib/jaluino-export && cat TORELEASE | sed "s#\r##" | grep -v ^\# | tar cfv - -T - | tar xfv - -C ../jaluino-${VERSION}
 	#  2. part of jallib TORELEASE
-	for f in `cat ../3rdparty/jallib_svn/TORELEASE | sed "s#\r##" | grep ^include | grep -v ^include\/device`; \
+	for f in `cat distrib/jaluino-export/3rdparty/jallib_svn/TORELEASE | sed "s#\r##" | grep ^include | grep -v ^include\/device`; \
 	do \
-		cp ../3rdparty/jallib_svn/$$f distrib/jaluino-${VERSION}/lib ;\
+		cp distrib/jaluino-export/3rdparty/jallib_svn/$$f distrib/jaluino-${VERSION}/lib ;\
 	done
 	# manually add needed device files
-	cp ../3rdparty/jallib_svn/include/device/18f4550.jal distrib/jaluino-${VERSION}/lib
-	cp ../3rdparty/jallib_svn/include/device/chipdef_jallib.jal distrib/jaluino-${VERSION}/lib
+	cp distrib/jaluino-export/3rdparty/jallib_svn/include/device/18f4550.jal distrib/jaluino-${VERSION}/lib
+	cp distrib/jaluino-export/3rdparty/jallib_svn/include/device/chipdef_jallib.jal distrib/jaluino-${VERSION}/lib
 	# same for some python libs
 	-mkdir -p distrib/jaluino-${VERSION}/tools
-	cp ../3rdparty/jallib_svn/toos/jallib.py distrib/jaluino-${VERSION}/tools
+	cp distrib/jaluino-export/3rdparty/jallib_svn/tools/jallib.py distrib/jaluino-${VERSION}/tools
 	# get compiler from jallib
 	cd distrib/jaluino-export/3rdparty/jallib_svn/ && tar cfv - compiler | tar xfv - -C ../../../jaluino-${VERSION}
 	# TODO: wait for a jalapi DITA integration
@@ -105,14 +103,18 @@ check:
 	sh distrib/jaluino-export/3rdparty/jallib_svn/tools/check_package.sh distrib/jaluino-${VERSION}/lib distrib/jaluino-${VERSION}/samples distrib/jaluino-${VERSION}/compiler/jalv2
 
 dita:
-	-mkdir -p distrib/tmp/jaluino_dita_${VERSION}/pdf
-	-mkdir -p distrib/tmp/jaluino_dita_${VERSION}/html
+	-mkdir -p distrib/jaluino-${VERSION}/doc/pdf
+	-mkdir -p distrib/jaluino-${VERSION}/doc/html/user_guide
+	-mkdir -p distrib/jaluino-${VERSION}/doc/html/getting_started
+	-mkdir -p distrib/jaluino-${VERSION}/doc/html/shields
 	# PDF
-	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/distrib/jaluino-export/doc/dita/jaluino_medium_userguide.ditamap -Dprompt.output.type=pdf -Dprompt.output.directory=`pwd`/distrib/tmp/jaluino_dita_${VERSION}/pdf/ -Dprompt.output.confirm=y
-	cp distrib/tmp/jaluino_dita_${VERSION}/pdf/*.pdf distrib/jaluino-${VERSION}/doc/pdf/
+	cd distrib/jaluino-export/doc/dita && make userguide-pdf && cp tmp/User_Guide_*.pdf ../../../jaluino-${VERSION}/doc/pdf/
+	cd distrib/jaluino-export/doc/dita && make starter-pdf && cp tmp/Getting_Started_*.pdf ../../../jaluino-${VERSION}/doc/pdf/
+	cd distrib/jaluino-export/doc/dita && make shields-pdf && cp tmp/Jaluino_Shields_*.pdf ../../../jaluino-${VERSION}/doc/pdf/
 	# HTML
-	ant -f $$DITA_HOME/build_demo.xml -Dprompt.ditamap.filename=`pwd`/distrib/jaluino-export/doc/dita/jaluino_medium_userguide.ditamap -Dprompt.output.type=web -Dprompt.output.directory=`pwd`/distrib/tmp/jaluino_dita_${VERSION}/html/ -Dprompt.output.confirm=y
-	cd distrib/tmp/jaluino_dita_${VERSION}/html && tar cf - . | tar xf - -C ../../../jaluino-${VERSION}/doc/html
+	cd distrib/jaluino-export/doc/dita && make userguide-html && cp -r tmp/* ../../../jaluino-${VERSION}/doc/html/user_guide
+	cd distrib/jaluino-export/doc/dita && make starter-html && cp -r tmp/* ../../../jaluino-${VERSION}/doc/html/getting_started
+	cd distrib/jaluino-export/doc/dita && make shields-html && cp -r tmp/* ../../../jaluino-${VERSION}/doc/html/shields
 
 ide:
 	cd ../ide/plugins/Jaluino && python setup.py bdist_egg --dist-dir ../

@@ -37,6 +37,7 @@ shields/template/jaluino_shield_template_pcb.pdf
 # Libraries
 lib/crumboard_shield.jal
 lib/jaluino_medium.jal
+lib/jaluino_medium_pinmap.jal
 
 # Samples
 samples/crumboard_blink.jal
@@ -81,9 +82,16 @@ bin/xwisp2_12.cfg
 bin/xwisp2_14.cfg
 bin/xwisp2_16.cfg
 
+# Doc materials
+#   Fritzing
+doc/materials/CrumboardShield.fzpz
+doc/materials/JaluinoMedium.fzpz
+doc/materials/Jumper.fzpz
+
 # Misc
 3RD_PARTY
 CHANGELOG
 README
 LICENSE.cc
 LICENSE.bsd
+
