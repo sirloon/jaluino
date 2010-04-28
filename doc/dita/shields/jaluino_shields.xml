@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- This document was created with Syntext Serna Free. -->
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_shields">
-  <title>Jaluino Shields</title>
+  <title>Overview</title>
   <body>
     <p>This section describes  <b>shields</b> compatible with Jaluino board. Shields are daughter boards you can plug onto Jaluino, to extend functionalities and features, experiment new designs...</p>
     <p><note><i>&quot;shield</i>&quot; name comes from Arduino shields themselves. Arduino names such boards because it covers the entire Arduino board.</note></p>

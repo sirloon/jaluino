@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd" []>
 <topic id="jaluino_crumboard">
   <title>Crumboard shield</title>
   <prolog>
@@ -47,13 +48,13 @@
                 <tbody>
                   <row>
                     <entry>
-                      <image href="images/Crumboard_pcb.png" width="200" placement="break" otherprops="clickable"/>
+                      <image href="images/Crumboard_pcb.png" width="150" placement="break" otherprops="clickable"/>
                     </entry>
                     <entry>
-                      <image href="images/Crumboard_pcb_front.png" width="200" placement="break" otherprops="clickable"/>
+                      <image href="images/Crumboard_pcb_front.png" width="150" placement="break" otherprops="clickable"/>
                     </entry>
                     <entry>
-                      <image href="images/label_for_crumboard.png" width="200" placement="break" otherprops="clickable"/>
+                      <image href="images/label_for_crumboard.png" width="150" placement="break" otherprops="clickable"/>
                     </entry>
                   </row>
                 </tbody>
