@@ -48,6 +48,8 @@ samples/crumboard_pintools.jal
 # 3rd party
 3rdparty/README
 3rdparty/tinybld2039.zip
+3rdparty/xwisp2196.zip
+3rdparty/xwisp_src.tar.gz
 
 # Bootloaders
 bootloaders/tinybl
@@ -56,16 +58,18 @@ bootloaders/pdfusb/
 # IDE & tools
 install.py
 ide/plugins/Jaluino
-ide/plugins/JaluinoDebugger
 ide/plugins/Jaluino-0.1-py2.5.egg
 ide/plugins/Jaluino-0.1-py2.6.egg
+ide/plugins/JaluinoDebugger
+ide/plugins/JaluinoDebugger-0.16-py2.5.egg
+ide/plugins/JaluinoDebugger-0.16-py2.6.egg
 ide/conf/jal.edxml
 ide/conf/hex.edxml
 ide/conf/jaluino_launch.xml
 ide/conf/jaluino_launch_win.xml
 ide/conf/README
-bin/jaluino_svn
-bin/jaluino_svn.bat
+bin/jaluino
+bin/jaluino.bat
 bin/pdfusb
 bin/pdfusb.bat
 bin/tinybl
@@ -73,6 +77,7 @@ bin/tinybld2
 bin/tinybld2.exe
 bin/tinybld2w.exe
 bin/piccodes.ini
+bin/xwisp.py
 bin/xwisp2
 bin/xwisp2u
 bin/xwisp2.exe
