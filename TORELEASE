@@ -40,10 +40,11 @@ lib/jaluino_medium.jal
 lib/jaluino_medium_pinmap.jal
 
 # Samples
-samples/crumboard_blink.jal
 samples/jaluino_medium_blink.jal
-samples/crumboard_push_led.jal
+samples/crumboard_blink.jal
+samples/crumboard_dynamic_adc.jal
 samples/crumboard_pintools.jal
+samples/crumboard_push_led.jal
 
 # 3rd party
 3rdparty/README

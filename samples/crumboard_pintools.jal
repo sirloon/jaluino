@@ -39,6 +39,7 @@ const bit CRUMBOARD_SW2_JP4  = on	-- and also on JP2 (use switch SW2)
 include crumboard_shield
 crumboard_init()
 
+
 -- we here define our associate array, a mapping between 
 -- pin names and an arbitrary index. crumboard_shield.jal says:
 --  - LED1 is on pin_A0: its index will be 0
@@ -77,7 +78,7 @@ forever loop
       -- here we set pin #0, which is pin_A0, to high or low level
 	  -- according to previous level
 	  _led1_level = ! _led1_level
-	  pintools_set_level(0,_led1_level)
+	  pintools_level[0] = _led1_level
    end if
 
    -- same for SW2
@@ -85,7 +86,7 @@ forever loop
 	  -- here we set pin #1, which is pin_C2, to input or output direction
 	  -- according to previous direction
 	  _led2_direction = ! _led2_direction
-	  pintools_set_direction(1,_led2_direction)
+	  pintools_direction[1] = _led2_direction
    end if
 
    -- debounce push buttons

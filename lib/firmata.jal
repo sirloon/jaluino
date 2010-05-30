@@ -125,11 +125,11 @@ procedure firmata_pin_mode(byte in pinnum, byte in mode) is
    case mode of
       FIRMATA_OUTPUT:
       block
-         pintools_set_direction(pinnum,output)
+         pintools_direction[pinnum] = output
       end block
       FIRMATA_INPUT:
       block
-         pintools_set_direction(pinnum,input)
+         pintools_direction[pinnum] = input
       end block
       FIRMATA_ANALOG:
       block
@@ -146,12 +146,12 @@ end procedure
 
 procedure firmata_pin_strobe(byte in pinnum, byte in howmany, word in on_interval, word in off_interval) is
    var byte i
-   pintools_set_direction(pinnum,output)
+   pintools_direction[pinnum] = output
    for howmany loop
       delay_1ms(off_interval)
-      pintools_set_level(pinnum,high)
+      pintools_level[pinnum] = high
       delay_1ms(on_interval)
-      pintools_set_level(pinnum,low)
+      pintools_level[pinnum] = low
    end loop
 end procedure
 
@@ -159,7 +159,7 @@ procedure firmata_blink_version() is
    -- blinking version isn't mandatory if no pin has been assigned
    -- for this purpose
    if defined(firmata_version_blink_pinnum) == true then
-      pintools_set_direction(firmata_version_blink_pinnum,output)
+      pintools_direction[firmata_version_blink_pinnum] = output
       firmata_pin_strobe(firmata_version_blink_pinnum,FIRMATA_MAJOR_VERSION,200,400)
       delay_1ms(300)
       firmata_pin_strobe(firmata_version_blink_pinnum,2,1,4)	 -- separator, a quick burst
