@@ -89,6 +89,7 @@ bin/xwisp2_14.cfg
 bin/xwisp2_16.cfg
 
 # Doc materials
+doc/materials/jaluino_medium_layout.svg
 #   Fritzing
 doc/materials/CrumboardShield.fzpz
 doc/materials/JaluinoMedium.fzpz
