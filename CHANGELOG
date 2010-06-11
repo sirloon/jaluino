@@ -1,5 +1,35 @@
 jaluino-next:
-------------
+-----------
+
+Released YYYY-MM-DD
+
+IDE: 
+  - 
+
+mainboard:
+ -
+
+documentation:
+ - 
+
+shields:
+ - 
+
+libraries:
+ - 
+
+bootloaders:
+ - 
+
+samples
+ - 
+
+
+
+jaluino-0.2:
+-----------
+
+Released 2010-06-11
 
 IDE: 
   - added JaluinoIDE, an IDE for Jaluino, based on Editra,
@@ -16,6 +46,7 @@ documentation:
  - updated to include pin numbers
  - created SVG file showing mapping between 18F4550 pins and shield
    connectors
+ - created Fritzing component for Jaluino mainboard and Crumboard shield
 
 shields:
  - stepper shield: drive a stepper motor
