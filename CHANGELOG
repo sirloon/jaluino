@@ -9,9 +9,13 @@ IDE:
 
 mainboard:
  - added pin numbers, updated labels
+ - 1st batch order: Jaluino v1.3a was produced by a professional
+   PCB manufacturer
 
 documentation:
  - updated to include pin numbers
+ - created SVG file showing mapping between 18F4550 pins and shield
+   connectors
 
 shields:
  - stepper shield: drive a stepper motor
@@ -22,10 +26,10 @@ libraries:
 
 bootloaders:
  - updated tinybd2
- - added PDFUSB bootloade support
+ - added PDFUSB bootloader support
 
 samples
- - more crumboard samples
+ - more crumboard samples (dynamic ADC configuration, pintools, ...)
 
 
 
