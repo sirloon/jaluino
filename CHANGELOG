@@ -18,6 +18,7 @@ documentation:
  - updated to include pin numbers
  - created SVG file showing mapping between 18F4550 pins and shield
    connectors
+ - created Fritzing component for Jaluino mainboard and Crumboard shield
 
 shields:
  - stepper shield: drive a stepper motor
