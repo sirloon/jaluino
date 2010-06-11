@@ -11,7 +11,7 @@
 all : clean test
 
 WEEKLYBUILDCODENAME=bee
-VERSION=dev
+VERSION=0.2
 SAMPLIR_DIR=../samples
 TEST_DIR=../tests
 INCLUDE_DIR=../lib
@@ -72,7 +72,7 @@ export:
 	echo ${VERSION} > distrib/jaluino-${VERSION}/VERSION
 	# get clean source from repos
 	# (svn export gets the sources, but without any .svn dir (no svn metadata)
-	svn export http://jaluino.googlecode.com/svn/trunk distrib/jaluino-export
+	svn export http://jaluino.googlecode.com/svn/tags/jaluino-0.2 distrib/jaluino-export
 
 prepare:
 	# process 2 TORELEASE files:
