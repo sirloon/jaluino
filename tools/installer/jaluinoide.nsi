@@ -100,12 +100,27 @@ SectionEnd
 !define PYEXE "python.exe"
 Var PYDIR
 Var PYPATH
+Var EDITRAEXE
 DirText "Select a directory to install JaluinoIDE and jallib/jaluino libraries and samples"
 Section "Install JaluinoIDE"
 
   SectionIn RO
   SetOutPath $INSTDIR
+  ; Embeds what declared in distrib (coming from "make release" under linux)
   File /r "..\distrib\jaluino-${PRODUCT_VERSION}\*"
+  ; register *.jal files as openable with Editra
+  ReadRegStr $EDITRAEXE HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Editra.exe" ""
+  IfErrors lbl_ederr
+  Goto fileassoc
+  fileassoc:
+  WriteRegStr HKCR ".jal" "" "Jal_File"
+  WriteRegStr HKCR "Jal_File" "" "$EDITRAEXE"
+  WriteRegStr HKCR "Jal_File\DefaultIcon" "" "$EDITRAEXE,0"
+  lbl_ederr:
+  ;WriteRegStr HKCR ".jal\DefaultIcon" "" "Jal,0"
+  ; if Editra hasn't run, xml and plugins files can't be installed
+  CreateDirectory "$APPDATA\Editra\cache"
+  CreateDirectory "$APPDATA\Editra\plugins"
   ; find pythont to run install.py and configure jaluinoide
   ReadRegStr $PYDIR HKLM "SOFTWARE\Python\PythonCore\2.6\InstallPath" ""
   IfErrors lbl_err
@@ -121,8 +136,24 @@ Section "Install JaluinoIDE"
 SectionEnd ; end the section
 
 
+Function un.onInit
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove ${PRODUCT_NAME} and all content in $INSTDIR?" IDYES +2
+  Abort
+FunctionEnd
 
+Section Uninstall
+  ; Remove all Files
+  RmDir /r "$INSTDIR\"
 
-Section "Uninstall"
-  Delete "$INSTDIR\${UNINSTALLER_FILENAME}"
+  ; Cleanup Registry
+  DeleteRegKey HKCR ".jal"
+  DeleteRegKey HKCR "Jal_file"
+
+  SetAutoClose true
 SectionEnd
+
+Function un.onUninstSuccess
+  HideWindow
+  MessageBox MB_ICONINFORMATION|MB_OK "${PRODUCT_NAME} was successfully removed from your computer."
+FunctionEnd
+
