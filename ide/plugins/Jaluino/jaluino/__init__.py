@@ -11,7 +11,7 @@
 """Jaluino IDE"""
 
 __author__ = "Sebastien Lelong"
-__version__ = "0.16"
+__version__ = "0.21"
 
 
 #-----------------------------------------------------------------------------#
@@ -26,15 +26,6 @@ cfg = jalutil.GetJaluinoPrefs()
 path = cfg.get("JALLIB_PYPATH")
 if path:
     sys.path = path.split(os.pathsep) + sys.path
-
-# HACK: Editra 0.5.51 win binary embeds library ctypes, but misses wintypes
-# wintypes is required by pyserial. Even adjusting PYTHONPATH, through sys.path 
-# modification above won't help in this case, as ctypes is already loaded by Editra
-# long before we get there. Importing ctypes again, as done in pyserial, will just
-# get ctypes already remaining in memory.
-# In order to refresh PYTHONPATH so ctypes is imported again, we need to reload it.
-import ctypes
-reload(ctypes)
 
 # Local modules
 import jaluino
