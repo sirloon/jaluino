@@ -18,8 +18,10 @@ import os, sys, glob, re
 import subprocess
 import cPickle
 
+
 def common():
-    runfrom = os.path.abspath(os.curdir)
+    # this is where install.py is located
+    runfrom = os.path.split(os.path.abspath(sys.argv[0]))[0]
     jaluino_root = runfrom
     jaluino_bin = os.path.join(jaluino_root,"bin")
     # adjust if running from SVN or release package
@@ -84,24 +86,37 @@ def win():
     import _winreg as winreg
     common_env = common()
     # Determine where python is installed
+    # 1. in Editra files
+    # 2. on system
     try:
-        python_exec = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Python.exe")
+        jaluino_dir = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"Software\Microsoft\Windows\CurrentVersion\App Paths\Jaluino")
+        python_exec = os.path.join(jaluino_dir,"3rdparty","Editra","python.exe")
+        if not os.path.isfile(python_exec):
+            raise OSError
+        jallib_pypath = os.pathsep.join([
+                os.path.join(common_env['JALLIB_ROOT'],"tools"),
+                os.path.join(jaluino_dir,"3rdparty","Editra","library.zip")])
     except OSError,e:
-        print >> sys.stderr, "Unable to find python, not installed...\nError: %s" % e
-        raw_input("Press a key to quit...")
-        sys.exit(255)
+        try:
+            python_exec = winreg.QueryValue(winreg.HKEY_LOCAL_MACHINE,r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Python.exe")
+            # ok, not using bundle python, so we need to adjust PYTHONPATH to include libraries from standard python installtion
+            rootpylib = os.path.split(python_exec)[0]
+            pylib = os.path.join(rootpylib,"Lib")
+            pysite = os.path.join(pylib,"site-packages")
+            jallib_pypath  = os.pathsep.join([pylib,pysite,os.path.join(common_env['JALLIB_ROOT'],"tools")]),
+        except OSError,e:
+            print >> sys.stderr, "Unable to find python, not installed...\nError: %s" % e
+            raw_input("Press a key to quit...")
+            sys.exit(255)
 
     # exception for windows, when Editra is bundled as binaries. We'll adjust PYTHONPATH to include
     # python2.5 libraries
-    rootpylib = os.path.split(python_exec)[0]
-    rootpylib = re.sub("2\d","25",rootpylib)
-    pylib = os.path.join(rootpylib,"Lib")
-    pysite = os.path.join(pylib,"site-packages")
 
-    win_env = {'PYTHON_EXEC'         : python_exec,
+
+    win_env = {'PYTHON_EXEC'         : '"%s"' % python_exec,
                'JALUINO_LAUNCH_FILE' : "jaluino_launch_win.xml",
                'JALLIB_JALV2'        : os.path.join(common_env['JALLIB_ROOT'],"compiler","jalv2.exe"),
-               'JALLIB_PYPATH'       : os.pathsep.join([pylib,pysite,os.path.join(common_env['JALLIB_ROOT'],"tools")]),
+               'JALLIB_PYPATH'       : jallib_pypath,
               }
 
     # Editra configuration directories
