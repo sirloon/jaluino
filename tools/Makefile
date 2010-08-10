@@ -68,8 +68,9 @@ export:
 	# prepare distrib dir
 	mkdir distrib
 	mkdir distrib/jaluino-${VERSION}
-	# generate VERSION file for each
+	# generate VERSION file for packages and NSIS
 	echo ${VERSION} > distrib/jaluino-${VERSION}/VERSION
+	echo '!define PRODUCT_VERSION "${VERSION}"' > installer/jaluino.nsh
 	# get clean source from repos
 	# (svn export gets the sources, but without any .svn dir (no svn metadata)
 	svn export http://jaluino.googlecode.com/svn/trunk distrib/jaluino-export
