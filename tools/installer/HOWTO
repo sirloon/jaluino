@@ -1,0 +1,27 @@
+How to bundle JaluinoIDE in Editra for Windows
+----------------------------------------------
+
+First perform a "make release VERSION=X.Y.Z" under Linux. This will produce usual
+zip and tar.gz files, and a remaining "jaluino-X.Y.Z" directory from where 
+installer will pick content.
+
+Prepare Editra. Checkout sources from SVN, http://svn.wxwidgets.org/svn/wx/wxPython/3rdParty/Editra,
+in "3rdparty" directory so there's a "3rdparty/Editra" directory containing all sources.
+
+Apply patches (under Linux):
+
+    cd tools/installer
+    ./patch_editra.sh
+
+(comes from "svn diff ../../3rdparty/Editra > editra_patch.diff"
+
+In a first step, Editra must be compiled using py2exe. Go to "3rdparty/Editra" with cmd and run:
+
+   c:\python26\python.exe setup.py py2exe
+
+This requires wxPython2.8 (unicode).
+
+Once built, go to "tools/installer" and compile jaluinoide.nsi (right-click, "Compile").
+File "jaluinoide-X.Y.Z.exe" is created, approx ~30MB.
+
+

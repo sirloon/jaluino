@@ -1,0 +1,39 @@
+Index: ../../3rdparty/Editra/setup.py
+===================================================================
+--- ../../3rdparty/Editra/setup.py	(révision 64746)
++++ ../../3rdparty/Editra/setup.py	(copie de travail)
+@@ -228,10 +228,13 @@
+ 
+ # Explicitly include some libraries that are either loaded dynamically
+ # or otherwise not able to be found by py2app/exe
++# Seb: serial and usb included, Tkinter for XWisp
+ INCLUDES = ['syntax.*', 'ed_log', 'shutil', 'subprocess', 'zipfile',
+             'pygments.*', 'pygments.lexers.*', 'pygments.formatters.*',
+             'pygments.filters.*', 'pygments.styles.*', 'ftplib',
+-            'extern.flatnotebook'] # temporary till all references can be removed
++            'extern.flatnotebook',
++            'serial','usb',
++            'Tkinter','Tkconstants','_tkinter','tkFileDialog'] # temporary till all references can be removed
+ if sys.platform.startswith('win'):
+     INCLUDES.extend(['ctypes', 'ctypes.wintypes'])
+ else:
+@@ -319,14 +322,17 @@
+         from enchant import utils as enutil
+         DATA_FILES += enutil.win32_data_files()
+ 
++    # Seb: include python interpreter executable to run jallib.py
++    DATA_FILES.append("C:\\Python26\\python.exe")
++
+     setup(
+         name = NAME,
+         version = VERSION,
+         options = {"py2exe" : {"compressed" : 1,
+                                "optimize" : 1,
+-                               "bundle_files" : 2,
++                               "bundle_files" : 3, # don't bundle DLLs, otherwise USB libs won't be reachable
+                                "includes" : INCLUDES,
+-                               "excludes" : ["Tkinter",],
++                               "compressed" : True,
+                                "dll_excludes": [ "MSVCP90.dll" ] }},
+         windows = [{"script": "src/Editra.py",
+                     "icon_resources": [(1, ICON['Win'])],
