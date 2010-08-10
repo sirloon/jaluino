@@ -184,6 +184,13 @@ Please run Editra once, and re-launch this script !
         content = file(pfilen,"rb").read()
         file(destn,"wb").write(content)
     
+    print "Enabling Jaluino plugin"
+    plugincfg = os.path.join(env['EDITRA_PLUGINS'],"..","plugin.cfg")
+    # Append config to existing or new file, Editra will clean up this when
+    # it quits...
+    fout = file(plugincfg,"a")
+    print >> fout,"jaluino=True"
+    fout.close()
     print
     print
     print """
@@ -193,7 +200,6 @@ You can now run Editra and enable Jaluino IDE plugin.
 
 
 """
-    raw_input("Press a key to quit...")
     return
 
 
