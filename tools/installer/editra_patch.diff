@@ -1,23 +1,24 @@
 Index: ../../3rdparty/Editra/setup.py
 ===================================================================
---- ../../3rdparty/Editra/setup.py	(révision 64746)
+--- ../../3rdparty/Editra/setup.py	(révision 65228)
 +++ ../../3rdparty/Editra/setup.py	(copie de travail)
-@@ -228,10 +228,13 @@
+@@ -228,10 +228,14 @@
  
  # Explicitly include some libraries that are either loaded dynamically
  # or otherwise not able to be found by py2app/exe
-+# Seb: serial and usb included, Tkinter for XWisp
++# Seb: serial and usb included, Tkinter for XWisp, site because required when using python.exe
  INCLUDES = ['syntax.*', 'ed_log', 'shutil', 'subprocess', 'zipfile',
              'pygments.*', 'pygments.lexers.*', 'pygments.formatters.*',
              'pygments.filters.*', 'pygments.styles.*', 'ftplib',
 -            'extern.flatnotebook'] # temporary till all references can be removed
 +            'extern.flatnotebook',
 +            'serial','usb',
-+            'Tkinter','Tkconstants','_tkinter','tkFileDialog'] # temporary till all references can be removed
++            'Tkinter','Tkconstants','_tkinter','tkFileDialog',
++            'site']
  if sys.platform.startswith('win'):
      INCLUDES.extend(['ctypes', 'ctypes.wintypes'])
  else:
-@@ -319,14 +322,17 @@
+@@ -319,14 +323,17 @@
          from enchant import utils as enutil
          DATA_FILES += enutil.win32_data_files()
  

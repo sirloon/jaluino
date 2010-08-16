@@ -1,0 +1,21 @@
+Few words about how to build a Jaluino release...
+
+Under Linux:
+
+ $ cd tools
+ $ make release VERSION=X.Y.Z
+
+This builds source tarball and zip archives.
+
+Then, under Windows, "jaluino" directory must be accessible (Samba share).
+Run "cmd":
+
+ $ cd path\to\jaluino\3rdparty\Editra
+ $ c:\python26\python.exe setup.py py2exe
+
+Then compile NSIS installer script. "jaluinoide.X.Y.Z.exe" is created.
+
+Upload archives and installer.
+
+Celebrate.
+
