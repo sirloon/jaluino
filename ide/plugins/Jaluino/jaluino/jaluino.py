@@ -683,7 +683,10 @@ class JaluinoWindow(eclib.ControlBox):
         return handenv
 
     def GetMainFile(self):
-        return self._prefs.get('mainfile')
+        # if no mainfile could be found, let's pick the first available
+        nb = self.GetMainWindow().GetNotebook()
+        first = nb.GetCurrentPage()
+        return self._prefs.get('mainfile') or first.GetFileName()
 
     def UpdateMainFile(self):
         # in case none selection, main is '', idx is -1...
