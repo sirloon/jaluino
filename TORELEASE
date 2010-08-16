@@ -58,8 +58,8 @@ bootloaders/pdfusb/
 
 # IDE & tools
 install.py
-ide/plugins/Jaluino-0.1-py2.5.egg
-ide/plugins/Jaluino-0.1-py2.6.egg
+ide/plugins/Jaluino-0.2.1-py2.5.egg
+ide/plugins/Jaluino-0.2.1-py2.6.egg
 ide/plugins/JaluinoDebugger-0.16-py2.5.egg
 ide/plugins/JaluinoDebugger-0.16-py2.6.egg
 ide/conf/jal.edxml
