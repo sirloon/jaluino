@@ -2,6 +2,9 @@ Few words about how to build a Jaluino release...
 
 Under Linux:
 
+ $ cd $DITA_HOME
+ $ ./startcmd.sh
+ $ cd $JALUINO_ROOT
  $ cd tools
  $ make release VERSION=X.Y.Z
 

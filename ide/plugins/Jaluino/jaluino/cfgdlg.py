@@ -436,6 +436,12 @@ class MiscPanel(wx.Panel):
     def __DoLayout(self):
         """Layout the controls"""
         msizer = wx.BoxSizer(wx.VERTICAL)
+        actbox = wx.StaticBox(self, label=_("Actions"))
+        actboxsz = wx.StaticBoxSizer(actbox, wx.VERTICAL)
+        libbox = wx.StaticBox(self, label=_("Autocompletion"))
+        libboxsz = wx.StaticBoxSizer(libbox, wx.VERTICAL)
+        tplbox = wx.StaticBox(self, label=_("Jalv2 templates"))
+        tplboxsz = wx.StaticBoxSizer(tplbox, wx.VERTICAL)
         sbox = wx.StaticBox(self, label=_("Text Colors"))
         boxsz = wx.StaticBoxSizer(sbox, wx.VERTICAL)
 
@@ -497,15 +503,28 @@ class MiscPanel(wx.Panel):
                        (colors[ID_WARN_BACK], 0, wx.EXPAND)])
         boxsz.Add(flexg, 0, wx.EXPAND)
 
+        libboxsz.AddMany([(wx.StaticText(self, label=_("Re-discover JAL libraries in order to rebuild autocompletion cache")), 0,wx.ALIGN_CENTER_VERTICAL),
+                          (gen_api_btn, 0,wx.EXPAND)])
+
+        actboxsz.AddMany([((5, 5), 0), (clear_cb, 0),
+                          ((5, 5), 0), (error_cb, 0)])
+
+        topBox = wx.BoxSizer(wx.HORIZONTAL)
+        tplfile = wx.FilePickerCtrl(self)
+        tplfile.SetPath("/tmp/jal.tpl")
+        tplfile.SetLabel("zelabel")
+        tplfile.SetName("zename")
+        topBox.Add(tplfile)
+        tplboxsz.AddMany([(topBox, 1,wx.EXPAND)])
+
         # Layout
         msizer.AddMany([((5, 5), 0),
-                        (wx.StaticText(self, label=("Actions") + u":"), 0),
-                        ((5, 5), 0), (clear_cb, 0),
-                        ((5, 5), 0), (error_cb, 0),
-                        ((5, 5), 0), (gen_api_btn, 0),
-                        ((10, 10), 0), (wx.StaticLine(self), 0, wx.EXPAND),
+                        actboxsz,
+                        libboxsz,
+                        tplboxsz,
                         ((10, 10), 0),
                         (boxsz, 1, wx.EXPAND)])
+
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.AddMany([((5, 5), 0), (msizer, 1, wx.EXPAND), ((5, 5), 0)])
         self.SetSizer(hsizer)
