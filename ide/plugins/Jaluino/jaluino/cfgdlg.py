@@ -16,6 +16,7 @@ import sys, os
 import subprocess
 import cPickle
 import wx
+import wx.lib.filebrowsebutton
 import wx.lib.mixins.listctrl as listmix
 import cStringIO
 import zlib
@@ -56,6 +57,8 @@ ID_CUSTOM_SPEED = wx.NewId()
 ID_AUTOCLEAR = wx.NewId()
 ID_ERROR_BEEP = wx.NewId()
 ID_GENERATE_API = wx.NewId()
+ID_CHOOSE_TPL = wx.NewId()
+ID_TPL_OVERWRITE = wx.NewId()
 
 # Environment panel
 ID_JALUINO_ROOT = wx.NewId()
@@ -192,7 +195,9 @@ class ConfigNotebook(wx.Notebook):
                              infof=buff.GetInfoForeground().Get(),
                              infob=buff.GetInfoBackground().Get(),
                              warnf=buff.GetWarningForeground().Get(),
-                             warnb=buff.GetWarningBackground().Get()))
+                             warnb=buff.GetWarningBackground().Get(),
+                             jaltpl=self.tpl.GetValue(),
+                             jaltplow=self.tplow.GetValue(),))
             buff.Destroy()
 
         # Setup
@@ -424,6 +429,8 @@ class MiscPanel(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         # Attributes
+        self.tpl = None     # template chooser
+        self.tplow = None   # overwrite existing templates
 
         # Layout
         self.__DoLayout()
@@ -503,31 +510,67 @@ class MiscPanel(wx.Panel):
                        (colors[ID_WARN_BACK], 0, wx.EXPAND)])
         boxsz.Add(flexg, 0, wx.EXPAND)
 
-        libboxsz.AddMany([(wx.StaticText(self, label=_("Re-discover JAL libraries in order to rebuild autocompletion cache")), 0,wx.ALIGN_CENTER_VERTICAL),
+        
+        libboxsz.AddMany([(wx.StaticText(self, label=_("Re-discover JAL libraries in order to rebuild autocompletion cache")), 0,wx.ALIGN_CENTER_VERTICAL|wx.EXPAND),
                           (gen_api_btn, 0,wx.EXPAND)])
 
         actboxsz.AddMany([((5, 5), 0), (clear_cb, 0),
                           ((5, 5), 0), (error_cb, 0)])
 
         topBox = wx.BoxSizer(wx.HORIZONTAL)
-        tplfile = wx.FilePickerCtrl(self)
-        tplfile.SetPath("/tmp/jal.tpl")
-        tplfile.SetLabel("zelabel")
-        tplfile.SetName("zename")
-        topBox.Add(tplfile)
-        tplboxsz.AddMany([(topBox, 1,wx.EXPAND)])
+        self.tpl = wx.lib.filebrowsebutton.FileBrowseButton(self,ID_CHOOSE_TPL,labelText="File containing templates",
+                                                      initialValue=cfg.get("jaltpl") or u"",
+                                                      changeCallback=self.OnTemplateSelected)
+        topBox.Add(self.tpl,1,wx.EXPAND)
+        self.tpltxt = wx.StaticText(self, label="")
+        self.tpltxt.SetFont(wx.Font(8,wx.NORMAL,wx.NORMAL,wx.NORMAL))
+        self.tplow = wx.CheckBox(self, ID_TPL_OVERWRITE,
+                               _("Overwrite existing templates if named the same"))
+        self.tplow.SetValue(cfg.get('jaltplow', False))
+        tplboxsz.AddMany([(topBox, 1,wx.EXPAND),(self.tplow,1,wx.EXPAND),((5,5),0),(self.tpltxt,0)])
+        # check if codetemplater, on which jalv2 template is based, is installed
+        # and enabled. If so, load templates to give feedback to users and make
+        # sure template file is safe
+        try:
+            import codetemplater
+            pm = wx.GetApp().GetPluginManager()
+            ct = pm[codetemplater.CodeTemplater]
+            if not ct:
+                self.tpltxt.SetForegroundColour(wx.RED)
+                self.tpltxt.SetLabel(_("CodeTemplater plugin is installed but not enabled. Please enable it from 'Plugin Manager' menu"))
+            else:
+                if self.tpl.GetValue():
+                    self.LoadTemplates()
+        except ImportError:
+            self.tpltxt.SetForegroundColour(wx.RED)
+            self.tpltxt.SetLabel(_("CodeTemplater plugin doesn't seem to be installed, templates can't be loaded without it"))
 
         # Layout
         msizer.AddMany([((5, 5), 0),
-                        actboxsz,
-                        libboxsz,
-                        tplboxsz,
+                        (actboxsz,0,wx.EXPAND),
+                        (libboxsz,0,wx.EXPAND),
+                        (tplboxsz,0,wx.EXPAND),
                         ((10, 10), 0),
                         (boxsz, 1, wx.EXPAND)])
 
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.AddMany([((5, 5), 0), (msizer, 1, wx.EXPAND), ((5, 5), 0)])
         self.SetSizer(hsizer)
+
+    def LoadTemplates(self):
+        try:
+            import codetemplater
+            pm = wx.GetApp().GetPluginManager()
+            ct = pm[codetemplater.CodeTemplater]
+            assert ct != None, "CodeTemplater plugin should be defined"
+            import jalutil
+            tpls = jalutil.MergeCodeTemplates(file(self.tpl.GetValue()),overwrite=self.tplow.GetValue())
+            ct.templates = tpls
+            self.tpltxt.SetForegroundColour(wx.BLACK)
+            self.tpltxt.SetLabel("Template(s) loaded")
+        except Exception,e:
+            self.tpltxt.SetForegroundColour(wx.RED)
+            self.tpltxt.SetLabel((_("Error while loading templates: ") + str(e)))
 
     def OnCheck(self, evt):
         """Handle checkbox events"""
@@ -538,6 +581,8 @@ class MiscPanel(wx.Panel):
             cfg['autoclear'] = e_val
         elif e_id == ID_ERROR_BEEP:
             cfg['errorbeep'] = e_val
+        elif e_id == ID_TPL_OVERWRITE:
+            cfg['jaltplow'] = e_val
         else:
             evt.Skip()
 
@@ -563,6 +608,14 @@ class MiscPanel(wx.Panel):
         mb = wx.MessageBox(_("You need to restart editor in order discover all JAL libraries"),
                            _("Restart needed"))
         
+    def OnTemplateSelected(self,evt):
+        jaltpl = self.tpl.GetValue()
+        # save selected template file in profile
+        cfg = Profile_Get(JALUINO_PREFS, default=dict())
+        cfg['jaltpl'] = jaltpl
+        import jalutil
+        util.Log("[jaluino][info] Merging templates from file '%s'" % jaltpl)
+        self.LoadTemplates()
 
 
 #-----------------------------------------------------------------------------#
