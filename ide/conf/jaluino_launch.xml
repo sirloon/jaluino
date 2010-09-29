@@ -37,9 +37,10 @@
       <commandlist default="Tiny Bootloader">
          <command name="Tiny Bootloader" execute="%(JALUINO_BIN)s/tinybld2 -s %(serial.baudrate)s -p %(serial.port)s"/>
          <command name="PDFUSB Bootloader" execute="%(PYTHON_EXEC)s %(JALUINO_ROOT)s/bootloaders/pdfusb/hostapp/UsbBootLoader.py -x write"/>
-         <command name="XWisp Programmer" execute="%(PYTHON_EXEC)s %(JALUINO_BIN)s/xwisp.py PORT %(serial.port)s"/>
-         <!-- can't make it work using IDE -->
-         <!-- command name="XWisp2 Programmer" execute="%(JALUINO_BIN)s/xwisp2u port %(serial.port)s go"/-->
+         <ecommand name="XWisp Programmer" execute="%(PYTHON_EXEC)s %(JALUINO_BIN)s/xwisp.py PORT %(serial.port)s"/>
+         e<!-- can't make it work using IDE -->
+         <!-- command name="XWisp2 Programmr" execute="%(JALUINO_BIN)s/xwisp2u port %(serial.port)s go"/-->
+         <command name="PicKit2" execute="pk2cmd -P -M -J -I -F"/>
       </commandlist>
    </handler>
  
