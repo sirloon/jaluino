@@ -1,0 +1,44 @@
+include jaluino_medium
+
+include delay
+include usb_serial
+include print
+
+-- constants
+const  byte str_welcome[] = "JALLIB USB Serial Demo app\n"
+
+-- variables
+
+-- interrupts? No thanks
+INTCON_GIE = false
+
+
+-- setup the USB serial library
+usb_serial_init()
+
+var bit has_shown_welcome_msg = true
+var byte ch
+
+-- main loop
+forever loop
+	-- poll the usb ISR function on a regular base, in order to 
+	-- serve the USB requests
+	usb_serial_flush()
+    
+    -- check if USB device has been configured by the HOST
+	if ( usb_cdc_line_status() !=  0x00 )  then
+		if !has_shown_welcome_msg then
+			has_shown_welcome_msg = true
+			print_string( usb_serial_data, str_welcome )
+		end if	
+	else
+		has_shown_welcome_msg = false
+	end if
+
+	-- check for input character
+	if usb_serial_read( ch ) then
+		-- echo input character
+		usb_serial_data = ch
+	end if
+	
+end loop
