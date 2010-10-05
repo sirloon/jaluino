@@ -64,7 +64,8 @@ class Jaluino(plugin.Plugin):
         return False
 
     def CreateItem(self, parent):
-        return jaluino.JaluinoWindow(parent)
+        self.jaluino_window = jaluino.JaluinoWindow(parent)
+        return self.jaluino_window
 
     def GetBitmap(self):
         """Get the tab bitmap
@@ -189,6 +190,13 @@ class Jaluino(plugin.Plugin):
                 hstate[langname] = (default,dprevcmds.items())
                 util.Log(u"[Jaluino][info] For language %s, available commands are: %s" % (langname,hstate[langname]))
                 handlers.SetState(hstate)
+
+    def GetJaluinoWindow(self):
+        try:
+            return self.jaluino_window
+        except AttributeError:
+            pass
+        return None
 
 #-----------------------------------------------------------------------------#
 

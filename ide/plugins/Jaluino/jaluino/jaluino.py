@@ -349,6 +349,9 @@ class JaluinoWindow(eclib.ControlBox):
 
         """
         return self._mw
+ 
+    def GetOutputBuffer(self):
+        return self._buffer
 
     def OnButton(self, evt):
         """Handle events from the buttons on the control bar"""

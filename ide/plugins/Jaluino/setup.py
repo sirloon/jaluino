@@ -15,7 +15,7 @@ except ImportError:
 if setup != None:
     setup(
         name='Jaluino',
-        version='0.2.1',
+        version='0.2.2',
         description=__doc__,
         author=__author__,
         author_email="sebastien.lelong@gmail.com",
