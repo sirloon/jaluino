@@ -1265,7 +1265,7 @@ class OutputDisplay(eclib.OutputBuffer, eclib.ProcessBufferMixin):
     def DoProcessStart(self, cmd=''):
         """Do any necessary preprocessing before a process is started"""
         self.GetParent().SetProcessRunning(True)
-        if not isinstance(cmd,pytypes.UnicodeType):
+        if not isinstance(cmd,pytypes.UnicodeType) and not isinstance(cmd,pytypes.StringType):
             cmd = u' '.join(cmd)
         self.AppendUpdate(">>> %s%s" % (cmd, os.linesep))
 
