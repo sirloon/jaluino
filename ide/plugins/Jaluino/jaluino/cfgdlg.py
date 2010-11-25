@@ -196,8 +196,9 @@ class ConfigNotebook(wx.Notebook):
                              infob=buff.GetInfoBackground().Get(),
                              warnf=buff.GetWarningForeground().Get(),
                              warnb=buff.GetWarningBackground().Get(),
-                             jaltpl=self.tpl.GetValue(),
-                             jaltplow=self.tplow.GetValue(),))
+                             jaltpl=None,
+                             jaltplow=None,
+                        ))
             buff.Destroy()
 
         # Setup
