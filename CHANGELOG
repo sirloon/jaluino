@@ -7,22 +7,25 @@ IDE:
   - Windows installer
 
 mainboard:
- -
+ - Jaluino Medium v2.0: improved designed, batch order #2, more details at
+   http://www.jaluino.org/shop/batch/2
 
 documentation:
  - 
 
 shields:
- - 
+ - Crumboard v2.1: more LEDs and push-buttond, batch order #3, more details at
+   http://www.jaluino.org/shop/batch/3
 
 libraries:
- - 
+ - jaluino_medium.jal: includes onboard LED definition
 
 bootloaders:
- - 
+ - PDFUSB: new bootloader version which takes advantages of Jaluino Medium v2.0
+           onboard LED to give feedback about its status
 
 samples
- - 
+ - serial hardware, USB serial
 
 
 
