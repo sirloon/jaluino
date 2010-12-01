@@ -31,7 +31,7 @@ pragma target clock 48_000_000     -- oscillator frequency
 pragma target PLLDIV	   P5
 pragma target CPUDIV	   P2
 pragma target USBPLL	   F48MHZ
-pragma target OSC		   HS_PLL
+pragma target OSC	   HS_PLL
 
 pragma target WDT  disabled        -- no watchdog
 pragma target LVP  disabled        -- no Low Voltage Programming

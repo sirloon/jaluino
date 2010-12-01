@@ -102,3 +102,8 @@ alias jpin_30_direction is pin_B6_direction
 alias jpin_31 is pin_B7
 alias jpin_31_direction is pin_B7_direction
 
+-- Jaluino Medium > 2.0 has an onboard LED
+-- define aliases
+alias onboard_led is pin_E2
+alias onboard_led_direction is pin_E2_direction
+
