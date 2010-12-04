@@ -54,7 +54,7 @@ if sys.platform == "linux2": # or sys.platform == "sunos": # in case needed
     pk2ptarg = "-P -R -T" 
     pk2idarg = "-P -I"
     pk2vearg = "-?v"
-    pk2uparg = ""
+    pk2uparg = "-D"
     
 if sys.platform == "win32":
     pk2cmdloc = ""
@@ -62,7 +62,7 @@ if sys.platform == "win32":
     pk2ptarg = "-P -R -T" 
     pk2idarg = "-P -I"
     pk2vearg = "-?v"
-    pk2uparg = ""
+    pk2uparg = "-D"
 
 class ConfigDialog(wx.Frame):
     """Configuration dialog for configuring the location of the pk2cmd exec
@@ -118,7 +118,7 @@ class ConfigPanel(wx.Panel):
         self._sbs = wx.StaticBoxSizer(self._sb, wx.VERTICAL)
         self._pk2cmdloc = wx.lib.filebrowsebutton.FileBrowseButton(self,ID_CMDLOC,labelText=_("PK2cmd location"),
                                                       initialValue=prefs.get("jpcmdloc") or pk2cmdloc,
-                                                      changeCallback=self.OnFileSelected)
+                                                      changeCallback=self.OnFileSelected,fileMask="*")
         self._pk2datloc = wx.lib.filebrowsebutton.FileBrowseButton(self,ID_DATLOC,labelText=_("PK2DeviceFile.dat location"),
                                                       initialValue=prefs.get("jpdatloc") or pk2datloc,
                                                       changeCallback=self.OnFileSelected)

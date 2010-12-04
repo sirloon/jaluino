@@ -117,6 +117,7 @@ class Jpk2cmd(plugin.Plugin):
             """Handles Updatinf PICKit2 Firmware"""
             options = prefs.get("jpuparg",jpk2cfg.pk2uparg,)
             
+            
             self.ExecuteCommandBuffer(pk2cmd,[options,""])
 
 
