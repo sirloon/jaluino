@@ -33,6 +33,10 @@ from profiler import Profile_Get, Profile_Set
 #Local import
 import jpk2cfg
 import jpk2cmd
+try:
+    wx.GetApp().AddMessageCatalog('jpk2cmd', __name__)
+except:
+    pass
 
 # Globals
 _ = wx.GetTranslation

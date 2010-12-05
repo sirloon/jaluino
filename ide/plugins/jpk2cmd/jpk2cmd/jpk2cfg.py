@@ -18,6 +18,7 @@ __version__ = "0.0.3"
 # Imports
 import sys
 import os.path
+import platform
 import wx
 import wx.lib.filebrowsebutton
 
@@ -49,8 +50,13 @@ ID_SAVEPREF = wx.NewId()
 mw = None
 
 if sys.platform == "linux2": # or sys.platform == "sunos": # in case needed
-    pk2cmdloc = ""
-    pk2datloc = ""
+    if platform.dist()[0]=="debian" :
+        pk2cmdloc = "/usr/bin/pk2cmd"
+        pk2datloc = "/usr/share/pk2cmd/PK2DeviceFile.dat"
+    else:
+        pk2cmdloc = ""
+        pk2datloc = ""  
+              
     pk2ptarg = "-P -R -T" 
     pk2idarg = "-P -I"
     pk2vearg = "-?v"
