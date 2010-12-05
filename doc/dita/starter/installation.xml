@@ -5,7 +5,7 @@
   <body>
     <section>
       <title>Downloading Jaluino</title>
-      <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code <xref href="http://code.google.com/p/jallib/downloads/list" format="html">download section</xref>. Actual installation  is rather easy: just unzip the archive.</p>
+      <p>As a first step, you&apos;ll need to download latest Jaluino archive. You can retrieve it from Jaluino Google Code <xref href="http://code.google.com/p/jaluino/downloads/list" format="html">download section</xref>. Actual installation  is rather easy: just unzip the archive.</p>
       <p><fig>
           <title>Typical Jaluino archive content</title>
           <image href="images/jaluino_archive_content.png" width="535" placement="break" otherprops="clickable"/>
