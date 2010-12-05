@@ -433,6 +433,7 @@ end if
 
 
 var byte t1_count = 0 
+var word led_counter = 0
 
 -- main loop
 forever loop
@@ -443,12 +444,16 @@ forever loop
       if PIR1_RCIF then
       end if
    end if
+
+   -- strobing LED
+   if led_counter == 0 then
+      onboard_led = !onboard_led
+   end if
+   led_counter = led_counter + 1
    
    if PIR1_TMR1IF == 1 then
       t1_count = t1_count + 1 
       PIR1_TMR1IF = 0
-      -- strobing LED
-      onboard_led = !onboard_led
       
       -- if expired, then jump to user location
       if t1_count > BOOT_TIMER_TICS then
