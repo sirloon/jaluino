@@ -13,13 +13,13 @@
 include jaluino_medium
 include delay
 
-pin_A0_direction =  output
-alias   led      is pin_A0
+-- Assuming LED is enable on hardware (jumper)
+onboard_led_direction =  output
 
 forever loop
-   led = on
+   onboard_led = on
    delay_1ms(250)
-   led = off
+   onboard_led = off
    delay_1ms(250)
 end loop
 
