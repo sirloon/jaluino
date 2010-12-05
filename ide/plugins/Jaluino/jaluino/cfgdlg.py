@@ -519,8 +519,9 @@ class MiscPanel(wx.Panel):
                           ((5, 5), 0), (error_cb, 0)])
 
         topBox = wx.BoxSizer(wx.HORIZONTAL)
+        default_tpl = os.path.join(ed_glob.CONFIG['CACHE_DIR'],"snippets.py")
         self.tpl = wx.lib.filebrowsebutton.FileBrowseButton(self,ID_CHOOSE_TPL,labelText="File containing templates",
-                                                      initialValue=cfg.get("jaltpl") or u"",
+                                                      initialValue=cfg.get("jaltpl") or default_tpl,
                                                       changeCallback=self.OnTemplateSelected)
         topBox.Add(self.tpl,1,wx.EXPAND)
         self.tpltxt = wx.StaticText(self, label="")
