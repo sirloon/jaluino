@@ -1,0 +1,179 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-12-05 11:39+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: jpk2cmd/jpk2cmd/__init__.py:61
+msgid "&Help"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:142
+msgid "'Identify' Options"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:141
+msgid "'Power the Target' options"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:144
+msgid "'Update Firmware' Options"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:143
+msgid "'Version info' Options"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:55
+msgid "About"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:158
+msgid "Clear Preferences"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:135
+msgid "Command lines Options"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:53
+msgid "Configure Plugin"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:162
+msgid "Dictionary read"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:123
+msgid "File Selection"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:56
+msgid "Get Information About Plugin"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:42
+msgid "Identify"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:43
+msgid "Identify the PIC attached to PicKit2"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:199
+msgid "Initializing preferences"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/__init__.py:190
+msgid "JPK2cmd "
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/__init__.py:134
+msgid ""
+"JPK2cmd is a software program that integrates in the JaluinoIDE plugin for Editra (C).\n"
+" It is a frontend to the Microchip (TM) PIC (TM) programmer PICKit2 through the PK2cmd command line interface program. \n"
+" It uses the JaluinoIDE Shelf window to show the informations.\n"
+" \n"
+"\n"
+"Platform: "
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:244
+msgid "Location of PK2DeviceFile.dat "
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:131
+msgid "Location of the PK2DeviceFile.dat,             PK2cmd need to know it"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:240
+msgid "No Saved Preferences"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:84
+msgid "PK2CMD Configuration Panel"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:128
+msgid "PK2DeviceFile.dat location"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/__init__.py:63 jpk2cmd/jpk2cmd/__init__.py:67
+msgid "PK2cmd"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:125
+msgid "PK2cmd location"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:45
+msgid "PK2cmd/PicKit2 Software Versions"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/__init__.py:154 jpk2cmd/jpk2cmd/jpk2cfg.py:199
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:245
+msgid "PicKit2"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:40
+msgid "Power the target"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:41
+msgid "Power the target board attached to PicKit2"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:156
+msgid "Save Preferences"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cfg.py:238
+msgid ""
+"Saved Preferences \n"
+"\n"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:52
+msgid "Settings"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:49
+msgid "Update Firmware"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:50
+msgid "Updating the PicKit2 Firmware"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:47
+msgid "Usage"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/__init__.py:154
+msgid "Uscita: "
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:46
+msgid "View the software versions of PK2cmd,PicKit2 and PK2Dev "
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/jpk2cmd.py:48
+msgid "View the usage help from pk2cmd commandline"
+msgstr ""
+
+#: jpk2cmd/jpk2cmd/__init__.py:145
+msgid "wxWindows License"
+msgstr ""
