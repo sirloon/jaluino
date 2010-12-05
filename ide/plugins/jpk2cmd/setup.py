@@ -9,7 +9,8 @@ from setuptools import setup
  
 __author__ = "Carlo Dormeletti"
 __doc__ = """Plugin to control PicKit2 in the JaluinoIDE"""
-__version__ = "0.0.2"
+import jpk2cmd 
+__version__ = jpk2cmd.__version__
  
 setup(
       name    = "PK2-JaluinoIDE",    # Plugin Name
