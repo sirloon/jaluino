@@ -7,7 +7,7 @@
 -- This file is part of jallib (http://jallib.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 -- 
--- Description: This application demonstratesest USB Serial library, this application 
+-- Description: This application demonstrates USB Serial library, this application 
 -- will emulate a RS-232 terminal device. Once the USB device has been detected by the 
 -- host operating system, it will create a virtual COM port. When opening this COM
 -- on the host computer, using a standard terminal application, it should show a
