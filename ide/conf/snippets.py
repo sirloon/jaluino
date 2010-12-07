@@ -27,21 +27,26 @@ templates = {
             "description" : "Configuration and include for serial_hardware library",
             "indent" : True,
             "templ" : """
---baudrateconst serial_hw_baudrate = #CUR115_200 -- or 19_200, 9_600, ...
+--baudrate
+const serial_hw_baudrate = #CUR115_200 -- or 19_200, 9_600, ...
 include serial_hardware
 serial_hw_init()
 """
         },
         "serial_sw" : {
-            "name" : "serial_isw",
+            "name" : "serial_sw",
             "description" : "Configuration and include for serial_software library",
             "indent" : True,
             "templ" : """
 --baudrate
 const serial_sw_baudrate = #CUR9_600 -- or 19_200, 2_400, ...
 -- RX/TX pins
-alias serial_sw_tx_pin is pin_...
-alias serial_sw_rx_pin is pin_B2
+alias serial_sw_tx_pin is pin_XX
+alias serial_sw_rx_pin is pin_YY
+alias serial_sw_tx_pin_direction is pin_XX_direction
+alias serial_sw_rx_pin_direction is pin_YY_direction
+serial_sw_tx_pin_direction = output
+serial_sw_rx_pin_direction = input
 -- inverted levels (usually it is)
 const serial_sw_invert = true
 include serial_software
