@@ -4,17 +4,17 @@
 # will be included).
 
 # Mainboard
-mainboard/jaluino_medium_v13a_pcb.pdf
-mainboard/jaluino_medium_v13a_schematic.pdf
-mainboard/jaluino_medium_v13b_pcb.pdf
-mainboard/jaluino_medium_v13b_schematic.pdf
-mainboard/label_for_jaluino_medium.pdf
+mainboard/jaluino_medium_v20_all.zip
+mainboard/jaluino_medium_v20_pcb.pdf
+mainboard/jaluino_medium_v20_gerber.zip
+mainboard/jaluino_medium_v20_schematic.pdf
 
 # Shields
 #   Crumboard
-shields/crumboard/Crumboard_pcb.pdf
-shields/crumboard/Crumboard_schematic.pdf
-shields/crumboard/label_for_crumboard.pdf
+shields/crumboard/crumboard_v21_all.zip
+shields/crumboard/crumboard_v21_pcb.pdf
+shields/crumboard/crumboard_v21_gerber.zip
+shields/crumboard/crumboard_v21_schematic.pdf
 #   Styx
 shields/styx/jaluino_shield_styx_pcb_front.pdf
 shields/styx/jaluino_shield_styx_pcb.pdf
@@ -41,6 +41,8 @@ lib/jaluino_medium_pinmap.jal
 
 # Samples
 samples/jaluino_medium_blink.jal
+samples/jaluino_medium_serial_hw_echo.jal
+samples/jaluino_medium_usb_serial.jal
 samples/crumboard_blink.jal
 samples/crumboard_dynamic_adc.jal
 samples/crumboard_pintools.jal
@@ -62,10 +64,13 @@ ide/plugins/Jaluino-0.2.1-py2.5.egg
 ide/plugins/Jaluino-0.2.1-py2.6.egg
 ide/plugins/JaluinoDebugger-0.16-py2.5.egg
 ide/plugins/JaluinoDebugger-0.16-py2.6.egg
+ide/plugins/CodeTemplater-0.2-py2.5.egg
+ide/plugins/CodeTemplater-0.2-py2.6.egg
 ide/conf/jal.edxml
 ide/conf/hex.edxml
 ide/conf/jaluino_launch.xml
 ide/conf/jaluino_launch_win.xml
+ide/conf/snippets.py
 ide/conf/README
 bin/jaluino
 bin/jaluino.bat
