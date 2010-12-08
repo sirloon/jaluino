@@ -7,8 +7,8 @@
 --
 -- Compiler: >=2.4g
 --
--- This file is part of jallib  (http://jaluino.org)
--- Released under the BSD license (http:/www.opensource.org/licenses/bsd-license.php)
+-- This file is part of jallib  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
 -- Description: Test program for serial hardware lib
 -- 
