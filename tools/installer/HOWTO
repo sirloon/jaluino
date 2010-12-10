@@ -17,6 +17,7 @@ Apply patches (under Linux):
 
 In a first step, Editra must be compiled using py2exe. Go to "3rdparty/Editra" with cmd and run:
 
+   c:\python26\python.exe setup.py clean
    c:\python26\python.exe setup.py py2exe
 
 This requires wxPython2.8 (unicode).

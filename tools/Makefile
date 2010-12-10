@@ -92,6 +92,9 @@ prepare:
 	cp distrib/jaluino-export/3rdparty/jallib_svn/tools/jallib.py distrib/jaluino-${VERSION}/tools
 	# get compiler from jallib
 	cd distrib/jaluino-export/3rdparty/jallib_svn/ && tar cfv - compiler | tar xfv - -C ../../../jaluino-${VERSION}
+	# include Editra 3rdparty sources so everything is available in the bundle
+	-mkdir -p distrib/jaluino-${VERSION}/3rdparty/
+	cp -r distrib/jaluino-export/3rdparty/Editra distrib/jaluino-${VERSION}/3rdparty/
 	# TODO: wait for a jalapi DITA integration
 	echo DONE: release directory distrib/jaluino-${VERSION}
 
