@@ -11,7 +11,6 @@
 """PK2cmd JaluinoIDE"""
 
 __author__ = "Carlo Dormeletti"
-__version__ = "0.0.3"
 
 
 #-----------------------------------------------------------------------------#
@@ -194,7 +193,7 @@ class ConfigPanel(wx.Panel):
         self.SetMinSize((550,445))
    
     def GetPrefs(self):
-        prefs = Profile_Get(JPK2CMD_PREFS, default=None)
+        prefs = Profile_Get(JPK2CMD_PREFS,default={})
         if prefs is None:
            wx.MessageBox( _("Initializing preferences"),_("PicKit2"))
            # Seb: what about just letting environment (PATH) decides where to pick

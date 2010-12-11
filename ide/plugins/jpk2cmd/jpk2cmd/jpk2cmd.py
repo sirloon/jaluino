@@ -11,7 +11,6 @@
 """PK2cmd JaluinoIDE jpk2cmd"""
 
 __author__ = "Carlo Dormeletti"
-__version__ = "0.0.3"
 
 #-----------------------------------------------------------------------------#
 # Imports

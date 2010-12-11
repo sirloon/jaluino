@@ -21,7 +21,6 @@ import wx
 from wx.lib.wordwrap import wordwrap
 
 #Editra imports
-
 import iface
 import plugin
 import util
@@ -67,7 +66,13 @@ class Jpk2cmd(plugin.Plugin):
             bar.Insert(bar.GetMenuCount()-1,jpk2menu,_("PK2cmd"))
         #End of Seb Code
 
-        jpk2cfg.GetPrefs()
+        # Register pk2cmd command line
+        import jaluino
+        import syntax.synglob
+        hexid = syntax.synglob.ID_LANG_HEX
+        prefs = Profile_Get(jpk2cfg.JPK2CMD_PREFS, default={})
+        cmd = prefs.get("jpcmdloc","") + " -P -M -J -I -F"
+        jaluino.RegisterCustomCommand(hexid,"pk2cmd",cmd)
         #ed_msg.Subscribe(self.OnProcessExit,eclib.edEVT_PROCESS_EXIT)
 
     def ExecuteCommandBuffer(self,cmd,arg):
