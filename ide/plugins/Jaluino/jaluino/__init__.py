@@ -46,6 +46,10 @@ import syntax.synglob as synglob
 # Globals
 _ = wx.GetTranslation
 
+# pre-filled a list a custom commands, which will be loaded
+# when Jaluino plugin will be up and available
+CUSTOM_COMMANDS = []
+
 #-----------------------------------------------------------------------------#
 # Interface Implementation
 class Jaluino(plugin.Plugin):
@@ -197,7 +201,8 @@ def RegisterJaluinoCommands():
     # merge custom and original commands
     hstate = Profile_Get(jaluino.JALUINO_KEY)
     if hstate is not None:
-        for langid,cmds in xmlcmds.items():
+        util.Log("[Jaluino][debug] \n\nCUSTOM_COMMANDS: %s" % repr(CUSTOM_COMMANDS))
+        for langid,cmds in xmlcmds.items() + CUSTOM_COMMANDS:
             langname = handlers.GetHandlerById(langid).GetName()
             if not hstate.get(langname):
                 util.Log(u"[Jaluino][warn] Can't find previous declared commands for language '%s', no merge needed" % langname)
@@ -212,18 +217,13 @@ def RegisterJaluinoCommands():
             util.Log(u"[Jaluino][info] For language %s, available commands are: %s" % (langname,hstate[langname]))
             handlers.SetState(hstate)
 
-def RegisterCustomCommands(langid,cmdname,cmdline):
+def RegisterCustomCommand(langid,cmdname,cmdline):
     """Register new command, named 'cmdname', for language
        identified by langid.
        eg. Jalv2 is synglob.ID_LANG_JAL,
            HEX is synglob.ID_LANG_HEX
     """
-    import launch.handlers as handlers
-    if not handlers.HANDLERS.has_key(langid):
-        util.Log(u"[Jaluino][info] Can't register command '%s' because language ID %s doesn't exist" % (cmdname,langid))
-        return
-    # add with existing ones, overwrite previous one with the same name
-    cmds = dict(handlers.HANDLERS[langid].GetCommands())
-    cmds[cmdname] = cmdline
-    handlers.HANDLERS[langid].SetCommands(cmds.items())
+    # register custom commands line, postponed because Jaluino plugin can be loaded
+    # after other plugins registering commands
+    CUSTOM_COMMANDS.append((langid,[(cmdname,cmdline,)],))
 
