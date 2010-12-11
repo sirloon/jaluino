@@ -40,7 +40,6 @@
          <command name="XWisp Programmer" execute="%(PYTHON_EXEC)s &quot;%(JALUINO_BIN)s\xwisp.py&quot; PORT %(serial.port)s"/>
          <!-- can't make it work using IDE -->
          <!-- command name="XWisp2 Programmer" execute="%(JALUINO_BIN)s\xwisp2w.exe port %(serial.port)s go"/ -->
-         <command name="PicKit2 (untested)" execute="C:\Program\ Files/Microchip/PICkit\ 2\ v2/PICkit2V2.exe -P -M -J -I -F"/>
       </commandlist>
    </handler>
  

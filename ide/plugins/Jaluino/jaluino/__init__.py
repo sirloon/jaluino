@@ -117,7 +117,7 @@ class Jaluino(plugin.Plugin):
         jaluino.EnableJaluinoMenu(mainw,False)
 
         util.Log("[Jaluino][info] Registering jalv2/jaluino commands")
-        self.RegisterJaluinoCommands()
+        RegisterJaluinoCommands()
 
     def IsInstalled(self):
         """Check whether jaluino has been installed yet or not
@@ -137,59 +137,6 @@ class Jaluino(plugin.Plugin):
 
     def GetFileTypeId(self):
         return synglob.ID_LANG_JAL
-
-
-    # Jaluino API
-    def RegisterJaluinoCommands(self):
-        # Plugins deps
-        try:
-            import launch.handlers as handlers
-            import launch.launchxml as launchxml
-        except ImportError,e:
-            msg = _("Launch plugin is missing and is required for Jaluino IDE\nPlease first install Launch plugin.")
-            util.Log("[Jaluino][info] %s" % msg)
-            wx.MessageBox(msg)
-            return
-
-        loaded = False
-        xmlcmds = {}
-        path = ed_glob.CONFIG['CACHE_DIR']
-        xmlfile = jalutil.GetJaluinoPrefs().get("JALUINO_LAUNCH_FILE","jaluino_launch.xml")
-        path = os.path.join(path,xmlfile)
-        if os.path.exists(path):
-            lxml = launchxml.LaunchXml()
-            lxml.SetPath(path)
-            try:
-                loaded = lxml.LoadFromDisk()
-            except Exception,e:
-                util.Log(u"[Jaluino][err] Unable to load default commands because: %s" % e)
-
-            if loaded:
-                for hndlr in lxml.GetHandlers().values():
-                    handlers.HANDLERS[hndlr.GetLangId()] = handlers.XmlHandlerDelegate(hndlr)
-                    xmlcmds.setdefault(hndlr.GetLangId(),handlers.HANDLERS[hndlr.GetLangId()].GetCommands())
-            else:
-                util.Log(u"[Jaluino][warn] failed to load launch extensions for Jaluino")
-        else:
-            util.Log(u"[Jaluino][warn] No jaluino_launch.xml file found for Jaluino commands !!!")
-
-        # merge custom and original commands
-        hstate = Profile_Get(jaluino.JALUINO_KEY)
-        if hstate is not None:
-            for langid,cmds in xmlcmds.items():
-                langname = handlers.GetHandlerById(langid).GetName()
-                if not hstate.get(langname):
-                    util.Log(u"[Jaluino][warn] Can't find previous declared commands for language '%s', no merge needed" % langname)
-                    continue
-                default,prevcmds = hstate[langname]
-                # default commands have precedence
-                util.Log(u"[Jaluino][info] Merging %s and %s" % (cmds,prevcmds))
-                dcmds = dict(cmds)
-                dprevcmds = dict(prevcmds)
-                dprevcmds.update(dcmds)
-                hstate[langname] = (default,dprevcmds.items())
-                util.Log(u"[Jaluino][info] For language %s, available commands are: %s" % (langname,hstate[langname]))
-                handlers.SetState(hstate)
 
     def GetJaluinoWindow(self):
         try:
@@ -211,4 +158,72 @@ class JaluinoConfigObject(plugin.PluginConfigObject):
         return _("Jaluino")
 
 #-----------------------------------------------------------------------------#
+
+
+# Jaluino API
+def RegisterJaluinoCommands():
+    # Plugins deps
+    try:
+        import launch.handlers as handlers
+        import launch.launchxml as launchxml
+    except ImportError,e:
+        msg = _("Launch plugin is missing and is required for Jaluino IDE\nPlease first install Launch plugin.")
+        util.Log("[Jaluino][info] %s" % msg)
+        wx.MessageBox(msg)
+        return
+
+    loaded = False
+    xmlcmds = {}
+    path = ed_glob.CONFIG['CACHE_DIR']
+    xmlfile = jalutil.GetJaluinoPrefs().get("JALUINO_LAUNCH_FILE","jaluino_launch.xml")
+    path = os.path.join(path,xmlfile)
+    if os.path.exists(path):
+        lxml = launchxml.LaunchXml()
+        lxml.SetPath(path)
+        try:
+            loaded = lxml.LoadFromDisk()
+        except Exception,e:
+            util.Log(u"[Jaluino][err] Unable to load default commands because: %s" % e)
+
+        if loaded:
+            for hndlr in lxml.GetHandlers().values():
+                handlers.HANDLERS[hndlr.GetLangId()] = handlers.XmlHandlerDelegate(hndlr)
+                xmlcmds.setdefault(hndlr.GetLangId(),handlers.HANDLERS[hndlr.GetLangId()].GetCommands())
+        else:
+            util.Log(u"[Jaluino][warn] failed to load launch extensions for Jaluino")
+    else:
+        util.Log(u"[Jaluino][warn] No jaluino_launch.xml file found for Jaluino commands !!!")
+
+    # merge custom and original commands
+    hstate = Profile_Get(jaluino.JALUINO_KEY)
+    if hstate is not None:
+        for langid,cmds in xmlcmds.items():
+            langname = handlers.GetHandlerById(langid).GetName()
+            if not hstate.get(langname):
+                util.Log(u"[Jaluino][warn] Can't find previous declared commands for language '%s', no merge needed" % langname)
+                continue
+            default,prevcmds = hstate[langname]
+            # default commands have precedence
+            util.Log(u"[Jaluino][info] Merging %s and %s" % (cmds,prevcmds))
+            dcmds = dict(cmds)
+            dprevcmds = dict(prevcmds)
+            dprevcmds.update(dcmds)
+            hstate[langname] = (default,dprevcmds.items())
+            util.Log(u"[Jaluino][info] For language %s, available commands are: %s" % (langname,hstate[langname]))
+            handlers.SetState(hstate)
+
+def RegisterCustomCommands(langid,cmdname,cmdline):
+    """Register new command, named 'cmdname', for language
+       identified by langid.
+       eg. Jalv2 is synglob.ID_LANG_JAL,
+           HEX is synglob.ID_LANG_HEX
+    """
+    import launch.handlers as handlers
+    if not handlers.HANDLERS.has_key(langid):
+        util.Log(u"[Jaluino][info] Can't register command '%s' because language ID %s doesn't exist" % (cmdname,langid))
+        return
+    # add with existing ones, overwrite previous one with the same name
+    cmds = dict(handlers.HANDLERS[langid].GetCommands())
+    cmds[cmdname] = cmdline
+    handlers.HANDLERS[langid].SetCommands(cmds.items())
 
