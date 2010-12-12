@@ -224,6 +224,10 @@ class JaluinoWindow(eclib.ControlBox):
 
     def __DoLayout(self):
         """Layout the window"""
+        # default font for shelf
+        # TODO: should take this from a pref setting
+        ft = wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, u'Comic Sans MS')
+
         #-- Setup ControlBar --#
         ctrlbar = eclib.ControlBar(self, style=eclib.CTRLBAR_STYLE_GRADIENT)
         if wx.Platform == '__WXGTK__':
@@ -237,17 +241,21 @@ class JaluinoWindow(eclib.ControlBox):
         ctrlbar.AddControl(pref, wx.ALIGN_LEFT)
 
         # Compile exe
-        ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Compile") + ":"),
-                           wx.ALIGN_LEFT)
+        exe_ch_txt = wx.StaticText(ctrlbar, label=_("Compile") + ":")
+        exe_ch_txt.SetFont(ft)
+        ctrlbar.AddControl(exe_ch_txt,wx.ALIGN_LEFT)
         self._exe_ch = wx.Choice(ctrlbar, ID_COMPILE_EXE)
         self._exe_ch.SetToolTipString(_("Compilation Command"))
+        self._exe_ch.SetFont(ft)
         ctrlbar.AddControl(self._exe_ch, wx.ALIGN_LEFT)
 
         # Upload exe
-        ctrlbar.AddControl(wx.StaticText(ctrlbar, label=_("Upload") + ":"),
-                           wx.ALIGN_LEFT)
+        up_ch = wx.StaticText(ctrlbar, label=_("Upload") + ":")
+        up_ch.SetFont(ft)
+        ctrlbar.AddControl(up_ch,wx.ALIGN_LEFT)
         self._up_ch = wx.Choice(ctrlbar, ID_UPLOAD_EXE)
         self._up_ch.SetToolTipString(_("Upload Command"))
+        self._up_ch.SetFont(ft)
         ctrlbar.AddControl(self._up_ch, wx.ALIGN_LEFT)
 
         # Spacer
@@ -256,6 +264,7 @@ class JaluinoWindow(eclib.ControlBox):
         # Script Label
         ctrlbar.AddControl((5, 5), wx.ALIGN_RIGHT)
         self._chFiles = wx.Choice(ctrlbar, wx.ID_ANY)#, choices=[''])
+        self._chFiles.SetFont(ft)
         ctrlbar.AddControl(self._chFiles, wx.ALIGN_RIGHT)
         
         # Compile Button
@@ -284,6 +293,7 @@ class JaluinoWindow(eclib.ControlBox):
         ctrlbar.SetVMargin(1, 1)
         self.SetControlBar(ctrlbar)
 
+        self._buffer.SetFont(ft)
         self.SetWindow(self._buffer)
 
     def __FindMainWindow(self):
