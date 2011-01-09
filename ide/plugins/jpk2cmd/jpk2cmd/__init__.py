@@ -11,7 +11,7 @@
 """PK2cmd JaluinoIDE"""
 
 __author__ = "Carlo Dormeletti"
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
 #-----------------------------------------------------------------------------#
@@ -71,7 +71,7 @@ class Jpk2cmd(plugin.Plugin):
         import syntax.synglob
         hexid = syntax.synglob.ID_LANG_HEX
         prefs = Profile_Get(jpk2cfg.JPK2CMD_PREFS, default={})
-        cmd = prefs.get("jpcmdloc","") + " -P -M -J -I -F"
+        cmd = prefs.get("jpcmdloc","") + prefs.get("jpjuarg","")
         jaluino.RegisterCustomCommand(hexid,"pk2cmd",cmd)
         #ed_msg.Subscribe(self.OnProcessExit,eclib.edEVT_PROCESS_EXIT)
 

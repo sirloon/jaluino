@@ -60,6 +60,7 @@ if sys.platform == "linux2": # or sys.platform == "sunos": # in case needed
     pk2idarg = "-P -I"
     pk2vearg = "-?v"
     pk2uparg = "-D"
+    pk2juarg = "-P -M -J -I -F"
     
 if sys.platform == "win32":
     pk2cmdloc = ""
@@ -68,6 +69,8 @@ if sys.platform == "win32":
     pk2idarg = "-P -I"
     pk2vearg = "-?v"
     pk2uparg = "-D"
+    pk2juarg = "-P -M -J -I -F"
+
 
 class ConfigDialog(wx.Frame):
     """Configuration dialog for configuring the location of the pk2cmd exec
@@ -141,6 +144,7 @@ class ConfigPanel(wx.Panel):
         self._sg1.Add(wx.StaticText(self,-1,_("'Identify' Options")),(1,0))
         self._sg1.Add(wx.StaticText(self,-1,_("'Version info' Options")),(2,0))
         self._sg1.Add(wx.StaticText(self,-1,_("'Update Firmware' Options")),(3,0))
+        self._sg1.Add(wx.StaticText(self,-1,_("'Jaluino IDE Upload' Options")),(4,0))
         
         self._jpptarg = wx.TextCtrl(self,ID_PTOPT,prefs.get("jptgarg") or pk2ptarg,size=(200,-1),name="ptargs")
         self._sg1.Add(self._jpptarg,(0,1))      
@@ -150,6 +154,9 @@ class ConfigPanel(wx.Panel):
         self._sg1.Add(self._jpvearg,(2,1))      
         self._jpuparg = wx.TextCtrl(self,ID_UPOPT,prefs.get("jpuparg") or pk2uparg,size=(200,-1),name="upargs")
         self._sg1.Add(self._jpuparg,(3,1))
+        self._jpjuarg = wx.TextCtrl(self,ID_UPOPT,prefs.get("jpjuarg") or pk2juarg,size=(200,-1),name="juargs")
+        self._sg1.Add(self._jpjuarg,(4,1))
+
 
 
         self._prefsave = wx.Button(self,ID_SAVEPREF,_("Save Preferences"),name = "Spref")             
@@ -172,6 +179,7 @@ class ConfigPanel(wx.Panel):
         cfg["jpigarg"] = self.FindWindowByName("idargs").GetValue()
         cfg["jpvearg"] = self.FindWindowByName("veargs").GetValue()
         cfg["jpuparg"] = self.FindWindowByName("upargs").GetValue()
+        cfg["jpjuarg"] = self.FindWindowByName("juargs").GetValue()
  
  
     def __DoLayout(self):
@@ -203,7 +211,8 @@ class ConfigPanel(wx.Panel):
                                           jptgarg = pk2ptarg,
                                           jpidarg = pk2idarg,
                                           jpvearg = pk2vearg,
-                                          jpuparg = pk2uparg
+                                          jpuparg = pk2uparg,
+                                          jpjuarg = pk2juarg
                                           ))
            # Seb: it should a dict so prefs.get() won't raise an error
            prefs = {}
