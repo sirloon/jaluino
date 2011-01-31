@@ -11,7 +11,6 @@
 """Jaluino IDE"""
 
 __author__ = "Sebastien Lelong"
-__version__ = "0.21"
 
 
 #-----------------------------------------------------------------------------#
@@ -22,7 +21,11 @@ import wx
 import jalutil
 import util
 # adjust PYTHONPATH for jallib.py
-cfg = jalutil.GetJaluinoPrefs()
+try:
+    cfg = jalutil.GetJaluinoPrefs()
+except AttributeError:
+    # not running from wx app
+    cfg = {}
 path = cfg.get("JALLIB_PYPATH")
 if path:
     sys.path = path.split(os.pathsep) + sys.path
@@ -90,7 +93,7 @@ class Jaluino(plugin.Plugin):
         return item
 
     def GetMinVersion(self):
-        return "0.5.33"
+        return "0.5.99"
 
     def GetName(self):
         """The name of this plugin"""

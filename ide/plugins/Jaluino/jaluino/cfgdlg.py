@@ -139,7 +139,7 @@ class ConfigDialog(wx.Frame):
         global handlers
         handlers = handlersmod
 
-        wx.Frame.__init__(self, parent, title=_("Jaluino Configuration"))
+        wx.Frame.__init__(self, parent, title=_("Jaluino Settings"))
 
         # Layout
         util.SetWindowIcon(self)

@@ -228,12 +228,23 @@ class Completer(completer.BaseCompleter):
         else:
             self._registered_symbol.setdefault("include",{})[libname and libname.lower()] = True
 
+    def GetLiveAPI(self,apifile):
+        """Convert pickled API to "live" API, with Symbol instances"""
+        api = cPickle.load(file(apifile))
+        api = [(m[0],completer.CreateSymbols([m[1][0]],m[1][1])[0],m[2]) for m in api]
+        return api
+
+    def SaveAPI(self,apifile):
+        api = self._api_symbols['include']
+        api = [(m[0],(m[1]._name,m[1]._type),m[2]) for m in api]
+        cPickle.dump(api,file(apifile,"wb"))
+
     def GenerateAPI(self):
         
         apifile = GetIncludeAPIFile()
         if os.path.exists(apifile):
             self._log("[jaluino][info] Loading API from file '%s'" % apifile)
-            self._api_symbols['include'] = cPickle.load(file(apifile))
+            self._api_symbols['include'] = self.GetLiveAPI(apifile)
             self.GenerateCurrentAPI()
             return
 
@@ -245,7 +256,7 @@ class Completer(completer.BaseCompleter):
             self._api_symbols.setdefault('include',[]).append((libname.lower(),symbol,path))
 
         self._log("[jaluino][debug] Saving include API to '%s'" % apifile)
-        cPickle.dump(self._api_symbols['include'],file(apifile,"wb"))
+        self.SaveAPI(apifile)
         self.GenerateCurrentAPI()
 
     def GetSymbols(self,chars,command=None):

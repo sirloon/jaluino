@@ -6,6 +6,7 @@
 __author__ = "Sebastien Lelong"
 
 import sys
+import jaluino.version
 try:
     from setuptools import setup
 except ImportError:
@@ -15,7 +16,7 @@ except ImportError:
 if setup != None:
     setup(
         name='Jaluino',
-        version='0.2.4',
+        version=jaluino.version.__VERSION__,
         description=__doc__,
         author=__author__,
         author_email="sebastien.lelong@gmail.com",
