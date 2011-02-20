@@ -30,6 +30,14 @@ else
 fi
 
 
+export JALLIB_PYTHON=python
+if [ "$PYTHON_EXEC" != "" ]
+then
+   export JALLIB_PYTHON=$PYTHON_EXEC
+fi
+
+
+
 #########################
 # ENVIRONMENT VARIABLES #
 #########################
@@ -57,17 +65,60 @@ then
     export JALLIB_JALV2="$JALLIB_ROOT/compiler/jalv2"
 fi
 
-
-
 ####################
-# python script    #
+# UPLOADER OPTIONS #
 ####################
 
-export JALLIB_PYTHON=python
-if [ "$PYTHON_EXEC" != "" ]
+# Select which method to use to upload your program
+# You can set: "tiny", "pdfusb", "xwisp"
+if [ "$JALUINO_UPLOADER" = "" ]
 then
-   export JALLIB_PYTHON=$PYTHON_EXEC
+    JALUINO_UPLOADER="pdfusb"
 fi
-$JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py $*
+# Set where Jaluino is plugged
+JALUINO_SERIAL="/dev/ttyUSB0"
 
+case $JALUINO_UPLOADER in
+    tiny)
+        export JALLIB_JALV2_ARGS="-loader18 4"
+        export JALUINO_UPLOAD_CMD="$JALUINO_ROOT/bin/tinybld2 -s 115200 -p $JALUINO_SERIAL "
+        ;;
+    pdfusb)
+        export JALLIB_JALV2_ARGS="-loader18 2048 -no-fuse"
+        export JALUINO_UPLOAD_CMD="$JALLIB_PYTHON $JALUINO_ROOT/bootloaders/pdfusb/hostapp/UsbBootLoader.py -x write "
+        ;;
+    xwisp)
+        echo "not implemented"
+        ;;
+    *)
+        export JALLIB_JALV2_ARGS=""
+        export JALUINO_UPLOAD_CMD=""
+        ;;
+esac
+
+########
+# Main #
+########
+
+# Either running from GUI, or cmd line
+# - GUI: delegate all commandline generation with args
+# - cmdline: use what's defined here
+if [ "$JALUINO_LAUNCH_FILE" = "" ] # only defined when using GUI
+then
+    echo "Jaluino wrapper, action:$1, uploader:$JALUINO_UPLOADER, args:'$JALLIB_JALV2_ARGS'"
+    # bypass some specific actions not handled by jallib.py
+    case "$1" in
+        upload)
+            $JALUINO_UPLOAD_CMD $2
+            ;;
+        compile)
+            $JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py compile $JALLIB_JALV2_ARGS $2 $3 $4 $5 $6 $7 $8 $9
+            ;;
+        *)
+            $JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py $*
+            ;;
+    esac
+else
+    $JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py $*
+fi
 
