@@ -105,16 +105,20 @@ esac
 # - cmdline: use what's defined here
 if [ "$JALUINO_LAUNCH_FILE" = "" ] # only defined when using GUI
 then
-    echo "Jaluino wrapper, action:$1, uploader:$JALUINO_UPLOADER, args:'$JALLIB_JALV2_ARGS'"
+    echo -n "Jaluino wrapper, action:$1, uploader:$JALUINO_UPLOADER, args:'$JALLIB_JALV2_ARGS' "
     # bypass some specific actions not handled by jallib.py
     case "$1" in
         upload)
-            $JALUINO_UPLOAD_CMD $2
+            hex=`echo "$2" | sed "s#\.jal\\$#.hex#"`
+            echo "file: $hex"
+            $JALUINO_UPLOAD_CMD $hex
             ;;
         compile)
+            echo "file: $2"
             $JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py compile $JALLIB_JALV2_ARGS $2 $3 $4 $5 $6 $7 $8 $9
             ;;
         *)
+            echo "file: $2"
             $JALLIB_PYTHON $JALLIB_ROOT/tools/jallib.py $*
             ;;
     esac
