@@ -21,4 +21,4 @@ else
     RUNFROM="`pwd`/`dirname $0`"
 fi
 
-$RUNFROM/../3rdparty/Editra/Editra
+$RUNFROM/../3rdparty/Editra/Editra $*
