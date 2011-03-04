@@ -1,0 +1,11 @@
+nerdtree_plugin/exec_menuitem.vim
+nerdtree_plugin/fs_menu.vim
+tags/jallib
+doc/NERD_tree.txt
+doc/taglist.txt
+plugin/jaluinoide.vim
+plugin/jvim.vim
+plugin/NERD_tree.vim
+plugin/tasklist.vim
+plugin/taglist.vim
+syntax/jalv2.vim
