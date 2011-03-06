@@ -1,0 +1,8 @@
+--langdef=jal
+--langmap=jal:.jal
+--regex-jal=/procedure\s*(\w+('put|))/\1/p,procedure/i
+--regex-jal=/function\s*(\w+('get|))/\1/f,function/i
+--regex-jal=/const\s*(\w+)/\1/c,constant/i
+--regex-jal=/const\s*(\w+|)\s*\w+\s*=/\3/v,variable/i
+--regex-jal=/record\s*(\w+)/\1/s,structure/i
+--regex-jal=/var\s*(volatile|)\s*\w+(\*\d+|)\s*(\w+)/\3/v,variable/i
