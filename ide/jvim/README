@@ -1,0 +1,36 @@
+JVIM, VIM for Jalv2, Jallib and Jaluino
+
+Sort of mix of different vim plugin and several helper/wrapper
+more specific to jalv2, jallib and jaluino projects.
+
+Installation
+------------
+
+Standard way:
+
+ - open vimball, "vim jvim.vba"
+ - source it, ":so %"
+ - uninstall it using ":RmVimball jvim"
+
+If using pathogen plugin, you can install it as a bundle
+ - create target location, "mkdir ~/.vim/bundle/jvim"
+ - open vimball, "vim jvim.vba"
+ - install vimball, ":UseVimball ~/.vim/bundle/jvim"
+ - uninstall it simply deleting  ~/.vim/bundle/jvim directory
+
+
+Description
+-----------
+
+Included in this plugin are:
+
+ - an updated syntax file for jalv2
+ - code snippets
+ - shortcut based in "jaluino" (or "jallib") wrapper, used to 
+   simplify compile/upload cycles
+ - online documentation
+ - ctags definition and generation
+ - autocompletion
+ - NERDTree, a file explorer which rocks, really
+
+

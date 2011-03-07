@@ -1,0 +1,9 @@
+-- describe hardware setup by declaring plugged jumpers
+const bit CRUMBOARD_LED1_JP1 = on   -- we've put a jumper in JP1 (use LED D1)
+const bit CRUMBOARD_LED2_JP2 = on   -- and also on JP2 (use LED D2)
+const bit CRUMBOARD_SW1_JP3  = on   -- we've put a jumper in JP3 (use switch SW1)
+const bit CRUMBOARD_SW2_JP4  = on   -- and also on JP2 (use switch SW2)
+-- now we can include crumboard library
+include crumboard_shield
+crumboard_init()
+

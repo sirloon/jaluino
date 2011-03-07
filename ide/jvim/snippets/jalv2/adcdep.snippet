@@ -1,0 +1,10 @@
+-- speficy the number of channels
+const byte ADC_NCHANNEL = ${1:1}
+-- high or low resolution ?
+const bit ADC_HIGH_RESOLUTION = ${2:low}
+-- Any voltage references ?
+const byte ADC_NVREF = ${3:0}
+include adc
+adc_init()
+${4:-- code}
+

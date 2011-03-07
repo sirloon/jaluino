@@ -1,0 +1,15 @@
+-- baudrate
+const serial_sw_baudrate = ${1:9_600} -- or 19_200, 2_400, ...
+-- RX/TX pins
+alias serial_sw_tx_pin is pin_${2:A5}
+alias serial_sw_rx_pin is pin_${3:A6}
+alias serial_sw_tx_pin_direction is pin_$2_direction
+alias serial_sw_rx_pin_direction is pin_$3_direction
+serial_sw_tx_pin_direction = output
+serial_sw_rx_pin_direction = input
+-- inverted levels (usually it is)
+const serial_sw_invert = ${4:TRUE}
+include serial_software
+serial_sw_init()
+${5:-- code}
+

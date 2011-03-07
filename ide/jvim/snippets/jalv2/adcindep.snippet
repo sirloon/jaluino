@@ -1,0 +1,9 @@
+-- high or low resolution ?
+const bit ADC_HIGH_RESOLUTION = ${1:low}
+-- Any voltage references ?
+const byte ADC_NVREF = ${2:0}
+include adc
+adc_init()
+-- Specify which pins should be configured as analog
+${3:set_analog_pin(1)} -- configure AN1
+
