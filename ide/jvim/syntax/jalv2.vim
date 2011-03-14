@@ -111,7 +111,7 @@ syn keyword jalType		bit byte word dword
 
 syn keyword jalModifier		interrupt assembler asm put get
 syn keyword jalStatement	out in is begin at shared alias
-syn keyword jalDirective	pragma jump_table target target_clock target_chip name error test assert inline
+syn keyword jalDirective	pragma jump_table target target_clock target_chip name error test assert inline defined
 syn keyword jalPredefined       hs xt rc lp internal 16c84 16f84 16f877 sx18 sx28 12c509a 12c508
 syn keyword jalPredefined       12ce674 16f628 18f252 18f242 18f442 18f452 12f629 12f675 16f88
 syn keyword jalPredefined	16f876 16f873 sx_12 sx18 sx28 pic_12 pic_14 pic_16
