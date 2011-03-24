@@ -105,7 +105,7 @@ syn keyword jalConstant		Input Output all_input all_output
 syn keyword jalConditional	if else then elsif end if case of
 syn keyword jalLabel		goto
 syn keyword jalRepeat		for while forever loop
-syn keyword jalStatement	procedure function
+syn keyword jalStatement	procedure function block
 syn keyword jalStatement	return end volatile const var
 syn keyword jalType		bit byte word dword
 

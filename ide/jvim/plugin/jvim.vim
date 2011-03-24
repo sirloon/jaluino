@@ -4,6 +4,12 @@ if $JVIM_ROOT == ""
     "finish
 endif
 
+" detect if windows is with us or not
+let s:running_windows = has("win16") || has("win32") || has("win64")
+
+" ctags options to generate tags for jalv2
+let g:jalv2_ctags_opts="--langdef=jal --langmap=jal:.jal --regex-jal=\"/procedure\\s*(\\w+(\\'put|))/\\1/p,procedure/i\" --regex-jal=\"/function\\s*(\\w+(\\'get|))/\\1/f,function/i\" --regex-jal=\"/const\\s*(\\w+)/\\1/c,constant/i\" --regex-jal=\"/record\\s*(\\w+)/\\1/s,structure/i\" --regex-jal=\"/var\\s*(volatile|)\\s*\\w+(\\*\\d+|)\\s*(\\+)/\\3/v,variable/i\""
+
 " Compilation of many vim tips glued together to bring some
 " sort of IDE with compilation output windows...
 
@@ -100,11 +106,22 @@ function MoveDownAndMaximize()
     call MaximizeAndResizeQuickfix(10)
 endfunction
 
-function DoCompile()
+let g:jalmain = ""
+
+function DoCompile(...)
     "" Quickfix
-    set makeprg=jaluino\ compile\ %
+    let l:jalfile = g:jalmain
+    if jalfile == ""
+       let l:jafile = expand("%")
+    endif
+
+    let l:cmd = "jaluino compile " + jalfile
+    echo cmd
+    "set makeprg=cmd
     set efm=%f:%l:%m
-    make
+    "tabnew
+    exec cmd
+    "make
     set makeprg=make " defaulting back
 endfunction
 
@@ -140,6 +157,31 @@ endfunction
 function UpdateJalapi()
 endfunction
 
+" extract ctags from jallib repository
+function DoExtractTags()
+    if $JALLIB_REPOS == ""
+        let l:repos = input("JALLIB_REPOS isn't defined, please provide absolute path to your jallib repository: ","","dir")
+        if l:repos == "" 
+            echomsg "No path provided, give up..."
+            return
+        endif
+    else
+        let l:repos = expand($JALLIB_REPOS)
+    endif    
+    
+    " TODO: split on ";" under windows (see s:running_windows)
+    echomsg "JALLIB_REPOS=" . l:repos
+    for dir in split(l:repos,":")
+        echomsg "Extracting tags from " . dir
+        let cmd = "!find " . dir . " -name \\\*.jal -type f | xargs ctags " . g:jalv2_ctags_opts . " -a -f jallib.tmp"
+        exec cmd
+    endfor
+    let cmd = "!mv jallib.tmp jallib.tags"
+    exec cmd
+    set tags+=jallib.tags
+ 
+endfunction
+
 
 
 " enrich with nice plugins...
@@ -169,7 +211,7 @@ map <C-L> <C-W>l
 " rebuild ctags
 "map <C-F12> :!ctags -R -h jal -f tags/jallib $JALUINO_ROOT/3rdparty/jallib_svn<CR>
 
-map <C-F12> :!oIFS=$IFS && IFS=: && for d in "$JALLIB_REPOS" ;do  echo Extracting tags from $d; find $d -name \*.jal -type f \| xargs ctags -a -f tags/jallib.tmp; done && IFS="$oIFS" && mv tags/jallib.tmp tags/jallib<CR>|set tags+=tags/jallib
+map <C-F12> :call DoExtractTags()<CR>
 
 map <silent> <F5> :call DoCompile()<CR><CR>
 map <silent> <F6> :call DoValidate()<CR>
@@ -178,7 +220,7 @@ map <silent> <F8> :call DoUpload()<CR>
 
 " taglist
 " ctags definition
-set tags+=tags/jallib
+set tags+=jallib.tags
 " shorcut
 "map <C-B> :TlistOpen<CR>
 "
@@ -195,10 +237,4 @@ filetype plugin indent on
 
 " misc
 set cursorline
-
-"" open quickfix window
-""copen
-""wincmd k
-
-set mouse=a
 
