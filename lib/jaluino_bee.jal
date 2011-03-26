@@ -30,7 +30,7 @@ include 18f27j53
 pragma target clock 48_000_000     -- oscillator frequency
 -- magical statements
 pragma target PLLDIV	   P4
-pragma target CPUDIV	   P2
+pragma target CPUDIV	   P1
 pragma target PLLEN  P4           -- PLL on
 pragma target OSC	   HS_PLL
 
