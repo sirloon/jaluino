@@ -10,7 +10,7 @@
 -- Description: this is the main file included in every jaluino project
 -- that uses Jaluino Bee hardware. Jaluino Bee is based on PIC 18F27J53.
 -- This files performs basic setup to configure PIC, like setting clock speed
--- to 16MHz, disable watchdog, etc...
+-- to 48MHz, disable watchdog, etc...
 -- --
 -- The idea is you just have to type "include jaluino_bee" and your chip
 -- is configured and ready to be used !
@@ -20,23 +20,16 @@
 -- Notes:
 --
 
--- Jaluino Bee is based on PIC18F27J53.
--- (though there could be other flavors, like PIC18F25K22)
 include 18f27j53
--- Board embeds 16MHz external crystal. This is the external clock speed.
--- But thanks to some kind of Harry Potter magic incantation, we are able to
--- to tell the chip to run at 48MHz (!), whereas there's "just" a 16MHz crystal.
--- To keep it simple: remember, Jaluino Bee runs at 48MHz
-pragma target clock 48_000_000     -- oscillator frequency
+pragma target clock 48_000_000   -- oscillator frequency
 -- magical statements
 pragma target PLLDIV	   P4
 pragma target CPUDIV	   P1
-pragma target PLLEN  P4           -- PLL on
+pragma target PLLEN  P1          -- PLL via fuse turned off
 pragma target OSC	   HS_PLL
+pragma target WDT  disabled      -- no watchdog
+OSCTUNE_PLLEN = on               -- PLL via OSCTUNE enabled
 
-pragma target WDT  disabled        -- no watchdog
-
--- by default, we'll set all pins as digital pins
 enable_digital_io()
 
 -- Include official pin mapping. Since it's arbitrary, one may want to bypass it
@@ -45,6 +38,7 @@ if defined(JALUINO_SKIP_PINMAP) == false then
    include jaluino_bee_pinmap
 end if
 
--- that's all, PIC is ready !
+_usec_delay(2000) -- PLL needs 2ms before stable
 
+-- that's all, PIC is ready !
 
