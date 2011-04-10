@@ -1,0 +1,50 @@
+-- ------------------------------------------------------
+-- Title: Jaluino Bee{p} device file (wrapper over 18f2550.jal)
+-- Author: Sebastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4l
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this is the main file included in every jaluino project
+-- that uses Jaluino Bee hardware. Jaluino Bee is based on PIC 18F27J53.
+-- This files performs basic setup to configure PIC, like setting clock speed
+-- to 48MHz, disable watchdog, etc...
+-- --
+-- The idea is you just have to type "include jaluino_bee" and your chip
+-- is configured and ready to be used !
+--
+-- Sources:
+--
+-- Notes:
+
+-- Jaluino Beep is based on PIC 18F2550
+include 18f2550
+-- Board embeds 20MHz external crystal. This is the external clock speed.
+-- But thanks to some kind of Harry Potter magic incantation, we are able to
+-- to tell the chip to run at 48MHz (!), whereas there's "just" a 20MHz crystal.
+-- To keep it simple: remember, Jaluino Beep runs at 48MHz
+pragma target clock 48_000_000     -- oscillator frequency
+-- magical statements
+pragma target PLLDIV	   P5
+pragma target CPUDIV	   P1
+pragma target USBPLL	   F48MHZ
+pragma target OSC	   HS_PLL
+
+pragma target WDT  disabled        -- no watchdog
+pragma target LVP  disabled        -- no Low Voltage Programming
+pragma target MCLR external        -- reset externally
+
+-- by default, we'll set all pins as digital pins
+enable_digital_io()
+
+-- Include official pin mapping. Since it's arbitrary, one may want to bypass it
+-- and provides his own mapping, defining the following constant.
+if defined(JALUINO_SKIP_PINMAP) == false then
+   include jaluino_bee_pinmap
+end if
+
+-- that's all, PIC is ready !
+
+

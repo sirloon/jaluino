@@ -1,0 +1,46 @@
+-- Title: Jaluino Bee{z} device file (wrapper over 18f25k22.jal)
+-- Author: Sebastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4n
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this is the main file included in every jaluino project
+-- that uses Jaluino Bee{z} "Zzzzz" hardware. Jaluino Beez is based on PIC 18F25K22.
+-- This files performs basic setup to configure PIC, like setting clock speed
+-- using internal oscillator, etc...
+-- --
+-- The idea is you just have to type "include jaluino_beez" and your chip
+-- is configured and ready to be used !
+--
+-- Sources:
+--
+-- Notes:
+--
+
+-- Jaluino BeeZ is based on PIC18F25K22.
+include 18f25k22                    -- target PICmicro
+pragma target clock 16_000_000     -- oscillator frequency
+-- configuration memory settings (fuses)
+pragma target OSC      INTOSC_NOCLKOUT -- internal osc
+OSCCON_IRCF = 0b111
+pragma target WDT      disabled     -- no watchdog
+pragma target DEBUG    disabled     -- no debugging
+pragma target LVP      disabled     -- no Low Voltage Programming
+pragma target MCLR external        -- reset externally
+-- These configuration bit settings are only a selection, sufficient for
+-- this program, but other programs may need more or different settings.
+--
+enable_digital_io()                -- make all pins digital I/O
+
+-- Include official pin mapping. Since it's arbitrary, one may want to bypass it
+-- and provides his own mapping, defining the following constant.
+if defined(JALUINO_SKIP_PINMAP) == false then
+   include jaluino_bee_pinmap
+end if
+
+-- that's all, PIC is ready !
+
+
+
