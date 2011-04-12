@@ -2,7 +2,7 @@
 -- Title: demo of usb_serial library
 -- Author: Albert Faber, Copyright (c) 2009, all rights reserved.
 -- Adapted-by:
--- Compiler: >=2.4n
+-- Compiler: >=2.4o
 -- 
 -- This file is part of jallib (http://jallib.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
