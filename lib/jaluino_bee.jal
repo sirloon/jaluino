@@ -29,6 +29,9 @@ pragma target PLLEN  P1          -- PLL via fuse turned off
 pragma target OSC	   HS_PLL
 pragma target WDT  disabled      -- no watchdog
 OSCTUNE_PLLEN = on               -- PLL via OSCTUNE enabled
+-- declare secondary oscillator on T1OSI/T1OSO pins
+pragma target RTCOSC T1OSC
+pragma target SOSCSEL HS_CP
 
 enable_digital_io()
 
