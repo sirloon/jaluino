@@ -29,7 +29,7 @@ include 18f2550
 pragma target clock 48_000_000     -- oscillator frequency
 -- magical statements
 pragma target PLLDIV	   P5
-pragma target CPUDIV	   P2
+pragma target CPUDIV	   P1
 pragma target USBPLL	   F48MHZ
 pragma target OSC	   HS_PLL
 
