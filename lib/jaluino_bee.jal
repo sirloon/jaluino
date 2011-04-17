@@ -28,10 +28,12 @@ pragma target CPUDIV	   P1
 pragma target PLLEN  P1          -- PLL via fuse turned off
 pragma target OSC	   HS_PLL
 pragma target WDT  disabled      -- no watchdog
+pragma target IOL1WAY disabled   -- Mapping allowed multiple time at runtime
 OSCTUNE_PLLEN = on               -- PLL via OSCTUNE enabled
 -- declare secondary oscillator on T1OSI/T1OSO pins
 pragma target RTCOSC T1OSC
 pragma target SOSCSEL HS_CP
+_usec_delay(2000) -- PLL needs 2ms before stable
 
 enable_digital_io()
 
@@ -40,8 +42,6 @@ enable_digital_io()
 if defined(JALUINO_SKIP_PINMAP) == false then
    include jaluino_bee_pinmap
 end if
-
-_usec_delay(2000) -- PLL needs 2ms before stable
 
 -- that's all, PIC is ready !
 

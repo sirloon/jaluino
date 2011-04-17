@@ -21,7 +21,7 @@ include pps
 const PPS_TX2_FUNCTION = 6
 
 -- PPS module writes are protected, we need to first unlock it
-pps_begin()
+pps_control_lock(false)
 
 -- TX2 is an output function: we assign a function to a RP pin
 -- Remappable pin RP9 can be accessed through the following register
@@ -30,7 +30,7 @@ RPOR9_RPOR = PPS_TX2_FUNCTION
 pps_map_rx2dt2(10)   -- RP10
 
 -- PPS configuration is done, we can lock again
-pps_commit()
+pps_control_lock(true)
 
 -- ok, now setup serial
 const serial_hw2_baudrate = 115_200
