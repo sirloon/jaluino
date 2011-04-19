@@ -14,6 +14,11 @@
 -- --
 -- The idea is you just have to type "include jaluino_bee" and your chip
 -- is configured and ready to be used !
+-- Prior including this lib, more configuration can be performed, particularly
+-- setting the following constant to 1:
+--    * JALUINO_SKIP_PINMAP : won't create pin aliases, like "onboard_led"
+--    * ENABLE_MSSP2_SDCARD : will configure PPS module for MSSP2 usage,
+--                            in order to use SD-Card
 --
 -- Sources:
 --
@@ -41,6 +46,36 @@ enable_digital_io()
 -- and provides his own mapping, defining the following constant.
 if defined(JALUINO_SKIP_PINMAP) == false then
    include jaluino_bee_pinmap
+end if
+
+
+include pps
+
+-- Configure Remappable Pins on MSSP2 to match SPI/SD-Card wiring.
+-- Doesn't actually import and configure MSSP2 and SD-card libraries
+-- it just prepares MSSP2 module usage on arbitrary pins
+if defined(ENABLE_MSSP2_SDCARD) then
+
+   -- PPS module writes are protected, we need to first unlock it
+   pps_control_lock(false)
+   -- RP3 <-> /SS2
+   PPS_MAP_SS2IN = RP3
+   -- RP2 <-> SCK2
+   PPS_MAP_RP2 = PPS_SCK2
+   PPS_MAP_SCK2IN = RP2
+   -- RP5 <-> SDI2
+   PPS_MAP_SDI2 = RP5
+   -- RP6 <-> SDO2
+   PPS_MAP_RP6 = PPS_SDO2
+   -- PPS configuration is done, we can lock again
+   pps_control_lock(true)
+
+   alias pin_ss2_direction is pin_b0_direction
+   alias pin_ss2 is pin_b0
+   alias pin_sdi2_direction is pin_b2_direction
+   alias pin_sdo2_direction is pin_b3_direction
+   alias pin_sck2_direction is pin_a5_direction
+   
 end if
 
 -- that's all, PIC is ready !
