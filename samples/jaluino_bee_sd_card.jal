@@ -1,0 +1,131 @@
+-- Title: Sample showing usage of PPS module for Jaluino Bee, 18F27J53 based
+-- Author: Sébastien Lelong, Copyright (c) 2011, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4o
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: SD-Card demo, running MSSP2 with PPS module:
+-- - RBO / RP3: /SS2 (I)
+-- - RA5 / RP2: SCK2 (I/O)
+-- - RB2 / RP5: SDI2 (I)
+-- - RB3 / RP6: SDO2 (O)
+-- Sample will write incrementing values, beginning at sector 20. Once written,
+-- it'll read them back and check values. If value is correct, LED is blinking fast.
+-- You can also check SD-card content, running "hexdump -v -C /dev/<sdcard-device> | less"
+-- under Linux, or something similar under Windows.
+-- You'll see values at address 0x2800 (which 20 sectors * 512 bytes = 10240 = 0x2800)
+-- .
+-- Expected behavior:
+-- 1. LED is flashing once (write bytes)
+-- 2. small delay
+-- 3. LED is blinking very fast, for ~20 seconds (read and check values)
+-- 4. LED is blinking sloooowly for 5 seconds (pause before restarting)
+--
+--
+
+include jaluino_bee
+
+onboard_led_direction = output
+
+include pps
+
+const PPS_SDO2_FUNCTION = 10
+const PPS_SCK2_FUNCTION = 11
+
+-- Enable MSSP2 module on arbitrary pins
+alias pin_ss2_direction is pin_b0_direction
+alias pin_ss2 is pin_b0
+alias pin_sdi2_direction is pin_b2_direction
+alias pin_sdo2_direction is pin_b3_direction
+alias pin_sck2_direction is pin_a5_direction
+
+-- PPS module writes are protected, we need to first unlock it
+pps_control_lock(false)
+
+-- RP3 <-> /SS2
+pps_map_ss2(3)
+-- RP2 <-> SCK2
+RPOR2_RPOR = PPS_SCK2_FUNCTION
+pps_map_sck2(2)
+-- RP5 <-> SDI2
+pps_map_sdi2(5)
+-- RP6 <-> SDO2
+RPOR6_RPOR = PPS_SDO2_FUNCTION
+
+-- PPS configuration is done, we can lock again
+pps_control_lock(true)
+
+include print
+include delay
+
+-- setup uart for communication
+const serial_hw_baudrate  = 115200   -- set the baudrate
+include serial_hardware
+serial_hw_init()
+
+
+-- configure SPI via MSSP2
+include spi_master_hw2
+pin_sdi2_direction = input    -- spi input
+pin_sdo2_direction = output   -- spi output
+pin_sck2_direction = output   -- spi clock
+spi2_init(SPI_MODE_11,SPI_RATE_FOSC_4) -- init spi, choose mode and speed
+
+-- setup the sd card pins
+alias sd_chip_select is pin_ss2
+alias sd_chip_select_direction is pin_ss2_direction
+sd_chip_select_direction = output
+sd_chip_select = high
+
+-- setup the sd card library
+;const bit SD_EXTRA_SPEED = TRUE
+const bit SD_ALWAYS_SET_SPI_MODE = TRUE
+const bit SD_DELAY_AFTER_WRITE = TRUE
+-- define which data carrier to use to access sd-card
+alias spi_master is spi_master_hw2
+include sd_card
+sd_init()
+
+-- variables for the sample
+var word step1
+var byte counter = 0
+var byte volatile data
+
+onboard_led = off
+
+forever loop
+
+   -- 1st write...
+   onboard_led = on
+   sd_start_write(20)         -- get sd card ready for write at sector 20
+   for 512 + 256 loop         -- loop 1 sector + 1 half sector (512 + 256 bytes)
+     sd_data_byte = counter   -- write 1 bytes of data
+     counter = counter + 1
+   end loop
+   sd_stop_write()            -- tell sd card you are done reading
+   onboard_led = off
+   delay_1ms(500)
+
+   -- then 2nd read & check
+   counter = 0
+   sd_start_read(20)          -- get sd card ready for read at sector 20
+   for 512 + 256 loop         -- loop 1 sector + 1 half sector (512 + 256 bytes)
+      data = sd_data_byte       -- read 1 bytes of data
+      if data == counter then
+         delay_1ms(30)
+         onboard_led = !onboard_led
+      end if
+      counter = counter + 1
+   end loop
+   sd_stop_read()             -- tell sd card you are done reading
+
+   -- slow blink before next R/W cycle
+   for 5 loop
+      delay_1s(1)
+      onboard_led = !onboard_led
+   end loop
+
+end loop
+
