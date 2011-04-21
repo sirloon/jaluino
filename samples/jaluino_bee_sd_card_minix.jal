@@ -1,0 +1,61 @@
+-- Title: Sample showing usage of PPS module for Jaluino Bee, 18F27J53 based
+-- Author: Sébastien Lelong, Copyright (c) 2011, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4o
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: SD-Card demo, running MSSP2 with PPS module:
+-- - RBO / RP3: /SS2 (I)
+-- - RA5 / RP2: SCK2 (I & O)
+-- - RB2 / RP5: SDI2 (I)
+-- - RB3 / RP6: SDO2 (O)
+-- Sample will write incrementing values, beginning at sector 20. Once written,
+-- it'll read them back and check values. If value is correct, LED is blinking fast.
+-- You can also check SD-card content, running "hexdump -v -C /dev/<sdcard-device> | less"
+-- under Linux, or something similar under Windows.
+-- You'll see values at address 0x2800 (which 20 sectors * 512 bytes = 10240 = 0x2800)
+-- .
+-- Expected behavior:
+-- 1. LED is flashing once (write bytes)
+-- 2. small delay
+-- 3. LED is blinking very fast, for ~20 seconds (read and check values)
+-- 4. LED is blinking sloooowly for 5 seconds (pause before restarting)
+--
+--
+
+-- we plan to use SD-Card so tell the main library to 
+-- configure remappable pins and create appropriate aliases
+const byte ENABLE_MSSP2_SDCARD = 1
+
+include jaluino_bee
+include print
+include delay
+
+onboard_led_direction = output
+onboard_led = off
+
+const serial_hw_baudrate = 115_200
+include serial_hardware
+serial_hw_init()
+
+alias minix_set_address is sd_start_read
+alias minix_stop_read is sd_stop_read
+alias minix_data_byte is sd_data_byte -- get|put byte
+alias minix_print_carrier is serial_hw_data
+include minixfs
+
+const byte WELCOME[] = "Minix demo"
+print_string(serial_hw_data,WELCOME)
+print_crlf(serial_hw_data)
+
+forever loop
+   minix_read_super_block()   -- some sort of "mount"
+   minix_print_super_block()
+   minix_print_error()
+
+   delay_1s(5)
+
+end loop
+
