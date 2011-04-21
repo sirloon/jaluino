@@ -35,10 +35,16 @@ const byte WELCOME[] = "Minix demo"
 print_string(serial_hw_data,WELCOME)
 print_crlf(serial_hw_data)
 
+-- some sort of "mount"
+minix_read_super_block(true)
+minix_print_super_block()
+minix_print_error()
+   
 forever loop
-   minix_read_super_block(true)   -- some sort of "mount"
-   minix_print_super_block()
-   minix_print_error()
+
+   -- read root inode
+   var minix_inode root = minix_get_inode(MINIX_INODE_ROOT_ID) 
+   minix_print_inode(root)
 
    delay_1s(5)
 
