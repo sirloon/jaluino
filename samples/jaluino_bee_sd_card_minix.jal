@@ -37,14 +37,23 @@ print_crlf(serial_hw_data)
 
 -- some sort of "mount"
 minix_read_super_block(true)
-minix_print_super_block()
-minix_print_error()
+minix_dev_print_super_block()
+minix_dev_print_error()
    
 forever loop
 
-   -- read root inode
-   var minix_inode root = minix_get_inode(MINIX_INODE_ROOT_ID) 
-   minix_print_inode(root)
+   var minix_inode inode
+   inode = minix_get_inode(MINIX_INODE_ROOT_ID) 
+   var byte inode_num = 2
+   while inode.mode.filetype != 0 loop
+      minix_dev_print_inode(inode)
+      inode = minix_get_inode(inode_num) 
+      inode_num = inode_num + 1
+   end loop
+
+   const byte STR_NO_MORE[] = "No more contiguous inodes found"
+   print_string(serial_hw_data,STR_NO_MORE)
+   print_crlf(serial_hw_data)
 
    delay_1s(5)
 
