@@ -55,6 +55,23 @@ forever loop
    print_string(serial_hw_data,STR_NO_MORE)
    print_crlf(serial_hw_data)
 
+   const byte STR_ROOT_LISTING[] = "Root content directory:"
+   print_string(serial_hw_data,STR_ROOT_LISTING)
+   print_crlf(serial_hw_data)
+
+   -- list root directory
+   var minix_dir_entry content
+   minix_set_cwd(MINIX_INODE_ROOT_ID)
+   content = minix_list_cwd
+   while content.inode_num != 0 loop
+      minix_dev_print_dir_entry(content)
+      print_crlf(serial_hw_data)
+      content = minix_list_cwd
+   end loop
+
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+
    delay_1s(5)
 
 end loop
