@@ -25,8 +25,8 @@ const serial_hw_baudrate = 115_200
 include serial_hardware
 serial_hw_init()
 
-alias minix_set_address is sd_start_read
-alias minix_stop_read is sd_stop_read
+alias minix_goto_address is sd_start_read
+alias minix_close_block is sd_stop_read
 alias minix_data_byte is sd_data_byte -- get|put byte
 alias minix_print_carrier is serial_hw_data
 include minixfs
@@ -36,7 +36,7 @@ print_string(serial_hw_data,WELCOME)
 print_crlf(serial_hw_data)
 
 -- some sort of "mount"
-minix_read_super_block(true)
+minix_init(true)
 minix_dev_print_super_block()
 minix_dev_print_error()
    
@@ -60,13 +60,13 @@ forever loop
    print_crlf(serial_hw_data)
 
    -- list root directory
-   var minix_dir_entry content
+   var minix_dir_entry entry
    minix_set_cwd(MINIX_INODE_ROOT_ID)
-   content = minix_list_cwd
-   while content.inode_num != 0 loop
-      minix_dev_print_dir_entry(content)
+   entry = minix_next_entry
+   while entry.inode_num != 0 loop
+      minix_dev_print_dir_entry(entry)
       print_crlf(serial_hw_data)
-      content = minix_list_cwd
+      entry = minix_next_entry 
    end loop
 
    print_crlf(serial_hw_data)
