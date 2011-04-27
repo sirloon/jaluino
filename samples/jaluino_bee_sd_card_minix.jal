@@ -63,14 +63,13 @@ forever loop
 
    -- open root directory and list content
    var minix_dir_entry entry
-   minix_open(MINIX_INODE_ROOT_ID)
+   minix_cd(MINIX_INODE_ROOT_ID)
    entry = minix_next_entry
    while entry.inode_num != 0 loop
       minix_dev_print_dir_entry(entry)
       print_crlf(serial_hw_data)
       entry = minix_next_entry 
    end loop
-   minix_close()
 
    print_crlf(serial_hw_data)
 
