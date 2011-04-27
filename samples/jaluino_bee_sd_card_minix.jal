@@ -17,6 +17,7 @@ const byte ENABLE_MSSP2_SDCARD = 1
 include jaluino_bee
 include print
 include delay
+include jascii
 
 onboard_led_direction = output
 onboard_led = off
@@ -39,40 +40,65 @@ print_crlf(serial_hw_data)
 minix_init(true)
 minix_dev_print_super_block()
 minix_dev_print_error()
+
+-- walk inodes and display internal guts
+var minix_inode inode
+inode = minix_get_inode(MINIX_INODE_ROOT_ID) 
+var byte inode_num = 2
+while inode.mode.filetype != 0 loop
+   minix_dev_print_inode(inode)
+   inode = minix_get_inode(inode_num) 
+   inode_num = inode_num + 1
+end loop
+
+const byte STR_NO_MORE[] = "No more contiguous inodes found"
+print_string(serial_hw_data,STR_NO_MORE)
+print_crlf(serial_hw_data)
    
 forever loop
-
-   var minix_inode inode
-   inode = minix_get_inode(MINIX_INODE_ROOT_ID) 
-   var byte inode_num = 2
-   while inode.mode.filetype != 0 loop
-      minix_dev_print_inode(inode)
-      inode = minix_get_inode(inode_num) 
-      inode_num = inode_num + 1
-   end loop
-
-   const byte STR_NO_MORE[] = "No more contiguous inodes found"
-   print_string(serial_hw_data,STR_NO_MORE)
-   print_crlf(serial_hw_data)
 
    const byte STR_ROOT_LISTING[] = "Root content directory:"
    print_string(serial_hw_data,STR_ROOT_LISTING)
    print_crlf(serial_hw_data)
 
-   -- list root directory
+   -- open root directory and list content
    var minix_dir_entry entry
-   minix_set_cwd(MINIX_INODE_ROOT_ID)
+   minix_open(MINIX_INODE_ROOT_ID)
    entry = minix_next_entry
    while entry.inode_num != 0 loop
       minix_dev_print_dir_entry(entry)
       print_crlf(serial_hw_data)
       entry = minix_next_entry 
    end loop
+   minix_close()
 
    print_crlf(serial_hw_data)
-   print_crlf(serial_hw_data)
 
-   delay_1s(5)
+   const byte STR_CHOOSE[] = "Enter inode number to display file's content: "
+   print_string(serial_hw_data,STR_CHOOSE)
+   -- atoi
+   var byte num = 0
+   var byte numdec = 0
+   var byte data = 0
+   numdec = serial_hw_data -- blocking
+   serial_hw_data = numdec -- echo   
+   num = serial_hw_data
+   serial_hw_data = num -- echo
+   if num == ASCII_LF | num == ASCII_CR then
+      num = numdec
+      numdec = "0"
+   else
+      data = serial_hw_data   -- wait for any key
+      serial_hw_data = data   -- echo
+   end if
+   inode_num = ((numdec - "0") * 10) + (num - "0")
+
+   const byte STR_CONTENT[] = "Content for file pointed by inode #"
+   print_string(serial_hw_data,STR_CONTENT)
+   print_byte_dec(serial_hw_data,inode_num)
+   print_crlf(serial_hw_data)
+   minix_cat(inode_num)   -- file8K #inode
+   print_crlf(serial_hw_data)
 
 end loop
 
