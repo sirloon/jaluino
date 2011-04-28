@@ -96,7 +96,20 @@ forever loop
    print_string(serial_hw_data,STR_CONTENT)
    print_byte_dec(serial_hw_data,inode_num)
    print_crlf(serial_hw_data)
-   minix_cat(inode_num)   -- file8K #inode
+
+   ;minix_open(inode_num)
+   ;minix_seek(9000000)
+   ;-- display the remaining content
+   ;while minix_curfd.read != minix_curfd.inode.filesize loop
+   ;   serial_hw_data = minix_read()
+   ;   serial_hw_data = " "
+   ;   print_dword_dec(serial_hw_data,minix_curfd.read)
+   ;   serial_hw_data = "/"
+   ;   print_dword_dec(serial_hw_data,minix_curfd.inode.filesize)
+   ;   print_crlf(serial_hw_data)
+   ;end loop
+
+   minix_dev_cat(inode_num)
    print_crlf(serial_hw_data)
 
 end loop
