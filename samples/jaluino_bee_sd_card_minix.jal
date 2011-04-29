@@ -18,6 +18,7 @@ include jaluino_bee
 include print
 include delay
 include jascii
+include strings
 
 onboard_led_direction = output
 onboard_led = off
@@ -33,84 +34,96 @@ alias minix_print_carrier is serial_hw_data
 include minixfs
 
 const byte WELCOME[] = "Minix demo"
+const byte PROMPT[] = "minix> "
 print_string(serial_hw_data,WELCOME)
 print_crlf(serial_hw_data)
 
 -- some sort of "mount"
 minix_init(true)
-minix_dev_print_super_block()
-minix_dev_print_error()
 
--- walk inodes and display internal guts
-var minix_inode inode
-inode = minix_get_inode(MINIX_INODE_ROOT_ID) 
-var byte inode_num = 2
-while inode.mode.filetype != 0 loop
-   minix_dev_print_inode(inode)
-   inode = minix_get_inode(inode_num) 
-   inode_num = inode_num + 1
-end loop
-
-const byte STR_NO_MORE[] = "No more contiguous inodes found"
-print_string(serial_hw_data,STR_NO_MORE)
-print_crlf(serial_hw_data)
-   
-forever loop
-
-   const byte STR_ROOT_LISTING[] = "Root content directory:"
-   print_string(serial_hw_data,STR_ROOT_LISTING)
-   print_crlf(serial_hw_data)
-
-   -- open root directory and list content
-   var minix_dir_entry entry
-   minix_cd(MINIX_INODE_ROOT_ID)
-   entry = minix_next_entry
-   while entry.inode_num != 0 loop
-      minix_dev_print_dir_entry(entry)
-      print_crlf(serial_hw_data)
-      entry = minix_next_entry 
-   end loop
-
-   print_crlf(serial_hw_data)
-
-   const byte STR_CHOOSE[] = "Enter inode number to display file's content: "
-   print_string(serial_hw_data,STR_CHOOSE)
-   -- atoi
+function atoi(byte in nums[]) return byte is
    var byte num = 0
    var byte numdec = 0
-   var byte data = 0
-   numdec = serial_hw_data -- blocking
-   serial_hw_data = numdec -- echo   
-   num = serial_hw_data
-   serial_hw_data = num -- echo
-   if num == ASCII_LF | num == ASCII_CR then
+   numdec = nums[0] -- blocking
+   num = nums[1]
+   if num == ASCII_NULL then
       num = numdec
       numdec = "0"
-   else
-      data = serial_hw_data   -- wait for any key
-      serial_hw_data = data   -- echo
    end if
-   inode_num = ((numdec - "0") * 10) + (num - "0")
+   return byte(((numdec - "0") * 10) + (num - "0"))
+end function
 
-   const byte STR_CONTENT[] = "Content for file pointed by inode #"
-   print_string(serial_hw_data,STR_CONTENT)
-   print_byte_dec(serial_hw_data,inode_num)
-   print_crlf(serial_hw_data)
+-- Minix commands for REPL impl.
+const byte MINIX_FSCK_CMD[] = "fsck\0"
+const byte MINIX_DOLLARQ_CMD[] = "$?\0"
+const byte MINIX_CAT_CMD[] = "cat\0"
+const byte MINIX_DCAT_CMD[] = "dcat\0"
+const byte MINIX_CD_CMD[] = "cd\0"
+const byte MINIX_LS_CMD[] = "ls\0"
+   
+var byte command[16]
+var byte filename[MINIX_MAX_FILENANE_LEN]
+var byte char
+var byte i
+forever loop
 
-   ;minix_open(inode_num)
-   ;minix_seek(9000000)
-   ;-- display the remaining content
-   ;while minix_curfd.read != minix_curfd.inode.filesize loop
-   ;   serial_hw_data = minix_read()
-   ;   serial_hw_data = " "
-   ;   print_dword_dec(serial_hw_data,minix_curfd.read)
-   ;   serial_hw_data = "/"
-   ;   print_dword_dec(serial_hw_data,minix_curfd.inode.filesize)
-   ;   print_crlf(serial_hw_data)
-   ;end loop
+   -- print prompt :)
+   print_string(serial_hw_data,PROMPT)
 
-   minix_dev_cat(inode_num)
-   print_crlf(serial_hw_data)
+   -- read command
+   i = 0
+   while true  loop
+      char = serial_hw_data
+      -- echo
+      serial_hw_data = char
+      if char == ASCII_LF | char == ASCII_CR | char == ASCII_SP then
+         exit loop
+      end if
+      command[i] = char
+      i = i + 1
+   end loop
+   command[i] = ASCII_NULL -- NULL terminated string
+
+   -- read filename if necessary
+   if char == ASCII_SP then
+      i = 0
+      while true  loop
+         char = serial_hw_data
+         -- echo
+         serial_hw_data = char
+         if char == ASCII_LF | char == ASCII_CR | char == ASCII_SP then
+            exit loop
+         end if
+         filename[i] = char
+         i = i + 1
+      end loop
+      filename[i] = ASCII_NULL -- NULL terminated string
+   end if
+
+   if char == ASCII_LF | char == ASCII_CR | char == ASCII_SP then
+      print_crlf(serial_hw_data)
+   end if
+
+   if command[0] != ASCII_NULL then
+      if strcmp(command,MINIX_FSCK_CMD) then
+         minix_dev_print_super_block()
+      end if
+      if strcmp(command,MINIX_DOLLARQ_CMD) then
+         minix_dev_print_error()
+      end if
+      if strcmp(command,MINIX_CD_CMD) then
+         minix_cdi(atoi(filename))
+      end if
+      if strcmp(command,MINIX_CAT_CMD) then
+         minix_cati(atoi(filename))
+      end if
+      if strcmp(command,MINIX_DCAT_CMD) then
+         minix_dev_cati(atoi(filename))
+      end if
+      if strcmp(command,MINIX_LS_CMD) then
+         minix_lsi(atoi(filename))
+      end if
+   end if
 
 end loop
 
