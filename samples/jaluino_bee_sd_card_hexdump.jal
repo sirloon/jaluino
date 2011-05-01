@@ -1,0 +1,101 @@
+-- Title: sample acting like "hexdump" program
+-- Author: Sébastien Lelong, Copyright (c) 2011, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4o
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: This sample is an implementation of "hexdump" program
+-- "hexdump" dumps raw data in HEX format, with several extra information.
+-- This implementation is equivalent of "hexdump -v -C" parameters, that is:
+--  * dumps all content (-v)
+--  * adds a line at the end showing correspondong ASCII chars (-C)
+-- Output goes like this:
+-- .
+-- address  b0 b1 b2 b3 b4 b5 b6 b7  b8 b9 b0 b1 b2 b3 b4 b5  |aaaaaaaaaaaaaaaa|
+--
+--
+
+-- we plan to use SD-Card so tell the main library to 
+-- configure remappable pins and create appropriate aliases
+const byte ENABLE_MSSP2_SDCARD = 1
+
+include jaluino_bee
+include print
+include delay
+
+onboard_led_direction = output
+onboard_led = off
+
+-- High speed serial comm.
+-- Check with your OS if supported
+const serial_hw_baudrate = 2_000_000
+include serial_hardware
+serial_hw_init()
+
+-- variables for the sample
+var dword address = 0
+var byte data
+var byte line[16]
+var byte i
+
+-- very beginning of SD card
+sd_start_read(0)
+print_crlf(serial_hw_data)
+
+forever loop
+   
+   -- end of 1GB SD card ?
+   if address > 0x40000000 then 
+      -- will stick here
+      sd_stop_read()             -- tell sd card you are done reading
+      serial_hw_data = "?"
+   end if
+
+   -- address field
+   print_dword_hex(serial_hw_data,address)
+   serial_hw_data = " "
+   serial_hw_data = " "
+
+   -- first 8 bytes
+   for 8 using i loop
+      data = sd_data_byte
+      line[i] = data
+      print_byte_hex(serial_hw_data,data)
+      serial_hw_data = " "
+   end loop
+   serial_hw_data = " "
+   -- second next 8 bytes
+   for 8 using i loop
+      data = sd_data_byte
+      line[i+8] = data
+      print_byte_hex(serial_hw_data,data)
+      serial_hw_data = " "
+   end loop
+   serial_hw_data = " "
+
+   -- ascii line
+   serial_hw_data = "|"
+   for count(line) using i loop
+      data = line[i]
+      -- non-printable char goes for "."
+      if data < 0x20 then
+         serial_hw_data = "."
+      elsif data > 0x7E then
+         serial_hw_data = "."
+      else
+         serial_hw_data = data
+      end if
+   end loop
+   serial_hw_data = "|"
+
+   print_crlf(serial_hw_data)
+   -- print 16 bytes on one line
+   address = address + 16
+
+   onboard_led = !onboard_led
+
+end loop
+
+
