@@ -22,7 +22,7 @@ echo "" > $JALUINO_TMP/compile.failed
 
 for sample in $jalsamples
 do
-	$JALLIB_PYTHON $JALUINO_ROOT/3rdparty/jallib_svn/tools/jallib.py compile $sample > $JALUINO_TMP/tmpcomp.out 2>&1 
+	$JALLIB_PYTHON $JALUINO_ROOT/3rdparty/jallib_svn/tools/jallib.py compile -no-variable-reuse $sample > $JALUINO_TMP/tmpcomp.out 2>&1 
 	if [ "$?" != "0" ]
 	then
 		echo sample: $sample ... Failed >> $JALUINO_TMP/compile.out
