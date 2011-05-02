@@ -30,7 +30,7 @@ onboard_led = off
 
 -- High speed serial comm.
 -- Check with your OS if supported
-const serial_hw_baudrate = 2_000_000
+const serial_hw_baudrate = 115_200
 include serial_hardware
 serial_hw_init()
 
@@ -42,7 +42,6 @@ var byte i
 
 -- very beginning of SD card
 sd_start_read(0)
-print_crlf(serial_hw_data)
 
 forever loop
    
