@@ -42,29 +42,13 @@ include minixfs
 
 const byte WELCOME[] = "Welcome to Minix OS :)"
 const byte PROMPT[] = "minix> "
+const byte COMMAND_NOT_FOUND[] = "Command not found"
 print_crlf(serial_hw_data)
 print_string(serial_hw_data,WELCOME)
 print_crlf(serial_hw_data)
 
 -- some sort of "mount"
 minix_init(true)
-
-function atoi(byte in nums[]) return byte is
-   var byte num = 0
-   var byte numdec = 0
-   numdec = nums[0] -- blocking
-   -- no number at all ?
-   if numdec == ASCII_NULL then
-      return 0
-   end if
-   num = nums[1]
-   -- no decimals ?
-   if num == ASCII_NULL then
-      num = numdec
-      numdec = "0"
-   end if
-   return byte(((numdec - "0") * 10) + (num - "0"))
-end function
 
 procedure reboot() is
    asm goto 0x00
@@ -77,6 +61,12 @@ const byte MINIX_CAT_CMD[] = "cat\0"
 const byte MINIX_DCAT_CMD[] = "dcat\0"
 const byte MINIX_CD_CMD[] = "cd\0"
 const byte MINIX_LS_CMD[] = "ls\0"
+const byte MINIX_OPEN_CMD[] = "open\0"
+const byte MINIX_CLOSE_CMD[] = "close\0"
+const byte MINIX_READ_CMD[] = "read\0"
+const byte MINIX_SEEK_CMD[] = "seek\0"
+const byte MINIX_BLOCK_CMD[] = "block\0"
+const byte MINIX_RAWREAD_CMD[] = "rread\0"
 const byte MINIX_REBOOT_CMD[] = "reboot\0"
    
 var byte command[16]
@@ -139,8 +129,36 @@ forever loop
          minix_dev_cat(filename)
       elsif strcmp(command,MINIX_LS_CMD) then
          minix_ls(filename)
+      elsif strcmp(command,MINIX_OPEN_CMD) then
+         minix_open(filename)
+      elsif strcmp(command,MINIX_CLOSE_CMD) then
+         minix_close()
+      elsif strcmp(command,MINIX_READ_CMD) then
+         if filename[0] != 0 then
+            for atoi(filename) loop
+               serial_hw_data = minix_read()
+            end loop
+         else
+            serial_hw_data = minix_read()
+         end if
+      elsif strcmp(command,MINIX_SEEK_CMD) then
+         minix_seek(atoi(filename))
+      elsif strcmp(command,MINIX_BLOCK_CMD) then
+         minix_close_block()
+         minix_open_block(atoi(filename))
+      elsif strcmp(command,MINIX_RAWREAD_CMD) then
+         if filename[0] != 0 then
+            for atoi(filename) loop
+               serial_hw_data = minix_data_byte
+            end loop
+         else
+            serial_hw_data = minix_data_byte
+         end if
       elsif strcmp(command,MINIX_REBOOT_CMD) then
          reboot()
+      else
+         print_string(serial_hw_data,COMMAND_NOT_FOUND)
+         print_crlf(serial_hw_data)
       end if
    end if
 
