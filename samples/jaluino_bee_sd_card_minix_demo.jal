@@ -81,6 +81,7 @@ const byte MINIX_WRITE_CMD[] = "write\0"
 const byte MINIX_SEEK_CMD[] = "seek\0"
 const byte MINIX_BLOCK_CMD[] = "block\0"
 const byte MINIX_RAWREAD_CMD[] = "rread\0"
+const byte MINIX_ALLOC_CMD[] = "alloc\0"
 const byte MINIX_REBOOT_CMD[] = "reboot\0"
    
 var byte command[16]
@@ -144,9 +145,9 @@ forever loop
       elsif strcmp(command,MINIX_LS_CMD) then
          minix_ls(filename)
       elsif strcmp(command,MINIX_OPEN_READ_CMD) then
-         minix_open(filename,MINIX_READ_ONLY)
+         minix_open(filename,MINIX_MODE_READ)
       elsif strcmp(command,MINIX_OPEN_WRITE_CMD) then
-         minix_open(filename,MINIX_WRITE_ONLY)
+         minix_open(filename,MINIX_MODE_WRITE)
       elsif strcmp(command,MINIX_CLOSE_CMD) then
          minix_close()
       elsif strcmp(command,MINIX_READ_CMD) then
@@ -176,6 +177,9 @@ forever loop
          else
             serial_hw_data = minix_data_byte
          end if
+      elsif strcmp(command,MINIX_ALLOC_CMD) then
+         print_dword_dec(serial_hw_data,minix_zone_alloc())
+         print_crlf(serial_hw_data)
       elsif strcmp(command,MINIX_REBOOT_CMD) then
          reboot()
       else
