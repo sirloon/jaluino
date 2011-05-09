@@ -49,8 +49,8 @@ alias MINIX_STORAGE_SECTOR_SIZE is SD_BYTE_PER_SECTOR
 
 -- how to interact with Minix OS
 alias minix_print_carrier is serial_hw_data
-
 include minixfs
+include minixfs_cmd
 
 const byte WELCOME[] = "Welcome to Minix OS :)"
 const byte PROMPT[] = "minix> "
