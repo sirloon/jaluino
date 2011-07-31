@@ -3,6 +3,7 @@
 -- Author: Sebastien Lelong, Copyright (c) 2008..2009, all rights reserved.
 -- Adapted-by:
 -- Compiler: 2.4n
+-- Revision: $Revision$
 --
 -- This file is part of jaluino  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
@@ -47,7 +48,6 @@ enable_digital_io()
 if defined(JALUINO_SKIP_PINMAP) == false then
    include jaluino_bee_pinmap
 end if
-
 
 include pps
 
@@ -101,6 +101,24 @@ if defined(ENABLE_MSSP2_SDCARD) then
    include sd_card
    sd_init()
    
+end if
+
+if defined(ENABLE_MSSP2_23K256) then
+   if !defined(ENABLE_MSSP2_SDCARD) then
+      _error "You need to ENABLE_MSSP2_SDCARD to setup MSSP2"
+   end if
+   alias sram_23k256_chip_select is pin_b1
+   alias sram_23k256_chip_select_direction is pin_b1_direction
+   -- initial settings
+   sram_23k256_chip_select_direction = output -- chip select/slave select pin
+   sram_23k256_chip_select = high             -- start chip slect high (chip disabled)
+   -- initalize 23k256 in byte mode, always set spi mode to 0,0
+   alias sram_23k256_force_spi_mode is spi_master_hw2_set_mode_00
+   -- setup Microchip 23k256 sram
+   include sram_23k256
+   -- init 23k256 in sequential mode
+   sram_23k256_init(SRAM_23K256_SEQUENTIAL_MODE, SRAM_23K256_HOLD_DISABLE)
+
 end if
 
 -- that's all, PIC is ready !

@@ -5,6 +5,7 @@
 -- Adapted-by: 
 --
 -- Compiler: >=2.4g
+-- Revision: $Revision$
 --
 -- This file is part of jallib  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
@@ -18,7 +19,7 @@ include delay
 onboard_led_direction = output
 
 -- ok, now setup serial
-const serial_hw_baudrate = 115_200
+const serial_hw_baudrate = 9_600
 
 include serial_hardware
 serial_hw_init()
@@ -40,8 +41,8 @@ forever loop
       serial_hw_write(char)	-- that's the echo...
       onboard_led = !onboard_led
    end if
-   
-   counter = counter - 1;
+
+   counter = counter - 1
    if (counter == 0) then
       counter = 50000
       serial_hw_data = "."	   
