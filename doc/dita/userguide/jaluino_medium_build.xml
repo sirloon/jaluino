@@ -36,7 +36,7 @@
               </tgroup>
             </table></p>
         </fig></p>
-      <p><note type="important">don&apos;t use these images to build your PCB, as they may not be scaled appropriately. 1:1 scale PDF files are available on <xref href="http://code.google.com/p/jaluino/source/browse/#svn/trunk/mainboard" format="html">Jaluino repository</xref>, for <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13a_pcb.pdf" format="pdf">version A</xref> and <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13b_pcb.pdf" format="pdf">version B</xref>.</note></p>
+      <p><note type="important">don&apos;t use these images to build your PCB, as they may not be scaled appropriately. 1:1 scale PDF files are available on <xref href="http://code.google.com/p/jaluino/source/browse/#svn/trunk/mainboard" format="html">Jaluino repository</xref>, for <xref href="http://code.google.com/p/jaluino/source/browse/trunk/mainboard/jaluino_medium_v13a_pcb.pdf?r=283" format="pdf">version A</xref> and <xref href="http://code.google.com/p/jaluino/source/browse/trunk/mainboard/jaluino_medium_v13b_pcb.pdf?r=283" format="pdf">version B</xref>.</note></p>
       <p>We can&apos;t explain this in details, but here are few links showing this technique:<ul>
           <li>
             <xref href="http://electrons.psychogenic.com/modules/arms/art/10/pcb_howto.php" format="html">http://electrons.psychogenic.com/modules/arms/art/10/pcb_howto.php</xref>

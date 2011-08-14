@@ -9,10 +9,10 @@
   </prolog>
   <body>
     <p><b>Jaluino Medium</b> comes in two versions, <i>a</i> and <i>b</i>. See <xref href="jaluino_medium_description.xml#jaluino_medium_description/jaluino_ab">section &quot;Description&quot;</xref> to understand why. This section simply describes schematics for these two versions. For better readability, you may also have a look at PDF versions.</p>
-    <p>All schematics, as well as PCBs, are available at <xref href="http://code.google.com/p/jaluino/source/browse/trunk/mainboard/" format="html">Jaluino SVN repository</xref>. If you have troubles with following links, please directly have a look this repository. </p>
+    <p>All schematics, as well as PCBs, are available at <xref href="http://code.google.com/p/jaluino/source/browse/trunk/mainboard/" format="html">Jaluino SVN repository</xref>. If you have troubles with following links, please directly have a look this repository. Finally please note this version is deprecated, v2.1 is now the current one, I just don't have time to update this documentation (but there are minimal differences though...)</p>
     <section>
       <title>Jaluino Medium version a</title>
-      <p><b>Version a</b> schematic is also available on Jaluino  SVN repository as a <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13a_schematic.pdf" format="pdf">PDF file</xref>. </p>
+      <p><b>Version a</b> schematic is also available on Jaluino  SVN repository as a <xref href="http://code.google.com/p/jaluino/source/browse/trunk/mainboard/jaluino_medium_v13a_schematic.pdf?r=283" format="pdf">PDF file</xref>. </p>
       <p><fig>
           <title>Jaluino Medium version a schematic</title>
           <image href="images/jaluino_medium_v13a_schematic.png" width="500" placement="break" otherprops="clickable"/>
@@ -20,7 +20,7 @@
     </section>
     <section>
       <title>Jaluino Medium version b</title>
-      <p><b>Version b</b> schematic is also available on Jaluino SVN repository as a <xref href="http://jaluino.googlecode.com/svn/trunk/mainboard/jaluino_medium_v13b_schematic.pdf" format="pdf">PDF file</xref>. </p>
+      <p><b>Version b</b> schematic is also available on Jaluino SVN repository as a <xref href="http://code.google.com/p/jaluino/source/browse/trunk/mainboard/jaluino_medium_v13a_schematic.pdf?r=283">PDF file</xref>. </p>
       <p><fig>
           <title>Jaluino Medium version b schematic</title>
           <image href="images/jaluino_medium_v13b_schematic.png" width="500" placement="break" otherprops="clickable"/>
