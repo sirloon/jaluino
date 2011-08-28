@@ -1,0 +1,87 @@
+-- Title: Powermeter with Jaluino Bee.
+-- Author: Alexey Studenikin stalex@gmail.com , Copyright (c) 2011, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4o
+--
+-- This file is part of jaluino (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: Some electrical counter device has a flashing LED giving information
+-- about current consumption. This program uses a phototransistor connected on RA1,
+-- and detect these flashes, using interrupts.
+--
+
+-- chip setup
+include jaluino_bee
+
+include delay
+include print
+
+const SERIAL_HW_BAUDRATE = 115_200
+include serial_hardware
+serial_hw_init()
+
+onboard_led_direction = output
+onboard_led =  off
+
+-- map INT1 on RA1 (which is remappable pin RP1)
+pps_control_lock(false)
+PPS_MAP_INT1 = RP1
+pps_control_lock(true)
+
+
+const byte STR_WELCOME[] = "Power Meter"
+const byte MSG3[] = "overflow"
+
+print_string(serial_hw_data,STR_WELCOME)
+
+delay_100ms(5)
+
+-- set stopwatch variable size, (2 = word) or (4 = dword)
+const STOPWATCH_VAR_SIZE = 4 -- (4 is default if not defined)
+-- the lowest time unit to measure
+const STOPWATCH_MIN_VALUE = STOPWATCH_MS -- (STOPWATCH_NS is default if not defined)
+-- choose what timer to use
+const STOPWATCH_USE_TIMER = 1 -- (1 is default if not defined)
+include stopwatch
+stopwatch_init()
+
+
+-- set up interrupts
+INTCON3_INT1IE = on -- allow interrupt from changing state on INT1
+INTCON3_INT1IF = off -- flush flag of interrupt from INT1
+INTCON2_INTEDG1 = 0 -- setting up interrupt INT1 from changing state 1->0
+                    -- this corresponds to no-light -> light
+INTCON_GIE = on -- allow interrupts
+INTCON_PEIE = on -- allow interrupt
+
+
+procedure int_isr() is
+   pragma interrupt
+   
+   if INTCON3_INT1IF then -- if interrupt from INT1
+
+      onboard_led = !onboard_led
+
+      stopwatch_stop() -- figure out how many time occured between last flash
+      print_crlf(serial_hw_data)
+      if stopwatch_time_overflow == TRUE then
+         print_string(serial_hw_data,MSG3)
+      else
+         print_dword_dec(serial_hw_data, stopwatch)
+      end if
+      print_crlf(serial_hw_data)
+      stopwatch_start() -- here we go again
+
+      INTCON3_INT1IF = off -- flushing flag
+   end if
+
+end procedure
+
+-- main loop
+stopwatch_start()
+forever loop
+   delay_1s(1)
+   serial_hw_data = "."
+end loop
+
