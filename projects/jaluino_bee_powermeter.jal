@@ -17,6 +17,11 @@
 -- chip setup
 include jaluino_bee
 
+-- enable watchdog, it must be cleared within ~4s
+-- before PIC gets reset
+pragma target WDT  enabled
+pragma target WDTPS P1K
+
 include delay
 include print
 
@@ -173,6 +178,8 @@ forever loop
    
    delay_1s(1)
    serial_hw_data = "."
+   -- we're alive, so clear watchdog
+   asm clrwdt
    
 end loop
 
