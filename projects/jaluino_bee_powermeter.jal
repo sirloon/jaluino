@@ -33,8 +33,10 @@ const SERIAL_HW_BAUDRATE = 9600
 include serial_hardware
 serial_hw_init()
 
-const byte STR_DATA[] = "Data: "
+const byte STR_DATA[] = "!Data: "
 const byte STR_WELCOME[] = "Power Meter"
+const byte STR_DATETIME[] = "?datetime "
+const byte STR_OK[] = "!OK"
 
 print_string(serial_hw_data,STR_WELCOME)
 print_crlf(serial_hw_data)
@@ -46,16 +48,6 @@ include rtcc_hw
 -- in order to determine the deviation. This is specific to 
 -- the crystal itself. We're assuming no deviation.
 rtc_calibrate(0)
-
--- let's say we're April 23rd 2011, it's 10:56:12 o'clock.
--- Alarm is set at 10:56:17
-rtc_set_date(0x11,0x04,0x23)           -- YY/MM/DD )
-rtc_set_time(0x10,0x56,0x12)           -- HH:MM:SS ) BCD format
-rtc_set_alarm_time(0x10,0x56,0x17)     -- HH:MM:SS )
-rtc_set_alarm_interval(RTC_ALARM_INTERVAL_TENSECONDS)
-rtc_set_alarm_repeat(255)
-rtc_set_alarm(ON)                      -- enable alarm
-rtc_set_clock(ON)                      -- enable RTCC module
 
 -- set up interrupts
 INTCON3_INT1IE = on -- allow interrupt from changing state on INT1
@@ -74,6 +66,8 @@ var byte day
 var byte hour
 var byte minute
 var byte second
+
+var byte _trash -- used to ignore returned values
 
 var word flash_count
 var bit do_send_data = false
@@ -95,6 +89,58 @@ procedure int_isr() is
    end if
 
 end procedure
+
+-- convert string numbers to BCD numbers
+-- (eg. "11" becomes 0x11, in HEX)
+procedure str2num(byte out num) is
+   var byte char
+   char = serial_hw_data
+   serial_hw_data = char -- echo
+   num = (char - "0") << 4
+   char = serial_hw_data
+   serial_hw_data = char -- echo
+   num = num + (char - "0")
+end procedure
+
+-- request datetime to PC, though serial. PC must reply
+-- the following format: "YY-MM-DD hh:mm:ss"
+procedure set_datetime() is
+   print_string(serial_hw_data,STR_DATETIME)
+   print_crlf(serial_hw_data)
+   -- year
+   str2num(year)
+   serial_hw_data = serial_hw_data -- sep "-"
+   -- month
+   str2num(month)
+   serial_hw_data = serial_hw_data -- sep "-"
+   -- day
+   str2num(day)
+   serial_hw_data = serial_hw_data -- space
+   -- hour
+   str2num(hour)
+   serial_hw_data = serial_hw_data -- sep ":"
+   -- minute
+   str2num(minute)
+   serial_hw_data = serial_hw_data -- sep ":"
+   --second
+   str2num(second)
+   
+   -- got everything needed, let's set date & time
+   rtc_set_date(year,month,day)           -- YY/MM/DD )
+   rtc_set_time(hour,minute,minute)           -- HH:MM:SS ) BCD format
+   rtc_set_alarm_time(hour,minute,second)     -- HH:MM:SS )
+   rtc_set_alarm_interval(RTC_ALARM_INTERVAL_MINUTE)
+   rtc_set_alarm_repeat(255)
+   rtc_set_alarm(ON)                      -- enable alarm
+   rtc_set_clock(ON)                      -- enable RTCC module
+
+   -- ACK time setting
+   print_crlf(serial_hw_data)
+   print_string(serial_hw_data,STR_OK)
+   print_crlf(serial_hw_data)
+end procedure
+
+set_datetime()
 
 -- main loop
 forever loop
