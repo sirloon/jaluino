@@ -22,17 +22,19 @@
 
 -- Jaluino BeeZ is based on PIC18F25K22.
 include 18f25k22                    -- target PICmicro
-pragma target clock 16_000_000     -- oscillator frequency
+pragma target clock 64_000_000     -- oscillator frequency
 -- configuration memory settings (fuses)
 pragma target OSC      INTOSC_NOCLKOUT -- internal osc
+pragma target HFOFST   enabled
+OSCTUNE_PLLEN = 0b1
 OSCCON_IRCF = 0b111
 pragma target WDT      disabled     -- no watchdog
 pragma target DEBUG    disabled     -- no debugging
 pragma target LVP      disabled     -- no Low Voltage Programming
 pragma target MCLR external        -- reset externally
--- These configuration bit settings are only a selection, sufficient for
--- this program, but other programs may need more or different settings.
---
+
+_usec_delay(2000) -- wait PLL to settle
+
 enable_digital_io()                -- make all pins digital I/O
 
 -- Include official pin mapping. Since it's arbitrary, one may want to bypass it
