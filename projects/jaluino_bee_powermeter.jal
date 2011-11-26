@@ -84,6 +84,8 @@ procedure int_isr() is
    if INTCON3_INT1IF then
       onboard_led = !onboard_led
       flash_count = flash_count + 1
+      -- debounce trigger to avoid counting this flash more than once
+      delay_1ms(10)
       INTCON3_INT1IF = off -- flushing flag
    end if
    
