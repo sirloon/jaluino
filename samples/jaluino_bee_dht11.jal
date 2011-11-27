@@ -11,7 +11,8 @@
 -- (http://www.seeedstudio.com/depot/grove-temphumi-sensor-p-745.html?cPath=144_147)
 -- just power the sensor with 5V or 3V3, connect RA3 pin to SIG pin on the sensor.
 -- Results are printed through serial.
--
+--
+
 
 include jaluino_bee
 include delay
