@@ -12,6 +12,9 @@
 -- Using Realtime clock & calendar peripheral, it triggers some alarm events
 -- on regular basis, and send flash count through serial. This allows to collect
 -- flash count each minute, for instance.
+-- .
+-- Also added DHT11 sensor...
+-- Also added LDR light sensor...
 --
 
 -- chip setup
@@ -38,13 +41,20 @@ const SERIAL_HW_BAUDRATE = 9600
 include serial_hardware
 serial_hw_init()
 
-const byte STR_DATA[] = "!Data: "
+const byte STR_FLASH[] = "!Flash: "
+const byte STR_TEMP[] = "!Temperature: "
+const byte STR_HUM[] = "!Humidity: "
+const byte STR_LIGHT[] = "!Light: "
 const byte STR_WELCOME[] = "Power Meter"
 const byte STR_DATETIME[] = "?datetime "
 const byte STR_OK[] = "!OK"
 
 print_string(serial_hw_data,STR_WELCOME)
 print_crlf(serial_hw_data)
+
+alias pin_dht11_direction is pin_A3_direction
+alias pin_dht11 is pin_A3
+include temperature_humidity_dht11
 
 
 include rtcc_hw
@@ -75,7 +85,19 @@ var byte second
 var byte _trash -- used to ignore returned values
 
 var word flash_count
+var word light = 0
+var word max_light = 0
 var bit do_send_data = false
+
+
+-- Configure ADC
+const byte ADC_NVREF = ADC_NO_EXT_VREF
+const word ADC_RSOURCE = 2_000
+const bit ADC_HIGH_RESOLUTION = high
+include adc
+adc_init()
+set_analog_pin(4) -- RA5/AN*4*
+
 
 procedure int_isr() is
    pragma interrupt
@@ -158,7 +180,7 @@ forever loop
       print_crlf(serial_hw_data)
       rtc_get_date(year,month,day)
       rtc_get_time(hour,minute,second)
-      print_string(serial_hw_data,STR_DATA)
+      print_string(serial_hw_data,STR_FLASH)
       print_byte_hex(serial_hw_data,year)
       serial_hw_data = "-"
       print_byte_hex(serial_hw_data,month)
@@ -176,6 +198,30 @@ forever loop
       -- reset flash counter
       flash_count = 0
       
+      -- get temp/hum value
+      if(dht11_read() == DHT11_OK) then
+         print_string(serial_hw_data,STR_TEMP)
+         print_byte_dec(serial_hw_data,dht11_temperature)
+         print_crlf(serial_hw_data)
+         print_string(serial_hw_data,STR_HUM)
+         print_byte_dec(serial_hw_data,dht11_humidity)
+         print_crlf(serial_hw_data)
+      end if
+
+      -- send highest light value found during delay
+      print_string(serial_hw_data,STR_LIGHT)
+      print_word_dec(serial_hw_data,max_light)
+      print_crlf(serial_hw_data)
+      -- reset max value
+      max_light = 0
+
+   end if
+   
+   -- light: we're trying to capture higher values during one minute
+   -- that is, the max value from 60 readings
+   light = adc_read(4)
+   if light >= max_light then
+      max_light = light
    end if
    
    delay_1s(1)
