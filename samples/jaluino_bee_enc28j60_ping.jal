@@ -21,25 +21,12 @@
 --
 --
 
+const ENABLE_PPS_RX2TX2_B7B6 = 1
+const ENABLE_SERIAL_HW2 = 9600
 include jaluino_bee
 include print
 include delay
 
-include pps
--- PPS module writes are protected, we need to first unlock it
-pps_control_lock(false)
--- TX2 is an output function: we assign a function to a RP pin
--- Remappable pin RP9 can be accessed through the following register
-PPS_MAP_RP9 = PPS_TX2CK2
--- RX2 is an input function: we assign a RP pin the a function register
-PPS_MAP_RX2DT2 = RP10
--- PPS configuration is done, we can lock again
-pps_control_lock(true)
-
--- ok, now setup serial
-const serial_hw2_baudrate = 9600
-include serial_hardware2
-serial_hw2_init()
 alias serial_data is serial_hw2_data
 
 const byte STR_WELCOME[] = "-- ENC28J60 Ping sample --"
@@ -114,12 +101,6 @@ const NETWORK_USE_ARP_CALLBACKS = TRUE
 --
 const NETWORK_USE_ICMP = TRUE -- required for ping only
 const NETWORK_USE_ICMP_CALLBACKS = TRUE
---
-const NETWORK_USE_UDP = FALSE -- udp can transfer data
-const NETWORK_USE_UDP_CALLBACKS = FALSE
---
-const NETWORK_USE_TCP = FALSE -- under development. requires ARP
-const NETWORK_USE_TCP_CALLBACKS = FALSE
 --
 const byte network_local_ip[4] = {192,168,0,60}  -- IP address of PIC
 const byte network_gateway_ip[4] = {192,168,0,1} -- IP address of gateway/router

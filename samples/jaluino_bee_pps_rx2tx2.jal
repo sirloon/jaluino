@@ -31,6 +31,11 @@ pps_control_lock(true)
 
 -- ok, now setup serial
 const serial_hw2_baudrate = 115_200
+-- declare aliases for the remapped RX2 and TX2 pins
+alias pin_RX2            is  pin_RP10
+alias pin_RX2_direction  is  pin_RP10_direction
+alias pin_TX2            is  pin_RP9
+alias pin_TX2_direction  is  pin_RP9_direction
 include serial_hardware2
 serial_hw2_init()
 
