@@ -15,11 +15,18 @@
 -- --
 -- The idea is you just have to type "include jaluino_bee" and your chip
 -- is configured and ready to be used !
+-- .
 -- Prior including this lib, more configuration can be performed, particularly
--- setting the following constant to 1:
+-- setting the following constant to 1 or other specific values:
 --    * JALUINO_SKIP_PINMAP : won't create pin aliases, like "onboard_led"
---    * ENABLE_MSSP2_SDCARD : will configure PPS module for MSSP2 usage,
---                            in order to use SD-Card
+--    * ENABLE_MSSP2_SPI    : will configure PPS module for MSSP2 usage,
+--    * ENABLE_MSSP2_SDCARD : will auto-set ENABLE_MSSP2_SPI = 1 and configure
+--                            MSSP2 to user SD-Card
+--    * ENABLE_PPS_RX2TX2_B7B6 : prepare pins through PPS for serial hardware 2
+--                               module usage (RX2 <=> RB7, TX2 <=> RB6)
+--    * ENABLE_SERIAL_HW: use passed value as baud speed and configure
+--                        serial hardware
+--    * ENABLE_SERIAL_HW2: same as before, for second serial hardware module
 --
 -- Sources:
 --
@@ -54,7 +61,12 @@ include pps
 -- Configure Remappable Pins on MSSP2 to match SPI/SD-Card wiring,
 -- configure MSSP2 and initialize SD-card library
 if defined(ENABLE_MSSP2_SDCARD) then
+   if !defined(ENABLE_MSSP2_SPI) then
+      const byte ENABLE_MSSP2_SPI = 1
+   end if
+end if
 
+if defined(ENABLE_MSSP2_SPI) then
    -- PPS module writes are protected, we need to first unlock it
    pps_control_lock(false)
    -- RP3 <-> /SS2
@@ -81,7 +93,11 @@ if defined(ENABLE_MSSP2_SDCARD) then
    pin_sdo2_direction = output   -- spi output
    pin_sck2_direction = output   -- spi clock
    spi2_init(SPI_MODE_11,SPI_RATE_FOSC_4) -- init spi, choose mode and speed
-   
+
+end if
+
+if defined(ENABLE_MSSP2_SDCARD) then
+
    -- setup the sd card SPI "Slave Select" pin
    alias sd_chip_select is pin_ss2
    alias sd_chip_select_direction is pin_ss2_direction
@@ -98,6 +114,10 @@ if defined(ENABLE_MSSP2_SDCARD) then
    const bit SD_DELAY_AFTER_WRITE = TRUE
    -- define which data carrier to use to access sd-card
    alias spi_master is spi_master_hw2
+   
+   if defined(ENABLE_SDCARD_DEBUG) then
+      const byte SD_CARD_USE_DEBUG_PROC = true
+   end if
    include sd_card
    sd_init()
    
@@ -119,6 +139,43 @@ if defined(ENABLE_MSSP2_23K256) then
    -- init 23k256 in sequential mode
    sram_23k256_init(SRAM_23K256_SEQUENTIAL_MODE, SRAM_23K256_HOLD_DISABLE)
 
+end if
+
+-- configure pins through PPS as:
+--  * B7 <= RX2
+--  * B6 => TX2
+if defined(ENABLE_PPS_RX2TX2_B7B6) then
+
+   include pps
+   -- PPS module writes are protected, we need to first unlock it
+   pps_control_lock(false)
+   -- TX2 is an output function: we assign a function to a RP pin (here RP9)
+   PPS_MAP_RP9 = PPS_TX2CK2
+   -- RX2 is an input function: we assign a RP pin the a function register
+   PPS_MAP_RX2DT2 = RP10
+   -- PPS configuration is done, we can lock again to apply changes
+   pps_control_lock(true)
+
+   -- declare aliases for the remapped RX2 and TX2 pins
+   alias pin_RX2            is  pin_RP10
+   alias pin_RX2_direction  is  pin_RP10_direction
+   alias pin_TX2            is  pin_RP9
+   alias pin_TX2_direction  is  pin_RP9_direction
+
+   -- PIC is ready to use serial_hardware2
+   
+end if
+
+if defined(ENABLE_SERIAL_HW2) then
+   const serial_hw2_baudrate = ENABLE_SERIAL_HW2
+   include serial_hardware2
+   serial_hw2_init()
+end if
+
+if defined(ENABLE_SERIAL_HW) then
+   const serial_hw_baudrate = ENABLE_SERIAL_HW
+   include serial_hardware
+   serial_hw_init()
 end if
 
 -- that's all, PIC is ready !
