@@ -1,14 +1,14 @@
--- Title:
+-- Title: Xbee API operaiton library
 -- Author: Sebastien Lelong, Copyright (c) 2012, all rights reserved.
 -- Adapted-by:
 -- Compiler: 2.4o
 --
--- This file is part of jallib  (http:--jallib.googlecode.com)
--- Released under the BSD license (http:--www.opensource.org/licenses/bsd-license.php)
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
--- Description:
+-- Description: access Xbee in API mode
 --
--- Sources:
+-- Sources: mainly inspired by http://code.google.com/p/xbee-arduino/
 --
 -- Notes: Xbee series 2 only
 --
