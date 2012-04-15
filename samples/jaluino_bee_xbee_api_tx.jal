@@ -46,7 +46,12 @@ var word xbee_net = 0xfffe -- I think it's a broadcast network address
 xbee_req.addr64 = xbee_dest
 xbee_req.network = xbee_net
 xbee_req.api_id = XBEE_ZB_TX_REQUEST
--- what about frame id ?
+xbee_req.frame_id = 1
+-- also set the following, else it's working
+-- when PIC gets prog'd, not after a power down/up
+xbee_req.broadcast_radius = 0
+xbee_req.option = 0
+
 
 -- Assuming LED is enable on hajumper)
 onboard_led_direction =  output
