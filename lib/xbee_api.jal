@@ -190,13 +190,6 @@ end record
 -- record to proc/func, use global var)
 var xbee_request xbee_req
 
-procedure xbee_req_set_frame_id(byte in frid)
-;function xbee_req_get_frame_id() return byte
-;function xbee_req_get_api_id() return byte
-function xbee_req_get_frame_data(byte in pos) return byte
-;function xbee_req_get_frame_data_length() return byte
-;procedure xbee_set_api_id(byte in api)
-
 
 -- **************
 -- Implementation
@@ -211,56 +204,52 @@ function xbee_req_get_frame_data(byte in pos) return byte is
    case pos of
       0:	 block data = byte((xbee_req.addr64.msb >> 24) & 0xff) end block
       1:  block data = byte((xbee_req.addr64.msb >> 16) & 0xff) end block
-		2:  block data = byte((xbee_req.addr64.msb >> 8) & 0xff) end block
-		3:  block data = byte(xbee_req.addr64.msb & 0xff) end block
-		4:  block data = byte((xbee_req.addr64.lsb >> 24) & 0xff) end block
-		5:  block data = byte((xbee_req.addr64.lsb >> 16) & 0xff) end block
-		6:  block data = byte((xbee_req.addr64.lsb >> 8) & 0xff) end block
-		7:  block data = byte(xbee_req.addr64.lsb & 0xff) end block
-		8:  block data = byte((xbee_req.network >> 8) & 0xff) end block
-		9:  block data = byte(xbee_req.network & 0xff) end block
-		10: block data = byte(xbee_req.broadcast_radius) end block
-		11: block data = byte(xbee_req.option) end block
-		otherwise
+		  2:  block data = byte((xbee_req.addr64.msb >> 8) & 0xff) end block
+		  3:  block data = byte(xbee_req.addr64.msb & 0xff) end block
+		  4:  block data = byte((xbee_req.addr64.lsb >> 24) & 0xff) end block
+		  5:  block data = byte((xbee_req.addr64.lsb >> 16) & 0xff) end block
+		  6:  block data = byte((xbee_req.addr64.lsb >> 8) & 0xff) end block
+		  7:  block data = byte(xbee_req.addr64.lsb & 0xff) end block
+		  8:  block data = byte((xbee_req.network >> 8) & 0xff) end block
+		  9:  block data = byte(xbee_req.network & 0xff) end block
+		  10: block data = byte(xbee_req.broadcast_radius) end block
+		  11: block data = byte(xbee_req.option) end block
+		  otherwise
           block data = xbee_req.payload[pos - XBEE_ZB_TX_API_LENGTH] end block
 	end case
 	return data
 end function
 
 procedure xbee_send_byte(byte in b, bit in escape) is
-	
    if (escape & (b == XBEE_START_BYTE | b == XBEE_ESCAPE | b == XBEE_XON | b == XBEE_XOFF))
-	then
-		xbee_carrier = XBEE_ESCAPE
-		xbee_carrier = b ^ 0x20
-	else
-		xbee_carrier = b
+	 then
+      xbee_carrier = XBEE_ESCAPE
+		  xbee_carrier = b ^ 0x20
+   else
+      xbee_carrier = b
 	end if
-	
 end procedure
 
 procedure xbee_send() is
+   xbee_send_byte(XBEE_START_BYTE, false)
+   var byte len = xbee_req_get_frame_data_length()
 
-	xbee_send_byte(XBEE_START_BYTE, false)
-	
-  var byte len = xbee_req_get_frame_data_length()
+	 -- send length
+	 var byte msb_len = ((len + 2) >> 8) & 0xFF
+	 var byte lsb_len = (len + 2) & 0xFF
 
-	-- send length
-	var byte msb_len = ((len + 2) >> 8) & 0xFF
-	var byte lsb_len = (len + 2) & 0xFF
+	 xbee_send_byte(msb_len, true)
+	 xbee_send_byte(lsb_len, true)
 
-	xbee_send_byte(msb_len, true)
-	xbee_send_byte(lsb_len, true)
+	 -- api id
+	 xbee_send_byte(xbee_req.api_id, true)
+	 xbee_send_byte(xbee_req.frame_id, true)
 
-	-- api id
-	xbee_send_byte(xbee_req.api_id, true)
-	xbee_send_byte(xbee_req.frame_id, true)
+	 var byte checksum = 0
 
-	var byte checksum = 0
-
-	-- compute checksum, start at api id
-	checksum = checksum + xbee_req.api_id
-	checksum = checksum + xbee_req.frame_id
+	 -- compute checksum, start at api id
+	 checksum = checksum + xbee_req.api_id
+	 checksum = checksum + xbee_req.frame_id
 
    var byte i
    for len using i loop
@@ -268,32 +257,32 @@ procedure xbee_send() is
       checksum = checksum + xbee_req_get_frame_data(i)
    end loop
 
-	-- perform 2s complement
-	checksum = 0xff - checksum
+	 -- perform 2s complement
+	 checksum = 0xff - checksum
 
-	-- send checksum
-	xbee_send_byte(checksum, true)
+	 -- send checksum
+	 xbee_send_byte(checksum, true)
 
 end procedure
 
 procedure _xbee_res_init() is
    xbee_res.complete = false
-	xbee_res.error_code = XBEE_NO_ERROR
-	xbee_res.checksum = 0
-	xbee_res.payload_idx = 0
+	 xbee_res.error_code = XBEE_NO_ERROR
+	 xbee_res.checksum = 0
+	 xbee_res.payload_idx = 0
 end procedure
 
 procedure _xbee_res_reset() is
    _xbee_res_init()
-	xbee_res.api_id = 0
-	xbee_res.msb_length = 0
-	xbee_res.lsb_length = 0
-	xbee_res.frame_length = 0
+	 xbee_res.api_id = 0
+	 xbee_res.msb_length = 0
+	 xbee_res.lsb_length = 0
+	 xbee_res.frame_length = 0
 
    var byte i
    for XBEE_MAX_FRAME_DATA_SIZE using i loop
-		xbee_res.frame_data[i] = 0
-	end loop
+      xbee_res.frame_data[i] = 0
+	 end loop
 end procedure
 
 procedure _xbee_reset_response() is
@@ -314,44 +303,39 @@ function xbee_res_payload'get() return byte is
 end function
 
 procedure xbee_read_packet() is
-
-	-- reset previous response
-	if xbee_res.complete | xbee_res.error_code > 0 then
-		-- discard previous packet and start over
-		_xbee_reset_response()
-	end if
+	 -- reset previous response
+	 if xbee_res.complete | xbee_res.error_code > 0 then
+      -- discard previous packet and start over
+		  _xbee_reset_response()
+	 end if
    var byte data
    var bit continue_parse -- implement a "continue" or "next" within loop
    -- read and parse frame (this is a state machine)
    forever loop
       continue_parse = true
       data = xbee_carrier
-      
+
       if xbee.pos > 0 & data == XBEE_START_BYTE then
          xbee_res.error_code = XBEE_UNEXPECTED_START_BYTE
          exit loop
       end if
-      
+
       if xbee.pos > 0 & data == XBEE_ESCAPE then
          xbee.escape = true
          -- flag, need to read next byte, so shortcut loop
          continue_parse = false
       end if
-      
 
       if continue_parse then
-      
          if xbee.escape == true then
             xbee.escape = false
             data = 0x20 ^ data
          end if
-         
+
          if xbee.pos >= XBEE_API_ID_INDEX then
             xbee.checksum_total = xbee.checksum_total + data
          end if
-         
 
-         
          case xbee.pos of
             0: block
                   if data == XBEE_START_BYTE then
@@ -377,45 +361,44 @@ procedure xbee_read_packet() is
                      exit loop
                   end if
 
-              -- check if we're at the end of the packet
-				      -- packet length does not include start, length, or checksum bytes, so add 3
-				      if xbee.pos == (_xbee_res_get_packet_length() + 3) then
-				         -- verify checksum
-				         if (xbee.checksum_total & 0xff) == 0xff then
-                        xbee_res.checksum = data
-                     	xbee_res.complete = true
-                     	xbee_res.error_code = XBEE_NO_ERROR
-						     else
-						       -- checksum failed
-						       xbee_res.error_code = XBEE_CHECKSUM_FAILURE
-						     end if
-						     
+                  -- check if we're at the end of the packet
+				          -- packet length does not include start, length, or checksum bytes, so add 3
+				          if xbee.pos == (_xbee_res_get_packet_length() + 3) then
+				          -- verify checksum
+				          if (xbee.checksum_total & 0xff) == 0xff then
+                     xbee_res.checksum = data
+                     xbee_res.complete = true
+                     xbee_res.error_code = XBEE_NO_ERROR
+						      else
+						         -- checksum failed
+						         xbee_res.error_code = XBEE_CHECKSUM_FAILURE
+						      end if
 						
+      					  -- minus 4 because we start after start,msb,lsb,api and up
+                  -- to but not including checksum
+      					  -- e.g. if frame was one byte, _pos=4 would be the byte,
+                  -- pos=5 is the checksum, where end stop reading
+      					  xbee_res.frame_length = xbee.pos - 4
 
-      					-- minus 4 because we start after start,msb,lsb,api and up
-                     -- to but not including checksum
-      					-- e.g. if frame was one byte, _pos=4 would be the byte,
-                     -- pos=5 is the checksum, where end stop reading
-      					xbee_res.frame_length = xbee.pos - 4
-
-      					-- reset state vars
-      					xbee.pos = 0;
-      					xbee.checksum_total = 0;
+      					  -- reset state vars
+      					  xbee.pos = 0;
+      					  xbee.checksum_total = 0;
 		
-      					exit loop
+                  exit loop
 
-                  else
-                     -- add to packet array, starting with the fourth byte of the apiFrame
-					      xbee_res.frame_data[xbee.pos - 4] = data
-					      xbee.pos = xbee.pos + 1
-					      
-                  end if
-               end block
+               else
+                  -- add to packet array, starting with the fourth byte of the apiFrame
+					        xbee_res.frame_data[xbee.pos - 4] = data
+					        xbee.pos = xbee.pos + 1
+					
+               end if
+            end block
+
          end case
 
       end if
    end loop
-   
+
 end procedure
 
 procedure xbee_init() is
