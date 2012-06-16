@@ -17,10 +17,6 @@
 if !defined(xbee_carrier) then
    _error "xbee_carrier must be defined (alias to a serial pseudo-variable, eg. serial_hw_data)"
 end if
-;if !defined(xbee_carrier_data_available) then
-;   _error "xbee_carrier_data_available must be defined (eg. serial_hw_data_available)"
-;end if
-
 
 -- Defaults
 if !defined(XBEE_PAYLOAD_SIZE) then
@@ -88,7 +84,7 @@ const byte XBEE_ZB_BROADCAST_PACKET = 0x02
 
 -- Api Id constants
 const byte XBEE_TX_64_REQUEST = 0x0
-const byte XBEE_TX_16_REQUEST = 0x1
+const byte XBEE_TX_16_REQUEST= 0x1
 const byte XBEE_AT_COMMAND_REQUEST = 0x08
 const byte XBEE_AT_COMMAND_QUEUE_REQUEST = 0x09
 const byte XBEE_REMOTE_AT_REQUEST = 0x17
@@ -154,10 +150,12 @@ record xbee_main is
    byte next_frame_id
 end record
 var xbee_main xbee
--- public
-;procedure xbee_init()
-;procedure xbee_send()
--- ***************
+
+-- Related to Xbee address
+record xbee_address64 is
+   dword msb
+   dword lsb
+end record
 
 -- Related to: XBee response
 record xbee_response is
@@ -170,46 +168,12 @@ record xbee_response is
    byte frame_length
    bit  complete
    byte error_code
+   --
+   byte payload_idx
 end record
 -- global var to store one request (save memory, don't pass
 -- record to proc/func, use global var)
 var xbee_response xbee_res
-
--- todo: maybe use record to store frame data
-
-;function xbee_get_api_id() return byte ; instead: xbee_api_id
-;procedure xbee_set_api_id(byte in id)
-;function xbee_get_msb_length() return byte
-;procedure xbee_set_msb_length(byte in len)
-;function xbee_get_lsb_length() return byte
-;procedure xbee_set_lsb_length(byte in len)
-;function xbee_get_checksum() return byte
-;procedure xbee_set_checksum(byte in len)
-;function xbee_get_frame_data_length() return byte ; instead: xbee_frame_length
--- todo: avoid passing array, need global var
-;procedure xbee_set_frame_data(byte in data[])
-;function xbee_get_frame_data() return byte ;; not good
-;procedure xbee_set_frame_length(byte in len)
-;function xbee_get_packet_length() return word
-;procedure xbee_reset()
-;procedure xbee_response_init()
-;procedure xbee_get_tx_status_response(&response)
-;procedure xbee_get_rx_response(&response)
-;procedure xbee_get_zb_rx_io_sample_response(&response)
-;procedure xbee_get_at_command_response(&response)
-;procedure xbee_get_at_command_response(&response)
-;procedure xbee_get_modem_status_response(&response)
-;function xbee_is_available() return bit
-;procedure xbee_set_available(bit in avail)
-;function xbee_is_error() return bit
-;function xbee_get_error_code() return byte
-;procedure xbee_set_error_code(byte in err)
-
--- Related to Xbee address
-record xbee_address64 is
-   dword msb
-   dword lsb
-end record
 
 -- Related to: Xbee request
 -- File descriptor
@@ -279,7 +243,7 @@ procedure xbee_send() is
 
 	xbee_send_byte(XBEE_START_BYTE, false)
 	
-	var byte len = xbee_req_get_frame_data_length()
+  var byte len = xbee_req_get_frame_data_length()
 
 	-- send length
 	var byte msb_len = ((len + 2) >> 8) & 0xFF
@@ -316,6 +280,7 @@ procedure _xbee_res_init() is
    xbee_res.complete = false
 	xbee_res.error_code = XBEE_NO_ERROR
 	xbee_res.checksum = 0
+	xbee_res.payload_idx = 0
 end procedure
 
 procedure _xbee_res_reset() is
@@ -341,21 +306,26 @@ function _xbee_res_get_packet_length() return byte is
    return ((xbee_res.msb_length << 8) & 0xff) + (xbee_res.lsb_length & 0xff)
 end function
 
+function xbee_res_payload'get() return byte is
+   -- first 11 bytes are address(8), network(2) and options(1)
+   var byte x = xbee_res.frame_data[11 + xbee_res.payload_idx]
+   xbee_res.payload_idx = xbee_res.payload_idx + 1
+   return x
+end function
 
 procedure xbee_read_packet() is
+
 	-- reset previous response
 	if xbee_res.complete | xbee_res.error_code > 0 then
 		-- discard previous packet and start over
 		_xbee_reset_response()
 	end if
-
    var byte data
    var bit continue_parse -- implement a "continue" or "next" within loop
    -- read and parse frame (this is a state machine)
    forever loop
       continue_parse = true
       data = xbee_carrier
-      
       
       if xbee.pos > 0 & data == XBEE_START_BYTE then
          xbee_res.error_code = XBEE_UNEXPECTED_START_BYTE
@@ -368,6 +338,7 @@ procedure xbee_read_packet() is
          continue_parse = false
       end if
       
+
       if continue_parse then
       
          if xbee.escape == true then
@@ -378,6 +349,8 @@ procedure xbee_read_packet() is
          if xbee.pos >= XBEE_API_ID_INDEX then
             xbee.checksum_total = xbee.checksum_total + data
          end if
+         
+
          
          case xbee.pos of
             0: block
@@ -404,7 +377,7 @@ procedure xbee_read_packet() is
                      exit loop
                   end if
 
-                  -- check if we're at the end of the packet
+              -- check if we're at the end of the packet
 				      -- packet length does not include start, length, or checksum bytes, so add 3
 				      if xbee.pos == (_xbee_res_get_packet_length() + 3) then
 				         -- verify checksum
@@ -412,11 +385,13 @@ procedure xbee_read_packet() is
                         xbee_res.checksum = data
                      	xbee_res.complete = true
                      	xbee_res.error_code = XBEE_NO_ERROR
-						   else
+						     else
 						       -- checksum failed
 						       xbee_res.error_code = XBEE_CHECKSUM_FAILURE
-						   end if
+						     end if
+						     
 						
+
       					-- minus 4 because we start after start,msb,lsb,api and up
                      -- to but not including checksum
       					-- e.g. if frame was one byte, _pos=4 would be the byte,
@@ -426,16 +401,18 @@ procedure xbee_read_packet() is
       					-- reset state vars
       					xbee.pos = 0;
       					xbee.checksum_total = 0;
-      					
+		
       					exit loop
 
                   else
                      -- add to packet array, starting with the fourth byte of the apiFrame
 					      xbee_res.frame_data[xbee.pos - 4] = data
 					      xbee.pos = xbee.pos + 1
+					      
                   end if
                end block
          end case
+
       end if
    end loop
    

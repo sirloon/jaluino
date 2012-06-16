@@ -24,9 +24,9 @@
 --                            MSSP2 to user SD-Card
 --    * ENABLE_PPS_RX2TX2_B7B6 : prepare pins through PPS for serial hardware 2
 --                               module usage (RX2 <=> RB7, TX2 <=> RB6)
---    * ENABLE_SERIAL_HW: use passed value as baud speed and configure
+--    * USE_SERIAL_HW: use passed value as baud speed and configure
 --                        serial hardware
---    * ENABLE_SERIAL_HW2: same as before, for second serial hardware module
+--    * USE_SERIAL_HW2: same as before, for second serial hardware module
 --
 -- Sources:
 --
@@ -166,14 +166,14 @@ if defined(ENABLE_PPS_RX2TX2_B7B6) then
    
 end if
 
-if defined(ENABLE_SERIAL_HW2) then
-   const serial_hw2_baudrate = ENABLE_SERIAL_HW2
+if defined(USE_SERIAL_HW2) then
+   const serial_hw2_baudrate = USE_SERIAL_HW2
    include serial_hardware2
    serial_hw2_init()
 end if
 
-if defined(ENABLE_SERIAL_HW) then
-   const serial_hw_baudrate = ENABLE_SERIAL_HW
+if defined(USE_SERIAL_HW) then
+   const serial_hw_baudrate = USE_SERIAL_HW
    include serial_hardware
    serial_hw_init()
 end if
