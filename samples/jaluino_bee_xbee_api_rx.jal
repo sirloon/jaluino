@@ -1,4 +1,4 @@
--- Title:
+-- Title: XBee API receiving sample
 -- Author: Sebastien Lelong, Copyright (c) 2012, all rights reserved.
 -- Adapted-by:
 -- Compiler: 2.4n
@@ -6,13 +6,9 @@
 -- This file is part of jaluino  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
--- Description:
+-- Description: this sample show how to use xbee_api library to receive
+-- data through XBee in API mode.
 --
-
--- use serial 2 for debug
-const ENABLE_PPS_RX2TX2_B7B6 = 1
-const USE_SERIAL_HW2 = 115_200
-
 include jaluino_bee
 include delay
 include print

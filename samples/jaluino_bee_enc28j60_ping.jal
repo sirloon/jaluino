@@ -22,7 +22,7 @@
 --
 
 const ENABLE_PPS_RX2TX2_B7B6 = 1
-const ENABLE_SERIAL_HW2 = 9600
+const USE_SERIAL_HW2 = 9600
 include jaluino_bee
 include print
 include delay
