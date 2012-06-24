@@ -17,10 +17,6 @@ const serial_hw_baudrate = 9_600
 include serial_hardware
 serial_hw_init()
 
-include usb_serial
--- setup the USB serial library
-usb_serial_init()
-
 alias xbee_carrier is serial_hw_data
 --alias xbee_carrier_data_available is serial_hw_data_available
 const byte XBEE_PAYLOAD_SIZE = 2
@@ -65,7 +61,6 @@ forever loop
       -- prepare payload
       xbee_req.payload[0] = i
       xbee_req.payload[1] = i + 1
-
       xbee_send()
 
       delay_1s(1)

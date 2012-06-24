@@ -9,6 +9,11 @@
 -- Description: this sample show how to use xbee_api library to receive
 -- data through XBee in API mode.
 --
+
+-- we'll output received data through the other serial module
+const ENABLE_PPS_RX2TX2_B7B6 = 1
+const USE_SERIAL_HW2 = 115_200
+
 include jaluino_bee
 include delay
 include print
@@ -17,7 +22,7 @@ const serial_hw_baudrate = 9_600
 include serial_hardware
 serial_hw_init()
 alias xbee_carrier is serial_hw_data
---alias xbee_carrier_data_available is serial_hw_data_available
+
 const byte XBEE_PAYLOAD_SIZE = 2
 include xbee_api
 xbee_init()
@@ -89,7 +94,7 @@ forever loop
    print_crlf(serial_hw2_data)
    --
    print_string(serial_hw2_data,payload)
-   for XBEE_PAYLOAD_SIZE using i loop
+   for XBEE_PAYLOAD_SIZE loop
        serial_hw2_data = xbee_res_payload
    end loop
    print_crlf(serial_hw2_data)
