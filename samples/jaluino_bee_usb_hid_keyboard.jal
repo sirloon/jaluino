@@ -1,0 +1,58 @@
+-- Title: USB HID device demo
+-- Author: Albert Faber, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by: Sebastien Lelong
+-- Compiler: >=2.4j
+-- Revision: $Revision: 373 $
+-- 
+-- This file is part of jallib (http://jallib.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+-- 
+-- Description: This application emulates a USB keyboard.
+-- Once the USB device has been conifgured and the USB HID is recognized by
+-- the host operating systems, it will automatically type letters, A to Z.
+-- --
+-- 
+-- Sources: http://www.usb.org for USB specifications
+-- 
+-- Notes: 
+--
+
+include jaluino_bee
+include delay
+
+onboard_led_direction = output
+
+onboard_led = high
+delay_1s(1)
+onboard_led = low
+
+include usb_keyboard
+
+-- set all inputs to digital
+enable_digital_io()
+
+
+var byte key_value = USB_KEYBOARD_KEY_A
+
+-- intialize the library
+usb_keyboard_init()
+
+-- main loop
+forever loop
+	-- poll the usb flush function on a regular base, in order to 
+	-- serve the USB requests
+	usb_keyboard_flush()
+	
+	-- check if USB device has been configured by the HOST
+	if usb_is_configured()  then
+	
+		onboard_led = usb_keyboard_led_caps_lock
+		ush_keyboard_send_key( 0x00, key_value )
+		key_value = key_value + 1
+		if ( key_value > USB_KEYBOARD_KEY_Z ) then
+			key_value = USB_KEYBOARD_KEY_A
+		end if
+		ush_keyboard_send_key( 0, 0 )
+	end if
+end loop
+
