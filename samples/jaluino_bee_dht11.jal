@@ -22,6 +22,9 @@ onboard_led_direction =  output
 -- pin A3 is connected to SIG pin on sensor side
 alias pin_dht11 is pin_A3
 alias pin_dht11_direction is pin_A3_direction
+-- lib works with both DHT11 and more accurate DHT22, just declare it
+-- so lib is able to talk to the sensor the correct way
+const bit USE_DHT22 = true
 include temperature_humidity_dht11
 
 -- we'll print results through serial
@@ -30,8 +33,13 @@ include serial_hardware
 serial_hw_init()
 
 include print
+include format
 
-const byte welcome[] = "-- DHT11 sample --"
+if defined(USE_DHT22) then
+   const byte welcome[] = "-- DHT22 sample --"
+else
+   const byte welcome[] = "-- DHT11 sample --"
+end if
 const byte str_status[] = "Reading status: "
 const byte str_status_ok[] = "OK"
 const byte str_status_err[] = "CHECKSUM ERROR"
@@ -64,11 +72,11 @@ forever loop
    print_crlf(serial_hw_data)
    
    print_string(serial_hw_data,str_temperature)
-   print_byte_dec(serial_hw_data,dht11_temperature)
+   format_word_dec(serial_hw_data,dht11_temperature,3,1)
    print_crlf(serial_hw_data)
 
    print_string(serial_hw_data,str_humidity)
-   print_byte_dec(serial_hw_data,dht11_humidity)
+   format_word_dec(serial_hw_data,dht11_humidity,3,1)
    print_crlf(serial_hw_data)
    
    var byte i
