@@ -1,0 +1,44 @@
+-- Title: Dimming led using PWM module for Jaluino Bee, 18F27J53 based
+-- Author: Sébastien Lelong, Copyright (c) 2012, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4p
+-- Revision: $Revision: 373 $
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: this program produces a dimming LED using PWM module. LED must be 
+-- connected to pin RB4 which bring PWM signals as CCP4.
+--
+
+include jaluino_bee
+include delay
+
+pin_CCP4_direction = output
+include pwm_hardware
+pwm_max_resolution(1)
+pwm4_on() -- pwm module is CCP4, so we use pwm4_... prefixed procedures
+
+
+forever loop
+   var byte i
+   i = 0
+   -- loop up and down, to produce different duty cycle
+   while i < 100 loop
+      pwm4_set_dutycycle_percent(i)
+      _usec_delay(10000)
+      i = i + 1
+   end loop
+   while i > 0 loop
+      pwm4_set_dutycycle_percent(i)
+      _usec_delay(10000)
+      i = i - 1
+   end loop
+   -- turning off, the LED lights at max.
+   _usec_delay(500000)
+   pwm4_off()
+   _usec_delay(500000)
+   pwm4_on()
+   
+end loop
+--
