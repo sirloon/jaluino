@@ -1,0 +1,64 @@
+-- Title: Sound sensor sample for Jaluino Bee
+-- Author: Sebastien Lelong, Copyright (c) 2008..2013, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4p
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: This program shows how to read data from sound sensor.
+-- This basically means reading value from ADC. Using Seeedstudio's Grove brick
+-- (http://www.seeedstudio.com/wiki/index.php?title=Twig_-_Sound_Sensor)
+-- just power the sensor with 5V (not 3V3), connect RB3 pin (which is analog pin #9)
+-- to a R bridge voltage divider (150/100R), to prevent damage on ADC input pin
+-- (they are not 5V tolerant)
+--
+
+
+include jaluino_bee
+include delay
+
+onboard_led_direction =  output
+
+-- we'll print results through serial
+const SERIAL_HW_BAUDRATE = 9600
+include serial_hardware
+serial_hw_init()
+
+include print
+
+const byte welcome[] = "-- Sound sensor sample --"
+const byte str_sound[] = "Sound value: "
+const word SOUND_TRESHOLD = 100 -- above which we send something. Higher means louder.
+
+
+-- Configure ADC
+const byte ADC_NVREF = ADC_NO_EXT_VREF
+const word ADC_RSOURCE = 2_000
+const bit ADC_HIGH_RESOLUTION = high
+include adc
+adc_init()
+set_analog_pin(9) -- RAB3AN*9*
+
+var word sound_value = 0 -- will store result from ADC readings
+
+print_string(serial_hw_data,welcome)
+print_crlf(serial_hw_data)
+print_crlf(serial_hw_data)
+
+forever loop
+   
+   sound_value = adc_read_high_res(9) -- read on ADC channel #9
+   if sound_value > SOUND_TRESHOLD then
+      onboard_led = on
+      print_string(serial_hw_data,str_sound)
+      print_word_dec(serial_hw_data,sound_value)
+      print_crlf(serial_hw_data)
+      delay_1ms(20)
+      onboard_led = off
+   end if
+   
+   
+end loop
+
+--
