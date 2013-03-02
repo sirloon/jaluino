@@ -1,0 +1,62 @@
+-- Title: Maxbotix EZ1 ultrasonic sensor sample for Jaluino Bee
+-- Author: Sebastien Lelong, Copyright (c) 2008..2013, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4p
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: This program shows how to read data from Maxbotix ultrasonic EZ1 sensor.
+-- It's done through ADC readings.
+--
+
+
+include jaluino_bee
+include delay
+
+onboard_led_direction =  output
+
+-- we'll print results through serial
+const SERIAL_HW_BAUDRATE = 9600
+include serial_hardware
+serial_hw_init()
+
+include print
+
+const byte welcome[] = "-- Maxbotix EZ1 sensor sample --"
+const byte str_dist[] = "Distance value: "
+
+-- Configure ADC
+const byte ADC_NVREF = ADC_NO_EXT_VREF
+const word ADC_RSOURCE = 2_000
+include adc
+adc_init()
+set_analog_pin(9) -- RAB3AN*9*
+
+-- EZ1 can be powered @5V or @3V3. If 5V, set this is constant to 5, else 3.
+const byte SONAR_EZ1_POWER_SUPPLY = 3
+-- Readings will be done through ADC. What is the max value ADC can read ?
+-- (depends on ADC resolution, either: 256, 1024, 2048)
+const word SONAR_EZ1_MAX_ADC = 2048
+include sonar_ez1
+sonar_ez1_init()
+
+print_string(serial_hw_data,welcome)
+print_crlf(serial_hw_data)
+print_crlf(serial_hw_data)
+
+var word dist_value = 0
+forever loop
+   
+   onboard_led = on
+   delay_1ms(20)
+   dist_value = sonar_ez1_read(9)
+   print_string(serial_hw_data,str_dist)
+   print_word_dec(serial_hw_data,dist_value)
+   print_crlf(serial_hw_data)
+   onboard_led = off
+   
+   
+end loop
+
+--

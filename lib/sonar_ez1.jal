@@ -1,0 +1,46 @@
+-- Title: Maxbotix EZ1 ultra-sonic sensor library:
+-- Author: Sebastien Lelong, Copyright (c) 2008..2009, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4p
+-- Revision: $Revision: 412 $
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: 
+--  * only readings through ADC is implemented. Serial and PWM modes aren't.
+--  * There's no check about timeout on PW pin whn no object is detected
+-- (pin is high for more than 37.5ms)
+--
+-- Sources:
+--
+-- Notes:
+--
+
+const byte SONAR_EZ1_5V = 5
+const byte SONAR_EZ1_3V = 3
+const byte SONAR_EZ1_MV10_PER_INCH_5V  = 98
+const byte SONAR_EZ1_MV10_PER_INCH_3V3 = 64
+
+-- init procedure, mostly about timing init. If multiple sonars
+-- are used, there's no need to call it more than one time
+procedure sonar_ez1_init() is
+   pragma inline
+   delay_1ms(250) -- after powerup, sonar will be ready after few ms
+end procedure
+
+-- read distance using passed ADC channel number. Return distance in inches
+function sonar_ez1_read(byte in adcchan) return word is
+   var word dist_value = adc_read_high_res(adcchan) -- read on user defined ADC channel 
+   -- distance isn't the same depending on power supply
+   if SONAR_EZ1_POWER_SUPPLY == 5 then
+      -- 5V: ~9.8mV/in
+      var word tmp = word(dword(dist_value) * 10000 * SONAR_EZ1_5V / SONAR_EZ1_MAX_ADC / SONAR_EZ1_MV10_PER_INCH_5V)
+      return tmp
+   else
+      -- 3V3: ~6.4mV/in
+      var word tmp = word(dword(dist_value) * 10000 * SONAR_EZ1_5V / SONAR_EZ1_MAX_ADC / SONAR_EZ1_MV10_PER_INCH_3V3)
+      return tmp
+   end if
+end function
+
