@@ -1,0 +1,102 @@
+-- Title: nRF24L01 wireless network module sample for for Jaluino Bee, read register values
+-- Author: Sébastien Lelong, Copyright (c) 2008..2139, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4q
+-- Revision: $Revision: 373 $
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: test nRF24L01 module and SPI connectivity by displaying register values
+-- on serial
+--
+-- Notes: connect pins accordingly
+--  - Vcc: 3V3
+--  - GND: GND (yes)
+--  - CE:  A2
+--  - CSN: A3
+--  - SCK: A5
+--  - MO:  B3 (SDO)
+--  - MI:  B2 (SDI)
+--  (carefull, MO/MI aren't crossed-over as usual when using SPI device)
+--
+
+include jaluino_bee
+include delay
+include print
+include format
+
+-- ok, now setup serial
+const serial_hw_baudrate = 9_600
+include serial_hardware
+serial_hw_init()
+
+-- Configure Remappable Pins on MSSP2 
+-- PPS module writes are protected, we need to first unlock it
+pps_control_lock(false)
+-- RP2 <-> SCK2
+PPS_MAP_RP2 = PPS_SCK2
+PPS_MAP_SCK2IN = RP2
+-- RP5 <-> SDI2
+PPS_MAP_SDI2 = RP5
+-- RP6 <-> SDO2
+PPS_MAP_RP6 = PPS_SDO2
+-- PPS configuration is done, we can lock again
+pps_control_lock(true)
+
+;;alias pin_ss2_direction is pin_b0_direction
+;;alias pin_ss2 is pin_b0
+alias pin_sdi2_direction is pin_b2_direction
+alias pin_sdo2_direction is pin_b3_direction
+alias pin_sck2_direction is pin_a5_direction
+
+-- configure SPI to use MSSP2 module
+include spi_master_hw2
+pin_sdi2_direction = input    -- spi input
+pin_sdo2_direction = output   -- spi output
+pin_sck2_direction = output   -- spi clock
+alias spi_master_data is spi_master_hw2
+
+pin_A2_direction = output
+pin_A3_direction = output
+alias nrf24_ce_pin is pin_A2
+alias nrf24_csn_pin is pin_A3
+-- Receving adress, size must be NRF24_ADDR_LEN
+const byte NRF24_RECEIVE_ADDR[] = {0x00,0x01,0x02,0x03,0x04}
+include nrf24l01
+
+nrf24_ce_pin = low
+nrf24_csn_pin = high
+spi2_init(SPI_MODE_00,SPI_RATE_FOSC_4) -- init spi, choose mode and speed
+
+nrf24_init()
+
+
+print_string(serial_hw_data,"Reading registers...")
+print_crlf(serial_hw_data)
+
+forever loop
+var byte rf_setup[] = {0x00}
+print_string(serial_hw_data,"count rf_setup: ")
+print_byte_dec(serial_hw_data,count(rf_setup))
+print_crlf(serial_hw_data)
+nrf24_read_register(NRF24_RF_SETUP,rf_setup)
+print_string(serial_hw_data,"RF_SETUP: ")
+print_byte_bin(serial_hw_data,xfer_tmp[0])
+print_crlf(serial_hw_data)
+
+nrf24_read_register(NRF24_CONFIG_REG,rf_setup)
+print_string(serial_hw_data,"CONFIG: ")
+print_byte_bin(serial_hw_data,xfer_tmp[0])
+print_crlf(serial_hw_data)
+
+nrf24_read_register(NRF24_RX_ADDR_P1,rf_setup)
+print_string(serial_hw_data,"NRF24_RX_ADDR_P1: ")
+print_byte_bin(serial_hw_data,xfer_tmp[0])
+print_crlf(serial_hw_data)
+
+delay_1s(2)
+
+end loop
+
+
