@@ -31,6 +31,7 @@ const serial_hw_baudrate = 9_600
 include serial_hardware
 serial_hw_init()
 
+
 -- Configure Remappable Pins on MSSP2 
 -- PPS module writes are protected, we need to first unlock it
 pps_control_lock(false)
@@ -71,32 +72,206 @@ spi2_init(SPI_MODE_00,SPI_RATE_FOSC_4) -- init spi, choose mode and speed
 
 nrf24_init()
 
-
-print_string(serial_hw_data,"Reading registers...")
+const byte str[] = "Reading registers..."
+print_string(serial_hw_data,str)
 print_crlf(serial_hw_data)
+
+
 
 forever loop
-var byte rf_setup[] = {0x00}
-print_string(serial_hw_data,"count rf_setup: ")
-print_byte_dec(serial_hw_data,count(rf_setup))
-print_crlf(serial_hw_data)
-nrf24_read_register(NRF24_RF_SETUP,rf_setup)
-print_string(serial_hw_data,"RF_SETUP: ")
-print_byte_bin(serial_hw_data,xfer_tmp[0])
-print_crlf(serial_hw_data)
+   nrf24_read_register(NRF24_CONFIG_REG,1)
+   var byte config = nrf24_bufout[0]
+   const byte str00[] = "CONFIG: "
+   print_string(serial_hw_data,str00)
+   print_byte_bin(serial_hw_data,config)
+   serial_hw_data = ","
+   print_byte_bin(serial_hw_data,nrf24_bufout[0])
+   print_crlf(serial_hw_data)
+   const byte str2[] = "  MASK_RX_DR[6] : "
+   print_string(serial_hw_data,str2)
+   print_byte_bin(serial_hw_data,(config >> NRF24_MASK_RX_DR) & 1)
+   print_crlf(serial_hw_data)
+   const byte str3[] = "  MASK_TX_DS[5] : "
+   print_string(serial_hw_data,str3)
+   print_byte_bin(serial_hw_data,(config >> NRF24_MASK_TX_DS) & 1)
+   print_crlf(serial_hw_data)
+   const byte str4[] = "  MASK_MAX_RT[4]: "
+   print_string(serial_hw_data,str4)
+   print_byte_bin(serial_hw_data,(config >> NRF24_MASK_MAX_RT) & 1)
+   print_crlf(serial_hw_data)
+   const byte str5[] = "  EN_CRC[3]     : "
+   print_string(serial_hw_data,str5)
+   print_byte_bin(serial_hw_data,(config >> NRF24_EN_CRC) & 1)
+   print_crlf(serial_hw_data)
+   const byte str6[] = "  CRCO[2]       : "
+   print_string(serial_hw_data,str6)
+   print_byte_bin(serial_hw_data,(config >> NRF24_CRCO) & 1)
+   print_crlf(serial_hw_data)
+   const byte str7[] = "  PWR_UP[1]     : "
+   print_string(serial_hw_data,str7)
+   print_byte_bin(serial_hw_data,(config >> NRF24_PWR_UP) & 1)
+   print_crlf(serial_hw_data)
+   const byte str8[] = "  PRIM_RX[0]    : "
+   print_string(serial_hw_data,str8)
+   print_byte_bin(serial_hw_data,(config >> NRF24_PWR_UP) & 1)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
 
-nrf24_read_register(NRF24_CONFIG_REG,rf_setup)
-print_string(serial_hw_data,"CONFIG: ")
-print_byte_bin(serial_hw_data,xfer_tmp[0])
-print_crlf(serial_hw_data)
 
-nrf24_read_register(NRF24_RX_ADDR_P1,rf_setup)
-print_string(serial_hw_data,"NRF24_RX_ADDR_P1: ")
-print_byte_bin(serial_hw_data,xfer_tmp[0])
-print_crlf(serial_hw_data)
+   nrf24_read_register(NRF24_EN_AA,1)
+   var byte en_aa = nrf24_bufout[0]
+   const byte str9[] = "EN_AA: "
+   print_string(serial_hw_data,str9)
+   print_byte_bin(serial_hw_data,en_aa)
+   print_crlf(serial_hw_data)
+   const byte str10[] = "  ENAA_P5[5] : "
+   print_string(serial_hw_data,str10)
+   print_byte_bin(serial_hw_data,(en_aa >> NRF24_ENAA_P5) & 1)
+   print_crlf(serial_hw_data)
+   const byte str11[] = "  ENAA_P4[4] : "
+   print_string(serial_hw_data,str11)
+   print_byte_bin(serial_hw_data,(en_aa >> NRF24_ENAA_P4) & 1)
+   print_crlf(serial_hw_data)
+   const byte str12[] = "  ENAA_P3[3] : "
+   print_string(serial_hw_data,str12)
+   print_byte_bin(serial_hw_data,(en_aa >> NRF24_ENAA_P3) & 1)
+   print_crlf(serial_hw_data)
+   const byte str13[] = "  ENAA_P2[2] : "
+   print_string(serial_hw_data,str13)
+   print_byte_bin(serial_hw_data,(en_aa >> NRF24_ENAA_P2) & 1)
+   print_crlf(serial_hw_data)
+   const byte str14[] = "  ENAA_P1[1] : "
+   print_string(serial_hw_data,str14)
+   print_byte_bin(serial_hw_data,(en_aa >> NRF24_ENAA_P1) & 1)
+   print_crlf(serial_hw_data)
+   const byte str15[] = "  ENAA_P0[0] : "
+   print_string(serial_hw_data,str15)
+   print_byte_bin(serial_hw_data,(en_aa >> NRF24_ENAA_P0) & 1)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
 
-delay_1s(2)
+   nrf24_read_register(NRF24_EN_RXADDR,1)
+   var byte en_rxaddr = nrf24_bufout[0]
+   const byte str16[] = "EN_RXADDR: "
+   print_string(serial_hw_data,str16)
+   print_byte_bin(serial_hw_data,en_rxaddr)
+   print_crlf(serial_hw_data)
+   const byte str17[] = "  ERX_P5[5] : "
+   print_string(serial_hw_data,str17)
+   print_byte_bin(serial_hw_data,(en_rxaddr >> NRF24_ERX_P5) & 1)
+   print_crlf(serial_hw_data)
+   const byte str18[] = "  ERX_P4[4] : "
+   print_string(serial_hw_data,str18)
+   print_byte_bin(serial_hw_data,(en_rxaddr >> NRF24_ERX_P4) & 1)
+   print_crlf(serial_hw_data)
+   const byte str19[] = "  ERX_P3[3] : "
+   print_string(serial_hw_data,str19)
+   print_byte_bin(serial_hw_data,(en_rxaddr >> NRF24_ERX_P3) & 1)
+   print_crlf(serial_hw_data)
+   const byte str20[] = "  ERX_P2[2] : "
+   print_string(serial_hw_data,str20)
+   print_byte_bin(serial_hw_data,(en_rxaddr >> NRF24_ERX_P2) & 1)
+   print_crlf(serial_hw_data)
+   const byte str21[] = "  ERX_P1[1] : "
+   print_string(serial_hw_data,str21)
+   print_byte_bin(serial_hw_data,(en_rxaddr >> NRF24_ERX_P1) & 1)
+   print_crlf(serial_hw_data)
+   const byte str22[] = "  ERX_P0[0] : "
+   print_string(serial_hw_data,str22)
+   print_byte_bin(serial_hw_data,(en_rxaddr >> NRF24_ERX_P0) & 1)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+
+   nrf24_read_register(NRF24_SETUP_AW,1)
+   var byte setup_aw = nrf24_bufout[0]
+   const byte str23[] = "SETUP_AW: "
+   print_string(serial_hw_data,str23)
+   print_byte_bin(serial_hw_data,setup_aw)
+   print_crlf(serial_hw_data)
+   const byte str24[] = "  AW[0-1] : "
+   print_string(serial_hw_data,str24)
+   print_byte_bin(serial_hw_data,(setup_aw >> NRF24_AW) & 1)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+
+   nrf24_read_register(NRF24_SETUP_RETR,1)
+   var byte setup_retr = nrf24_bufout[0]
+   const byte str25[] = "SETUP_RETR: "
+   print_string(serial_hw_data,str25)
+   print_byte_bin(serial_hw_data,setup_retr)
+   print_crlf(serial_hw_data)
+   const byte str26[] = "  ARD[4-7] : "
+   print_string(serial_hw_data,str26)
+   print_byte_bin(serial_hw_data,(setup_retr >> NRF24_ARD) & 1)
+   print_crlf(serial_hw_data)
+   const byte str27[] = "  ARC[0-3] : "
+   print_string(serial_hw_data,str27)
+   print_byte_bin(serial_hw_data,(setup_retr >> NRF24_ARC) & 1)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+
+   nrf24_read_register(NRF24_RF_CH,1)
+   var byte rf_ch = nrf24_bufout[0]
+   const byte str28[] = "RF_CH: "
+   print_string(serial_hw_data,str28)
+   print_byte_bin(serial_hw_data,rf_ch)
+   print_crlf(serial_hw_data)
+   const byte str29[] = "  RF_CH[0-6] : "
+   print_string(serial_hw_data,str29)
+   print_byte_bin(serial_hw_data,rf_ch)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+
+   nrf24_read_register(NRF24_RF_SETUP,1)
+   var byte rf_setup = nrf24_bufout[0]
+   const byte str30[] = "RF_SETUP: "
+   print_string(serial_hw_data,str30)
+   print_byte_bin(serial_hw_data,rf_setup)
+   print_crlf(serial_hw_data)
+   const byte str31[] = "  CONT_WAVE[7]  : "
+   print_string(serial_hw_data,str31)
+   print_byte_bin(serial_hw_data,(rf_setup >> NRF24_CONT_WAVE) & 1)
+   print_crlf(serial_hw_data)
+   const byte str32[] = "  RF_DR_LOW[5]  : "
+   print_string(serial_hw_data,str32)
+   print_byte_bin(serial_hw_data,(rf_setup >> NRF24_RF_DR_LOW) & 1)
+   print_crlf(serial_hw_data)
+   const byte str33[] = "  PLL_LOCK[4]   : "
+   print_string(serial_hw_data,str33)
+   print_byte_bin(serial_hw_data,(rf_setup >> NRF24_PLL_LOCK) & 1)
+   print_crlf(serial_hw_data)
+   const byte str34[] = "  RF_DR_HIGH[3] : "
+   print_string(serial_hw_data,str34)
+   print_byte_bin(serial_hw_data,(rf_setup >> NRF24_RF_DR_HIGH) & 1)
+   print_crlf(serial_hw_data)
+   const byte str35[] = "  RF_PWR[1-2]   : "
+   print_string(serial_hw_data,str35)
+   print_byte_bin(serial_hw_data,(rf_setup >> NRF24_RF_PWR) & 0b11)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+
+   nrf24_read_register(NRF24_RX_ADDR_P1,count(NRF24_RECEIVE_ADDR))
+   const byte str36[] = "NRF24_RX_ADDR_P1: "
+   print_string(serial_hw_data,str36)
+   var byte i = 0
+   for count(NRF24_RECEIVE_ADDR) loop
+      var byte c = nrf24_bufout[i]
+      ;print_byte_hex(serial_hw_data,c)
+      serial_hw_data = c + "0"
+      serial_hw_data = ","
+      i = i + 1
+   end loop
+   print_crlf(serial_hw_data)
+
+
+   print_crlf(serial_hw_data)
+   const byte str37[] = "..."
+   print_string(serial_hw_data,str37)
+   print_crlf(serial_hw_data)
+   print_crlf(serial_hw_data)
+   delay_1s(10)
+
 
 end loop
-
-
+;
+;

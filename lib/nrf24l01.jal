@@ -74,8 +74,11 @@ const byte NRF24_ERX_P0      = 0
 const byte NRF24_AW          = 0
 const byte NRF24_ARD         = 4
 const byte NRF24_ARC         = 0
+const byte NRF24_CH          = 0
+const byte NRF24_CONT_WAVE   = 7
+const byte NRF24_RF_DR_LOW   = 5
 const byte NRF24_PLL_LOCK    = 4
-const byte NRF24_RF_DR       = 3
+const byte NRF24_RF_DR_HIGH  = 3
 const byte NRF24_RF_PWR      = 1
 const byte NRF24_LNA_HCURR   = 0        
 const byte NRF24_RX_DR       = 6
@@ -116,7 +119,7 @@ end if
 
 -- Channel 0 - 127 or 0 - 84 in the US.
 if !defined(NRF24_CHANNEL) then
-   const byte NRF24_CHANNEL = 1
+   const byte NRF24_CHANNEL = 120
 end if
 
 -- Fool proof checks
@@ -150,17 +153,24 @@ procedure nrf24_config_register(byte in reg, byte in value)
 procedure nrf24_power_up_rx()
 procedure nrf24_flush_rx()
 procedure nrf24_set_raddr()
-procedure nrf24_write_register(byte in reg, byte in value[])
-procedure nrf24_transmit_sync(byte in datain[])
-procedure nrf24_read_register(byte in reg, byte in value[])
-procedure nrf24_transfer_sync(byte out dataout[]);, byte in datain[])
+procedure nrf24_write_register(byte in reg, byte in len)
+procedure nrf24_transmit_sync(byte in len)
+procedure nrf24_read_register(byte in reg, byte in len)
+procedure nrf24_transfer_sync(byte in len)
 
+const byte NRF24_BUFFER_LEN = 10
+var volatile byte nrf24_bufout[NRF24_BUFFER_LEN]
+var volatile byte nrf24_bufin[NRF24_BUFFER_LEN]
 
 -- Initializes pins to communicate with the MiRF module
 -- Should be called in the early initializing phase at startup.
 procedure nrf24_init() is
-   ;nrf24_ce_pin = low
-   ;nrf24_csn_pin = high
+   -- init buffers in/out
+   var byte i
+   for count(nrf24_bufin) using i loop
+      nrf24_bufin[i] = 0x0F
+      nrf24_bufout[i] = 0x0F
+   end loop
    -- Set receiving address
    nrf24_set_raddr()
    -- Set RF channel
@@ -198,67 +208,67 @@ end procedure
 -- sets the receiving address
 procedure nrf24_set_raddr() is
    nrf24_ce_pin = low
-   nrf24_write_register(NRF24_RX_ADDR_P1,NRF24_RECEIVE_ADDR)
+   var byte c = count(NRF24_RECEIVE_ADDR)
+   var byte i
+   for c using i loop
+      nrf24_bufin[i] = NRF24_RECEIVE_ADDR[i]
+   end loop
+   nrf24_write_register(NRF24_RX_ADDR_P1,c)
    nrf24_ce_pin = high
 end procedure
 
 -- Writes an array of bytes into inte the MiRF registers.
-procedure nrf24_write_register(byte in reg, byte in value[]) is
+procedure nrf24_write_register(byte in reg, byte in len) is
    nrf24_csn_pin = low
    spi_master_data = (NRF24_W_REGISTER | (NRF24_REGISTER_MASK & reg))
-   nrf24_transmit_sync(value)
+   nrf24_transmit_sync(len)
    nrf24_csn_pin = high
 end procedure
 
-procedure nrf24_transmit_sync(byte in datain[]) is
+procedure nrf24_transmit_sync(byte in len) is
    var byte i
    var byte c
-   print_string(serial_hw_data,"count datain: ")
-   print_byte_dec(serial_hw_data,byte(count(datain)))
-   print_crlf(serial_hw_data)
-   for count(datain) using i loop
-      c = datain[i]
+   for len using i loop
+      c = nrf24_bufin[i]
       spi_master_data = c
    end loop
 end procedure
 
 
-var byte xfer_tmp[] = {0x2F}
 -- Reads an array of bytes from the given start position in the MiRF registers.
-procedure nrf24_read_register(byte in reg, byte out value[]) is
+procedure nrf24_read_register(byte in reg, byte in len) is
    nrf24_csn_pin = low
    spi_master_data = (NRF24_R_REGISTER | (NRF24_REGISTER_MASK & reg))
-   var byte dummy[] = {0x00}
-
-   print_string(serial_hw_data,"count val in read: ")
-   print_byte_dec(serial_hw_data,byte(count(value)))
-   print_crlf(serial_hw_data)
-
-   nrf24_transfer_sync(value);,value)
+   nrf24_transfer_sync(len)
    nrf24_csn_pin = high
+   ;const byte str[] = "bufout[O]:"
+   ;print_string(serial_hw_data,str)
+   ;print_byte_bin(serial_hw_data,nrf24_bufout[0])
+   ;print_crlf(serial_hw_data)
 end procedure
 
-procedure nrf24_transfer_sync(byte out dataout[]) is ;, byte in datain[]) is
-   var byte i
-   var byte c
+procedure nrf24_transfer_sync(byte in len) is
+   var byte i = 0
    -- assuming dataout/datein have same size
-   print_string(serial_hw_data,"count val in xfer: ")
-   print_byte_dec(serial_hw_data,byte(count(dataout)))
-   print_crlf(serial_hw_data)
-   ;for count(dataout) using i loop
-   for 1 using i loop
-      ;spi_master_data = 0x00
-      c = spi_master_data
-      xfer_tmp[0] = c
-      print_crlf(serial_hw_data)
-      print_string(serial_hw_data,"temp i: Ã ")
-      print_byte_dec(serial_hw_data,i)
-      serial_hw_data = ">"
-      print_byte_bin(serial_hw_data,c)
-      serial_hw_data = " "
-      print_byte_bin(serial_hw_data,xfer_tmp[0])
-      print_crlf(serial_hw_data)
+   ;serial_hw_data = "i"
+   ;serial_hw_data = i + "0"
+
+   nrf24_bufout[0] = 0x00
+
+   for len loop
+      ;serial_hw_data = i + "0"
+      ;serial_hw_data = " "
+      nrf24_bufout[i] = spi_master_hw2_exchange(nrf24_bufin[i])
+      ;const byte str[] = "xfer bufout[i]:"
+      ;print_string(serial_hw_data,str)
+      ;print_byte_bin(serial_hw_data,nrf24_bufout[i])
+      ;print_crlf(serial_hw_data)
+      i = i + 1
    end loop
+   ;const byte str[] = "xfer bufout[0]:"
+   ;print_string(serial_hw_data,str)
+   ;print_byte_bin(serial_hw_data,nrf24_bufout[0])
+   ;print_crlf(serial_hw_data)
 end procedure
 
 ;void send(uint8_t *value);
@@ -281,4 +291,4 @@ end procedure
 ;void powerDown();
 ;
 ;void flushRx();
-;
+
