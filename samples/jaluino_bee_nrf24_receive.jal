@@ -94,10 +94,6 @@ forever loop
          i = i + 1
       end loop
       print_crlf(serial_hw_data)
-   ;else
-   ;   print_string(serial_hw_data,str3)
-   ;   delay_1ms(100)
-   ;   print_crlf(serial_hw_data)
    end if
 
 end loop

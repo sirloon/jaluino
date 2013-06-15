@@ -18,7 +18,8 @@
 --  - SCK: A5
 --  - MO:  B3 (SDO)
 --  - MI:  B2 (SDI)
---  (carefull, MO/MI aren't crossed-over as usual when using SPI device)
+--  (carefull, MO/MI aren't crossed-over as usual when using SPI device,
+--   this is what you must connect to the PIC, not what's on NRF side)
 --
 
 include jaluino_bee
@@ -95,6 +96,7 @@ forever loop
 
    var byte i = 0
 
+   -- will send 0, 1, 2, ... bytes
    for 50 loop
       print_string(serial_hw_data,str2)
       print_byte_dec(serial_hw_data,i)
