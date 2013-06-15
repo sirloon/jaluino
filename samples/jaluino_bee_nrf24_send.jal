@@ -1,4 +1,4 @@
--- Title: nRF24L01 wireless network module sample for for Jaluino Bee, read register values
+-- Title: nRF24L01 wireless network module sample for for Jaluino Bee, send data
 -- Author: Sébastien Lelong, Copyright (c) 2008..2139, all rights reserved.
 -- Adapted-by:
 -- Compiler: 2.4q
@@ -26,6 +26,9 @@ include delay
 include print
 include format
 
+-- Assuming LED is enable on hardware (jumper)
+onboard_led_direction =  output
+
 -- ok, now setup serial
 const serial_hw_baudrate = 9_600
 include serial_hardware
@@ -45,8 +48,6 @@ PPS_MAP_RP6 = PPS_SDO2
 -- PPS configuration is done, we can lock again
 pps_control_lock(true)
 
-;;alias pin_ss2_direction is pin_b0_direction
-;;alias pin_ss2 is pin_b0
 alias pin_sdi2_direction is pin_b2_direction
 alias pin_sdo2_direction is pin_b3_direction
 alias pin_sck2_direction is pin_a5_direction
@@ -63,30 +64,52 @@ pin_A3_direction = output
 alias nrf24_ce_pin is pin_A2
 alias nrf24_csn_pin is pin_A3
 -- Receving adress, size must be NRF24_ADDR_LEN
-const byte NRF24_RECEIVE_ADDR[] = {0x00,0x01,0x02,0x03,0x04}
+const byte NRF24_RECEIVE_ADDR[] = {0x05,0x06,0x07,0x08,0x09}
+-- will send one byte at a time
+const byte NRF24_PAYLOAD_SIZE = 1
 include nrf24l01
 
 nrf24_ce_pin = low
 nrf24_csn_pin = high
-spi2_init(SPI_MODE_00,SPI_RATE_FOSC_4) -- init spi, choose mode and speed
+spi2_init(SPI_MODE_00,SPI_RATE_FOSC_16) -- init spi, choose mode and speed
 
+delay_1ms(10)
 nrf24_init()
 
-const byte str[] = "Reading registers..."
+const byte str[] = "Alive..."
 print_string(serial_hw_data,str)
 print_crlf(serial_hw_data)
 
+nrf24_print_registers()
+
+const byte str2[] = "Sending: "
+
+-- set destination address
+var byte taddr[] = {0x00,0x01,0x02,0x03,0x04} -- see receive sample addr
+nrf24_set_taddr(taddr)
+
+print_byte_dec(serial_hw_data,nrf24_ptx)
 
 
 forever loop
-   nrf24_print_registers()
 
-   print_crlf(serial_hw_data)
-   const byte str37[] = "..."
-   print_string(serial_hw_data,str37)
-   print_crlf(serial_hw_data)
-   print_crlf(serial_hw_data)
-   delay_1s(10)
+   var byte i = 0
+
+   for 50 loop
+      print_string(serial_hw_data,str2)
+      print_byte_dec(serial_hw_data,i)
+      print_crlf(serial_hw_data)
+      print_byte_dec(serial_hw_data,nrf24_ptx)
+      nrf24_send(i)
+      print_byte_dec(serial_hw_data,nrf24_ptx)
+      i = i + 1
+      onboard_led = high
+      while nrf24_is_sending() == true loop
+      end loop
+      delay_1ms(10)
+      onboard_led = low
+      delay_1ms(10)
+   end loop
 
 end loop
 
