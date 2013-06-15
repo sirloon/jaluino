@@ -17,7 +17,9 @@
 -- Notes: jalv2 port of MiRF lib for arduino. Greatly inspired from MiRF lib port for arduino, by
 -- Aaron Shrimpton and Stefan Engelke
 --
--- URL: 
+-- TODO:
+--  * remove serial_hw2_* hard-coded references
+--  * remove delay between csn low/high ?
 --
 
 -- -----------------
@@ -157,7 +159,7 @@ procedure nrf24_write_register(byte in reg, byte in len)
 procedure nrf24_transmit_sync(byte in len)
 procedure nrf24_read_register(byte in reg, byte in len)
 procedure nrf24_transfer_sync(byte in len)
-procedure nrf24_send(byte in value)
+procedure nrf24_send()
 function nrf24_get_status() return byte
 procedure nrf24_power_up_tx()
 function nrf24_rx_fifo_empty() return bit
@@ -257,9 +259,9 @@ procedure nrf24_transfer_sync(byte in len) is
    end loop
 end procedure
 
--- Sends a data package to the default address. Be sure to send the correct
--- amount of bytes as configured as payload on the receiver.
-procedure nrf24_send(byte in value) is
+-- Sends a data package to the default address. Sending buffer should be
+-- previously filled. Well, you should use pseudo-var nrf24_data for ease
+procedure nrf24_send() is
    
    var byte st = nrf24_get_status()
    while nrf24_ptx == 1 loop
@@ -280,10 +282,8 @@ procedure nrf24_send(byte in value) is
    nrf24_csn_pin = low
    
    spi_master_data = NRF24_W_TX_PAYLOAD
-   -- Write payload
-   nrf24_bufin[0] = value
-   -- TODO: I could send multiple byte at a time
-   nrf24_transmit_sync(1)
+   -- send as many bytes as declared in payload
+   nrf24_transmit_sync(NRF24_PAYLOAD_SIZE)
    
    -- Pull up chip select
    nrf24_csn_pin = high
@@ -378,6 +378,55 @@ procedure nrf24_set_taddr(byte in adr[]) is
    -- RX_ADDR_P0 must be set to the sending addr for auto ack to work.
    nrf24_write_register(NRF24_RX_ADDR_P0,NRF24_ADDR_LEN)
    nrf24_write_register(NRF24_TX_ADDR,NRF24_ADDR_LEN)
+end procedure
+
+-- Payload can be more than 1 byte long, so we need to 
+-- track, when reading values, if we're starting to read
+-- (ie. data is just received) or if we're continuing to read
+-- (ie. move forward withing buffer)
+var byte _nrf24_receive_next_buffer_index = 0
+
+-- pseudo-var to read a byte, blocking call
+function nrf24_data'get() return byte is
+   -- reached end of buffer ? reset next index
+   if _nrf24_receive_next_buffer_index == NRF24_PAYLOAD_SIZE then
+      _nrf24_receive_next_buffer_index = 0
+   end if
+
+   -- next index is 0 ? Means nothing in buffer, we need to receive data
+   if _nrf24_receive_next_buffer_index == 0 then
+      while nrf24_data_ready() == false loop
+      end loop
+      nrf24_get_data()
+   end if
+
+   var byte c
+   c = nrf24_bufout[_nrf24_receive_next_buffer_index]
+   _nrf24_receive_next_buffer_index = _nrf24_receive_next_buffer_index + 1
+   return c
+
+end function
+
+var byte _nrf24_send_next_buffer_index = 0
+-- pseudo-var to send a byte, blocking call
+-- (will block until sent)
+-- Call this procedure as many times as payload size. This will load
+-- sending buffer. Once buffer is full (payload size is reached) data
+-- is actually sent (and not before). When sent, call will block until
+-- data is actually sent.
+procedure nrf24_data'put(byte in data) is
+   -- buffer filled, now send
+   if _nrf24_send_next_buffer_index == NRF24_PAYLOAD_SIZE then
+      nrf24_send()
+      while nrf24_is_sending() == true loop
+      end loop
+      _nrf24_send_next_buffer_index = 0
+   end if
+
+   -- Write payload
+   nrf24_bufin[_nrf24_send_next_buffer_index] = data
+   _nrf24_send_next_buffer_index = _nrf24_send_next_buffer_index + 1
+
 end procedure
 
 procedure nrf24_print_registers() is

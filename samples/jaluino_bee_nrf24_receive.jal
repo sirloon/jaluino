@@ -83,18 +83,10 @@ const byte str3[] = "Sleeping..."
 
 forever loop
 
-   if nrf24_data_ready() == true then
-      nrf24_get_data()
-      var byte i = 0
-      var byte c = 0
-      for NRF24_PAYLOAD_SIZE loop
-      	 c = nrf24_bufout[i]
-         print_byte_dec(serial_hw_data,c)
-	 serial_hw_data = ","
-         i = i + 1
-      end loop
-      print_crlf(serial_hw_data)
-   end if
+   var byte c
+   c = nrf24_data
+   print_byte_dec(serial_hw_data,c)
+   serial_hw_data = ","
 
 end loop
 
