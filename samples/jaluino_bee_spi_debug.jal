@@ -1,0 +1,89 @@
+-- Title: SPI testing sample, using MISO/MOSI loopback
+-- Author: Sébastien Lelong, Copyright (c) 2008..2139, all rights reserved.
+-- Adapted-by:
+-- Compiler: 2.4p
+-- Revision: $Revision: 373 $
+--
+-- This file is part of jaluino  (http://jaluino.googlecode.com)
+-- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
+--
+-- Description: simple sample used to test if SPI module is properly configured and 
+-- functional. The idea is not using a SPI device, but instead connect MISO pin 
+-- with MOSI pin, creating a loopback, and if what's sent is received...
+-- In this case, plug a wire between B2 and B3 pins.
+--
+
+include jaluino_bee
+include delay
+include print
+include format
+
+-- ok, now setup serial
+const serial_hw_baudrate = 115_200
+include serial_hardware
+serial_hw_init()
+
+-- Configure Remappable Pins on MSSP2 
+-- PPS module writes are protected, we need to first unlock it
+pps_control_lock(false)
+-- RP2 <-> SCK2
+PPS_MAP_RP2 = PPS_SCK2
+PPS_MAP_SCK2IN = RP2
+-- RP5 <-> SDI2
+PPS_MAP_SDI2 = RP5
+-- RP6 <-> SDO2
+PPS_MAP_RP6 = PPS_SDO2
+-- PPS configuration is done, we can lock again
+pps_control_lock(true)
+
+;;alias pin_ss2_direction is pin_b0_direction
+;;alias pin_ss2 is pin_b0
+alias pin_sdi2_direction is pin_b2_direction
+alias pin_sdo2_direction is pin_b3_direction
+alias pin_sck2_direction is pin_a5_direction
+
+-- configure SPI to use MSSP2 module
+include spi_master_hw2
+pin_sdi2_direction = input    -- spi input
+pin_sdo2_direction = output   -- spi output
+pin_sck2_direction = output   -- spi clock
+alias spi_master_data is spi_master_hw2
+
+pin_A2_direction = output
+pin_A3_direction = output
+alias nrf24_ce_pin is pin_A2
+alias nrf24_csn_pin is pin_A3
+
+nrf24_ce_pin = low
+nrf24_csn_pin = high
+spi2_init(SPI_MODE_00,SPI_RATE_FOSC_16) -- init spi, choose mode and speed
+
+
+forever loop
+
+   var byte i = 255
+   var byte data
+
+   while i > 0 loop
+
+      print_string(serial_hw_data,"send: ")
+      print_byte_dec(serial_hw_data,i)
+      serial_hw_data = " "
+
+      data = spi_master_hw2_exchange(i)
+
+      print_string(serial_hw_data,"receive: ")
+      print_byte_dec(serial_hw_data,data)
+      serial_hw_data = " "
+
+      print_crlf(serial_hw_data)
+
+      delay_1ms(30)
+
+      i = i - 1
+
+   end loop
+
+   delay_1s(5)
+
+end loop
