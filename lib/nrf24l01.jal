@@ -18,9 +18,12 @@
 -- Aaron Shrimpton and Stefan Engelke
 --
 -- TODO:
---  * remove serial_hw2_* hard-coded references
 --  * remove delay between csn low/high ?
---
+--  * implement multiple pipeline (probably needs to revise buffers)
+--  * rename buffers, confusing (in/out)
+--  * implement channel scanner to pick the best available (based on round-trip time ?)
+--  * implement helper such as speed select, power select,...
+--  ...
 
 -- -----------------
 -- CONSTANTS DEFS --
@@ -140,8 +143,8 @@ if !defined(NRF24_RECEIVE_ADDR) then
    _error "Define NRF24_RECEIVE_ADDR as the receiving address for this module"
 end if
 
-if !defined(spi_master_data) then
-   _error "Define spi_master_data as an alias to SPI data pseudo vars (spi_master_hw or spi_master_hw2)"
+if !defined(spi_master_exchange) then
+   _error "Define spi_master_exchange as an alias to SPI full duplex exchange function (spi_master_hw_exchange or spi_master_hw2_exchange)"
 end if
 
 -- internal state: in read mode ?
@@ -192,8 +195,8 @@ end procedure
 -- Clocks only one byte into the given MiRF register
 procedure nrf24_config_register(byte in reg, byte in value) is
    nrf24_csn_pin = low
-   spi_master_data = (NRF24_W_REGISTER | (NRF24_REGISTER_MASK & reg))
-   spi_master_data = value
+   var byte _trash = spi_master_exchange(NRF24_W_REGISTER | (NRF24_REGISTER_MASK & reg))
+   _trash = spi_master_exchange(value)
    nrf24_csn_pin = high
 end procedure
 
@@ -207,7 +210,7 @@ end procedure
 
 procedure nrf24_flush_rx() is
    nrf24_csn_pin = low
-   spi_master_data = NRF24_FLUSH_RX_REG
+   var byte _trash = spi_master_exchange(NRF24_FLUSH_RX_REG)
    nrf24_csn_pin = high
 end procedure
 
@@ -226,17 +229,15 @@ end procedure
 -- Writes an array of bytes into inte the MiRF registers.
 procedure nrf24_write_register(byte in reg, byte in len) is
    nrf24_csn_pin = low
-   spi_master_data = (NRF24_W_REGISTER | (NRF24_REGISTER_MASK & reg))
+   var byte _trash = spi_master_exchange(NRF24_W_REGISTER | (NRF24_REGISTER_MASK & reg))
    nrf24_transmit_sync(len)
    nrf24_csn_pin = high
 end procedure
 
 procedure nrf24_transmit_sync(byte in len) is
    var byte i
-   var byte c
    for len using i loop
-      c = nrf24_bufin[i]
-      spi_master_data = c
+      var byte _trash = spi_master_exchange(nrf24_bufin[i])
    end loop
 end procedure
 
@@ -244,7 +245,7 @@ end procedure
 -- Reads an array of bytes from the given start position in the MiRF registers.
 procedure nrf24_read_register(byte in reg, byte in len) is
    nrf24_csn_pin = low
-   spi_master_data = (NRF24_R_REGISTER | (NRF24_REGISTER_MASK & reg))
+   var byte _trash = spi_master_exchange(NRF24_R_REGISTER | (NRF24_REGISTER_MASK & reg))
    nrf24_transfer_sync(len)
    nrf24_csn_pin = high
 end procedure
@@ -254,7 +255,7 @@ procedure nrf24_transfer_sync(byte in len) is
    nrf24_bufout[0] = 0x00
    
    for len loop
-      nrf24_bufout[i] = spi_master_hw2_exchange(nrf24_bufin[i])
+      nrf24_bufout[i] = spi_master_exchange(nrf24_bufin[i])
       i = i + 1
    end loop
 end procedure
@@ -276,12 +277,12 @@ procedure nrf24_send() is
    nrf24_power_up_tx()
    nrf24_csn_pin = low
    
-   spi_master_data = NRF24_FLUSH_TX 
+   var byte _trash = spi_master_exchange(NRF24_FLUSH_TX)
    nrf24_csn_pin = high
    delay_1ms(1) ; delete ?
    nrf24_csn_pin = low
    
-   spi_master_data = NRF24_W_TX_PAYLOAD
+   _trash = spi_master_exchange(NRF24_W_TX_PAYLOAD)
    -- send as many bytes as declared in payload
    nrf24_transmit_sync(NRF24_PAYLOAD_SIZE)
    
@@ -352,7 +353,7 @@ end function
 -- Reads payload bytes into data array
 procedure nrf24_get_data() is
    nrf24_csn_pin = low -- Pull down chip select
-   spi_master_data = NRF24_R_RX_PAYLOAD -- Send cmd to read rx payload
+   var byte _trash = spi_master_exchange(NRF24_R_RX_PAYLOAD)
    nrf24_transfer_sync(NRF24_PAYLOAD_SIZE)
    nrf24_csn_pin = high -- Pull up chip select
    -- NVI: per product spec, p 67, note c:
