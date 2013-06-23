@@ -54,7 +54,7 @@ include spi_master_hw2
 pin_sdi2_direction = input    -- spi input
 pin_sdo2_direction = output   -- spi output
 pin_sck2_direction = output   -- spi clock
-alias spi_master_data is spi_master_hw2
+alias spi_master_exchange is spi_master_hw2_exchange
 
 pin_A2_direction = output
 pin_A3_direction = output

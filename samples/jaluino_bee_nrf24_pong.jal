@@ -7,7 +7,7 @@
 -- This file is part of jaluino  (http://jaluino.googlecode.com)
 -- Released under the BSD license (http://www.opensource.org/licenses/bsd-license.php)
 --
--- Description: 
+-- Description: replying to ping request
 --
 -- Notes: connect pins accordingly
 --  - Vcc: 3V3
