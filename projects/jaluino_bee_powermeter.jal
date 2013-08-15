@@ -13,7 +13,7 @@
 -- on regular basis, and send flash count through serial. This allows to collect
 -- flash count each minute, for instance.
 -- .
--- Also added DHT11 sensor...
+-- Also added DHT22 sensor...
 -- Also added LDR light sensor...
 --
 -- Available pins:
@@ -23,22 +23,22 @@
 -- MSSP2 involved pins are mentioned for convenience
 --
 --                             _____  _____
---          |-|          MCLR |1   |_|   28| RB7/RP10     | |
---       NTC|X|   RA0/AN0/RP0 |2         27| RB6/RP9      | |
---      INT1|X|   RA1/AN1/RP1 |3    P    26| RB5/RP8      | |
---          | |   RA2/AN2/Vr- |4    I    25| RB4/RP7      | |
---     DHT11|X|   RA3/AN3/Vr+ |5    C    24| RB3/AN9/RP6  | |               SDO2
---          |-|       VDDCORE |6    1    23| RB2/AN8/RP5  | |               SDI2
---SCK2 LIGHT|X|   RA5/AN4/RP2 |7    8    22^ RB1/AN10/RP4 | |                SS2
---          |-|           Vss |8    F    21^ RB0/AN12/RP3 | |                SS2
---          |-|           RA7 |9    2    20| Vdd          |-|
---          |-|           RA6 |10   7    19| Vss2         |-|
---          |-|           RC0 |11   J    18| RC7/RX1/RP18 |X|Serial
---          |-|           RC1 |12   5    17| RC6/TX1/RP17 |X|Serial
---          |-| RC2/AN11/RP13 |13   3    16| RC5          |-|
---          |-|          Vusb |14        15| RC4          |-|
---                             ------------
---
+--           |-|          MCLR |1   |_|   28| RB7/RP10     | |
+--       AIRQ|X|   RA0/AN0/RP0 |2         27| RB6/RP9      | |
+--       INT1|X|   RA1/AN1/RP1 |3    P    26| RB5/RP8      | |
+--           |-|   RA2/AN2/Vr- |4    I    25| RB4/RP7      | |
+--      DHT22|X|   RA3/AN3/Vr+ |5    C    24| RB3/AN9/RP6  | |               SDO2
+--           |-|       VDDCORE |6    1    23| RB2/AN8/RP5  | |               SDI2
+-- SCK2 LIGHT|X|   RA5/AN4/RP2 |7    8    22^ RB1/AN10/RP4 | |                SS2
+--           |-|           Vss |8    F    21^ RB0/AN12/RP3 | |                SS2
+--           |-|           RA7 |9    2    20| Vdd          |-|
+--           |-|           RA6 |10   7    19| Vss2         |-|
+--           |-|           RC0 |11   J    18| RC7/RX1/RP18 |X|Serial
+--           |-|           RC1 |12   5    17| RC6/TX1/RP17 |X|Serial
+--           |-| RC2/AN11/RP13 |13   3    16| RC5          |-|
+--           |-|          Vusb |14        15| RC4          |-|
+--                              ------------
+-- 
 
 
 -- chip setup
@@ -47,13 +47,12 @@ include jaluino_bee
 -- enable watchdog, it must be cleared within ~8s
 -- before PIC gets reset
 -- /!\ only set when using programmer, not bootloader
-;pragma target WDT  enabled
-;pragma target WDTPS P2K
 pragma target WDT  enabled
 pragma target WDTPS P2K
 
 include delay
 include print
+include format
 
 onboard_led_direction = output
 onboard_led =  on
@@ -88,18 +87,20 @@ xbee_req.frame_id = 1
 xbee_req.broadcast_radius = 0
 xbee_req.option = 0
 
-const byte STR_FLASH[] = "!Flash: "
-const byte STR_TEMP[] = "!Temperature: "
-const byte STR_ROUGH_TEMP[] = "!RoughTemperature: "
-const byte STR_HUM[] = "!Humidity: "
-const byte STR_LIGHT[] = "!Light: "
+const byte STR_FLASH[] = "!Flash:"
+const byte STR_TEMP[] = "!Temperature:"
+const byte STR_HUM[] = "!Humidity:"
+const byte STR_LIGHT[] = "!Light:"
+const byte STR_DIST[] = "!Distance:"
+const byte STR_AIRQ[] = "!AirQ:"
 const byte STR_WELCOME[] = "Power Meter\0"
-const byte STR_DATETIME[] = "?datetime "
+const byte STR_DATETIME[] = "?datetime"
 const byte STR_OK[] = "!OK"
 
 
 alias pin_dht11_direction is pin_A3_direction
 alias pin_dht11 is pin_A3
+const bit USE_DHT22 = true
 include temperature_humidity_dht11
 
 include rtcc_hw
@@ -131,10 +132,8 @@ var byte _trash -- used to ignore returned values
 
 var word flash_count
 var word light = 0
-var word ntc_temp = 0
-var byte ntc_temp_part1 = 0
-var byte ntc_temp_part2 = 0
 var word max_light = 0
+var word airq_value = 0
 var bit do_send_data = false
 
 
@@ -145,7 +144,7 @@ const bit ADC_HIGH_RESOLUTION = high
 include adc
 adc_init()
 set_analog_pin(4) -- RA5/AN*4* : light sensor
-set_analog_pin(0) -- RA0/AN*0* : temp/ntc sensor
+set_analog_pin(0) -- RA0/AN*0* : air quality sensor
 
 
 procedure int_isr() is
@@ -153,10 +152,11 @@ procedure int_isr() is
    
    -- INT1 interrupt: there was a flash
    if INTCON3_INT1IF then
-      onboard_led = !onboard_led
+      onboard_led = on
       flash_count = flash_count + 1
       -- debounce trigger to avoid counting this flash more than once
       delay_1ms(10)
+      onboard_led = off
       INTCON3_INT1IF = off -- flushing flag
    end if
    
@@ -176,6 +176,20 @@ procedure str2num(byte out num) is
    num = (char - "0") << 4
    char = xbee_res_payload
    num = num + (char - "0")
+end procedure
+
+procedure send_timestamp() is
+   print_byte_hex(xbee_req_payload,year)
+   xbee_req_payload = "-"
+   print_byte_hex(xbee_req_payload,month)
+   xbee_req_payload = "-"
+   print_byte_hex(xbee_req_payload,day)
+   xbee_req_payload = " "
+   print_byte_hex(xbee_req_payload,hour)
+   xbee_req_payload = ":"
+   print_byte_hex(xbee_req_payload,minute)
+   xbee_req_payload = ":"
+   print_byte_hex(xbee_req_payload,second)
 end procedure
 
 -- request datetime to PC, though serial. PC must reply
@@ -219,17 +233,6 @@ procedure set_datetime() is
    xbee_send()
 end procedure
 
-procedure ntc_read() is
-   -- y = 437x + 26900	
-   -- gives something like 226609 which means 22.6609 °C
-   var word a = adc_read_high_res(0)
-   ntc_temp = (437 * a) + 26900
-   -- int part
-   ntc_temp_part1 = byte(ntc_temp / 10000)
-   -- dec part
-   ntc_temp_part2 = byte((ntc_temp/100) - (ntc_temp_part1*100))
-end procedure
-
 -- send welcome request
 print_string(xbee_req_payload,STR_WELCOME)
 print_crlf(xbee_req_payload)
@@ -250,17 +253,7 @@ forever loop
       rtc_get_date(year,month,day)
       rtc_get_time(hour,minute,second)
       print_string(xbee_req_payload,STR_FLASH)
-      print_byte_hex(xbee_req_payload,year)
-      xbee_req_payload = "-"
-      print_byte_hex(xbee_req_payload,month)
-      xbee_req_payload = "-"
-      print_byte_hex(xbee_req_payload,day)
-      xbee_req_payload = " "
-      print_byte_hex(xbee_req_payload,hour)
-      xbee_req_payload = ":"
-      print_byte_hex(xbee_req_payload,minute)
-      xbee_req_payload = ":"
-      print_byte_hex(xbee_req_payload,second)
+      send_timestamp()
       xbee_req_payload = "|"
       print_word_dec(xbee_req_payload,flash_count)
       print_crlf(xbee_req_payload)
@@ -273,32 +266,39 @@ forever loop
       if(dht11_read() == DHT11_OK) then
          -- send DHT request
          print_string(xbee_req_payload,STR_HUM)
-         print_byte_dec(xbee_req_payload,dht11_humidity)
+      	 send_timestamp()
+      	 xbee_req_payload = "|"
+         format_word_dec(xbee_req_payload,dht11_humidity,3,1)
          print_crlf(xbee_req_payload)
          xbee_send()
-         print_string(xbee_req_payload,STR_ROUGH_TEMP)
-         print_byte_dec(xbee_req_payload,dht11_temperature)
+
+         print_string(xbee_req_payload,STR_TEMP)
+      	 send_timestamp()
+      	 xbee_req_payload = "|"
+         format_word_dec(xbee_req_payload,dht11_temperature,3,1)
          print_crlf(xbee_req_payload)
          xbee_send()
       end if
 
       -- send highest light value found during delay
       print_string(xbee_req_payload,STR_LIGHT)
+      send_timestamp()
+      xbee_req_payload = "|"
       print_word_dec(xbee_req_payload,max_light)
       print_crlf(xbee_req_payload)
       -- reset max value
       max_light = 0
       -- send light request
       xbee_send()
-      
-      -- read accurate temperature value
-      ntc_read()
-      print_string(xbee_req_payload,STR_TEMP)
-      print_byte_dec(xbee_req_payload,ntc_temp_part1)
-      xbee_req_payload = "."
-      print_byte_dec(xbee_req_payload,ntc_temp_part2)
+
+      -- send current air quality valur
+      airq_value =  adc_read_high_res(0) -- read on ADC channel #0 (AN0)
+      print_string(xbee_req_payload,STR_AIRQ)
+      send_timestamp()
+      xbee_req_payload = "|"
+      print_word_dec(xbee_req_payload,airq_value)
       print_crlf(xbee_req_payload)
-      -- send NTC request
+      -- send airq request
       xbee_send()
       
    end if
@@ -309,11 +309,10 @@ forever loop
    if light >= max_light then
       max_light = light
    end if
-   
-   onboard_led = on
-   delay_1ms(20)
-   onboard_led = off
-   delay_1s(5)
+
+
+
+   delay_1s(1)
    -- we're alive, so clear watchdog
    asm clrwdt
    
