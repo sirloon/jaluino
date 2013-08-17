@@ -114,7 +114,8 @@ const byte NRF24_NOP           = 0xFF
 --
 -- Nrf24l settings
 const byte NRF24_ADDR_LEN = 5 ; seb: was used to loop over some arrays, still useful ? (we have count() in jalv2)
-const byte NRF24_CONFIG = ((1<<NRF24_EN_CRC) | (0<<NRF24_CRCO) )
+;const byte NRF24_CONFIG = ((1<<NRF24_EN_CRC) | (0<<NRF24_CRCO) )
+const byte NRF24_CONFIG = ((0<<NRF24_EN_CRC) | (0<<NRF24_CRCO) ) -- test with Pi
 ;const byte NRF24_CONFIG =  (0<<NRF24_CRCO)
 
 -- Payload width in bytes default 16 max 32
@@ -124,7 +125,7 @@ end if
 
 -- Channel 0 - 127 or 0 - 84 in the US.
 if !defined(NRF24_CHANNEL) then
-   const byte NRF24_CHANNEL = 120
+   const byte NRF24_CHANNEL = 20
 end if
 
 -- Fool proof checks
@@ -168,17 +169,17 @@ procedure nrf24_power_up_tx()
 function nrf24_rx_fifo_empty() return bit
 
 const byte NRF24_BUFFER_LEN = 10
-var volatile byte nrf24_bufout[NRF24_BUFFER_LEN]
-var volatile byte nrf24_bufin[NRF24_BUFFER_LEN]
+var volatile byte nrf24_bufread[NRF24_BUFFER_LEN]
+var volatile byte nrf24_bufwrite[NRF24_BUFFER_LEN]
 
 -- Initializes pins to communicate with the MiRF module
 -- Should be called in the early initializing phase at startup.
 procedure nrf24_init() is
    -- init buffers in/out
    var byte i
-   for count(nrf24_bufin) using i loop
-      nrf24_bufin[i] = 0x0F
-      nrf24_bufout[i] = 0x0F
+   for count(nrf24_bufwrite) using i loop
+      nrf24_bufwrite[i] = 0x0F
+      nrf24_bufread[i] = 0x0F
    end loop
    -- Set receiving address
    nrf24_set_raddr()
@@ -220,7 +221,7 @@ procedure nrf24_set_raddr() is
    var byte c = count(NRF24_RECEIVE_ADDR)
    var byte i
    for c using i loop
-      nrf24_bufin[i] = NRF24_RECEIVE_ADDR[i]
+      nrf24_bufwrite[i] = NRF24_RECEIVE_ADDR[i]
    end loop
    nrf24_write_register(NRF24_RX_ADDR_P1,c)
    nrf24_ce_pin = high
@@ -237,7 +238,7 @@ end procedure
 procedure nrf24_transmit_sync(byte in len) is
    var byte i
    for len using i loop
-      var byte _trash = spi_master_exchange(nrf24_bufin[i])
+      var byte _trash = spi_master_exchange(nrf24_bufwrite[i])
    end loop
 end procedure
 
@@ -252,10 +253,10 @@ end procedure
 
 procedure nrf24_transfer_sync(byte in len) is
    var byte i = 0
-   nrf24_bufout[0] = 0x00
+   nrf24_bufread[0] = 0x00
    
    for len loop
-      nrf24_bufout[i] = spi_master_exchange(nrf24_bufin[i])
+      nrf24_bufread[i] = spi_master_exchange(nrf24_bufwrite[i])
       i = i + 1
    end loop
 end procedure
@@ -296,7 +297,7 @@ end procedure
 function nrf24_get_status() return byte is
    var byte rv
    nrf24_read_register(STATUS,1)
-   rv = nrf24_bufout[0]
+   rv = nrf24_bufread[0]
    return rv
 end function
 
@@ -346,11 +347,13 @@ end function
 function nrf24_rx_fifo_empty() return bit is
    var byte fifostatus
    nrf24_read_register(NRF24_FIFO_STATUS,1)
-   fifostatus = nrf24_bufout[0]
+   fifostatus = nrf24_bufread[0]
    return (fifostatus & (1 << NRF24_RX_EMPTY))
 end function
 
 -- Reads payload bytes into data array
+-- If reads from the 3-levels FIFO. All RX channels (pipes)
+-- shere the FIFO, so you get data from any data pipes
 procedure nrf24_get_data() is
    nrf24_csn_pin = low -- Pull down chip select
    var byte _trash = spi_master_exchange(NRF24_R_RX_PAYLOAD)
@@ -373,7 +376,7 @@ procedure nrf24_set_taddr(byte in adr[]) is
    -- /!\ assuming adr is adr[NRF24_ADDR_LEN]
    var byte i = 0
    for NRF24_ADDR_LEN loop
-      nrf24_bufin[i] = adr[i]
+      nrf24_bufwrite[i] = adr[i]
       i = i + 1
    end loop
    -- RX_ADDR_P0 must be set to the sending addr for auto ack to work.
@@ -402,7 +405,7 @@ function nrf24_data'get() return byte is
    end if
 
    var byte c
-   c = nrf24_bufout[_nrf24_receive_next_buffer_index]
+   c = nrf24_bufread[_nrf24_receive_next_buffer_index]
    _nrf24_receive_next_buffer_index = _nrf24_receive_next_buffer_index + 1
    return c
 
@@ -425,19 +428,19 @@ procedure nrf24_data'put(byte in data) is
    end if
 
    -- Write payload
-   nrf24_bufin[_nrf24_send_next_buffer_index] = data
+   nrf24_bufwrite[_nrf24_send_next_buffer_index] = data
    _nrf24_send_next_buffer_index = _nrf24_send_next_buffer_index + 1
 
 end procedure
 
 procedure nrf24_print_registers() is
    nrf24_read_register(NRF24_CONFIG_REG,1)
-   var byte config = nrf24_bufout[0]
+   var byte config = nrf24_bufread[0]
    const byte str00[] = "CONFIG: "
    print_string(serial_hw_data,str00)
    print_byte_bin(serial_hw_data,config)
    serial_hw_data = ","
-   print_byte_bin(serial_hw_data,nrf24_bufout[0])
+   print_byte_bin(serial_hw_data,nrf24_bufread[0])
    print_crlf(serial_hw_data)
    const byte str2[] = "  MASK_RX_DR[6] : "
    print_string(serial_hw_data,str2)
@@ -471,7 +474,7 @@ procedure nrf24_print_registers() is
    
    
    nrf24_read_register(NRF24_EN_AA,1)
-   var byte en_aa = nrf24_bufout[0]
+   var byte en_aa = nrf24_bufread[0]
    const byte str9[] = "EN_AA: "
    print_string(serial_hw_data,str9)
    print_byte_bin(serial_hw_data,en_aa)
@@ -503,7 +506,7 @@ procedure nrf24_print_registers() is
    print_crlf(serial_hw_data)
    
    nrf24_read_register(NRF24_EN_RXADDR,1)
-   var byte en_rxaddr = nrf24_bufout[0]
+   var byte en_rxaddr = nrf24_bufread[0]
    const byte str16[] = "EN_RXADDR: "
    print_string(serial_hw_data,str16)
    print_byte_bin(serial_hw_data,en_rxaddr)
@@ -535,7 +538,7 @@ procedure nrf24_print_registers() is
    print_crlf(serial_hw_data)
    
    nrf24_read_register(NRF24_SETUP_AW,1)
-   var byte setup_aw = nrf24_bufout[0]
+   var byte setup_aw = nrf24_bufread[0]
    const byte str23[] = "SETUP_AW: "
    print_string(serial_hw_data,str23)
    print_byte_bin(serial_hw_data,setup_aw)
@@ -547,7 +550,7 @@ procedure nrf24_print_registers() is
    print_crlf(serial_hw_data)
    
    nrf24_read_register(NRF24_SETUP_RETR,1)
-   var byte setup_retr = nrf24_bufout[0]
+   var byte setup_retr = nrf24_bufread[0]
    const byte str25[] = "SETUP_RETR: "
    print_string(serial_hw_data,str25)
    print_byte_bin(serial_hw_data,setup_retr)
@@ -563,7 +566,7 @@ procedure nrf24_print_registers() is
    print_crlf(serial_hw_data)
    
    nrf24_read_register(NRF24_RF_CH,1)
-   var byte rf_ch = nrf24_bufout[0]
+   var byte rf_ch = nrf24_bufread[0]
    const byte str28[] = "RF_CH: "
    print_string(serial_hw_data,str28)
    print_byte_bin(serial_hw_data,rf_ch)
@@ -575,7 +578,7 @@ procedure nrf24_print_registers() is
    print_crlf(serial_hw_data)
    
    nrf24_read_register(NRF24_RF_SETUP,1)
-   var byte rf_setup = nrf24_bufout[0]
+   var byte rf_setup = nrf24_bufread[0]
    const byte str30[] = "RF_SETUP: "
    print_string(serial_hw_data,str30)
    print_byte_bin(serial_hw_data,rf_setup)
@@ -607,7 +610,7 @@ procedure nrf24_print_registers() is
    print_string(serial_hw_data,str36)
    var byte i = 0
    for count(NRF24_RECEIVE_ADDR) loop
-      var byte c = nrf24_bufout[i]
+      var byte c = nrf24_bufread[i]
       print_byte_hex(serial_hw_data,c)
       serial_hw_data = c + "0"
       serial_hw_data = ","
