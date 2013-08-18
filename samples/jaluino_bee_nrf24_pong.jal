@@ -72,20 +72,30 @@ spi2_init(SPI_MODE_00,SPI_RATE_FOSC_4) -- init spi, choose mode and speed
 
 nrf24_init()
 
+var byte pipe2[] = {0x00,0x01,0x02,0x03,0xDD}
+nrf24_set_rx_pipe(2,pipe2)
+
+
+
 const byte str[] = "Alive..."
 print_string(serial_hw_data,str)
 print_crlf(serial_hw_data)
 
-nrf24_print_registers()
+nrf24_print_details()
 
 var dword counter = 0
-var byte n0 at counter
-var byte n1 at counter + 1
-var byte n2 at counter + 2
-var byte n3 at counter + 3
+var byte n0 at counter : 0
+var byte n1 at counter : 1
+var byte n2 at counter : 2
+var byte n3 at counter : 3
 
 var dword expected = 0
 var dword errors = 0
+
+const byte STR_RECEIVED[] = "Received: "
+const byte STR_FROM[] = "from pipe #"
+const byte STR_EXPECTED[] = "Expected: "
+const byte STR_ERRORS[] = "Errors: "
 
 forever loop
 
@@ -103,10 +113,13 @@ forever loop
       expected = counter
    end if
 
-   print_string(serial_hw_data,"Received: ")
+   print_string(serial_hw_data,STR_RECEIVED)
    print_dword_dec(serial_hw_data,counter)
    serial_hw_data = " "
-   print_string(serial_hw_data,"Expected: ")
+   print_string(serial_hw_data,STR_FROM)
+   print_byte_dec(serial_hw_data,nrf24_last_pipe_number)
+   serial_hw_data = " "
+   print_string(serial_hw_data,STR_EXPECTED)
    print_dword_dec(serial_hw_data,expected)
    serial_hw_data = " "
 
@@ -119,7 +132,7 @@ forever loop
       expected = counter + 1 -- reinit for next value
    end if
 
-   print_string(serial_hw_data,"Errors: ")
+   print_string(serial_hw_data,STR_ERRORS)
    print_dword_dec(serial_hw_data,errors)
    for 20 loop
       serial_hw_data = " "

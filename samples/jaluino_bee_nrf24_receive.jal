@@ -76,7 +76,7 @@ const byte str[] = "Alive..."
 print_string(serial_hw_data,str)
 print_crlf(serial_hw_data)
 
-nrf24_print_registers()
+nrf24_print_details()
 
 const byte str2[] = "Received: "
 const byte str3[] = "Sleeping..."

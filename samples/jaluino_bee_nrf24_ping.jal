@@ -65,6 +65,7 @@ alias nrf24_ce_pin is pin_A2
 alias nrf24_csn_pin is pin_A3
 -- Receving adress, size must be NRF24_ADDR_LEN
 const byte NRF24_RECEIVE_ADDR[] = {0x05,0x06,0x07,0x08,0x09}
+;const byte NRF24_RECEIVE_ADDR[] = {0x73,0x65,0x72,0x76,0x31}
 -- will send dword values
 const byte NRF24_PAYLOAD_SIZE = 4
 include nrf24l01
@@ -80,19 +81,20 @@ const byte str[] = "Alive..."
 print_string(serial_hw_data,str)
 print_crlf(serial_hw_data)
 
-nrf24_print_registers()
+nrf24_print_details()
 
 const byte str2[] = "Sending: "
 
 -- set destination address
 var byte taddr[] = {0x00,0x01,0x02,0x03,0x04} -- see receive sample addr
+;var byte taddr[] = {0xF0,0xF0,0xF0,0xF0,0xE3}
 nrf24_set_taddr(taddr)
 
 var dword counter = 1
 var byte n0 at counter
-var byte n1 at counter + 1
-var byte n2 at counter + 2
-var byte n3 at counter + 3
+var byte n1 at counter : 1
+var byte n2 at counter : 2
+var byte n3 at counter : 3
 
 forever loop
 
