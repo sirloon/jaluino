@@ -56,12 +56,15 @@ enable_digital_io()
 --  * RA1 <-> (12) RCLK / LATCH
 --  * RA2 <-> (14) SER / DATA
 alias demux595_clock is pin_a0  
-alias demux595_data is pin_a2
 alias demux595_latch is pin_a1
+alias demux595_data is pin_a2
 alias demux595_clock_direction is pin_a0_direction 
 alias demux595_latch_direction is pin_a1_direction 
 alias demux595_data_direction is pin_a2_direction 
 -- for 74HC165 mux
+--  * RB7 <-> (1) SH / LATCH
+--  * RB6 <-> (2) CLK / CLOCK
+--  * RB3 <-> (9) QH / DATA
 alias mux165_latch is pin_b7 
 alias mux165_clock is pin_b6 
 alias mux165_data is pin_b3 
@@ -69,10 +72,10 @@ alias mux165_latch_direction is pin_b7_direction
 alias mux165_clock_direction is pin_b6_direction 
 alias mux165_data_direction is pin_b3_direction 
 -- extra pins for 9th and 10th bits
-alias mux165_data_9 is pin_b5 
-alias mux165_data_10 is pin_b6 
-alias mux165_data_9_direction is pin_b5_direction 
-alias mux165_data_10_direction is pin_b6_direction 
+alias mux165_data_9 is pin_b4 
+alias mux165_data_10 is pin_b5 
+alias mux165_data_9_direction is pin_b4_direction 
+alias mux165_data_10_direction is pin_b5_direction 
 
 
 procedure cpc6128() is
@@ -87,42 +90,67 @@ procedure cpc6128() is
    -- extra inputs to read mux 9th and 10th bits
    mux165_data_9_direction = input
    mux165_data_10_direction = input
+   -- init state
+   mux165_clock = low
+   mux165_latch = low
 end procedure
 
-cpc6128()
-
+-- shift out byte's bit through 595 demux
 procedure shift_out(byte in data) is
-   var byte i = 0
+var byte i = 0
    for 8 using i loop
       var byte val = (data & (1 << (7 - i)))
-      print_byte_dec(serial_hw_data,i)
-      serial_hw_data = ":"
-      print_byte_bin(serial_hw_data,!!val)
-      print_crlf(serial_hw_data)
-      demux595_data = !!val
-      ;digitalWrite(dataPin, !!(val & (1 << (7 - i))));
+      demux595_data = !!val -- convert to true/false
       demux595_clock = high
       demux595_clock = low
    end loop            
 end procedure
 
+-- shift in byte's bits from 165 mux
+function shift_in() return word is
+   var word value = 0
+   var byte i = 0
+   for 8 using i loop
+      value = value | (mux165_data << i)
+      mux165_clock = high
+      mux165_clock = low
+   end loop
 
-var byte data = 0
+   value = value | (word(mux165_data_9) << 8)
+   value = value | (word(mux165_data_10) << 9)
+   return value
+end function
 
+-- init
+cpc6128()
+
+var byte dataout = 0xFF
+var word datain = 0
 forever loop
-   print_byte_bin(serial_hw_data,data)
+   -- demux: send a byte, set pins to high/low
+   serial_hw_data = ">"
+   print_byte_bin(serial_hw_data,dataout)
    print_crlf(serial_hw_data)
    -- 595 demux, output bits
    -- take the latchPin low
    demux595_latch = low
    -- shift out the bits for the SECOND 74HC595:
-   shift_out(data)
+   shift_out(dataout)
    -- take the latch pin high so the LEDs update:
    demux595_latch = high
+
+   -- mux: read inputs, high/low
+   mux165_latch = high
+   datain = shift_in()
+   mux165_latch = low
+   serial_hw_data = "<"
+   print_word_bin(serial_hw_data,datain)
+   print_crlf(serial_hw_data)
+
    -- pause before next value:
    delay_1s(5)
-   
-   data = data + 1
+
+   dataout = dataout + 1
    onboard_led = ! onboard_led
 end loop
 
