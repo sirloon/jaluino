@@ -45,7 +45,7 @@ include serial_hardware
 serial_hw_init()
 
 
-;include usb_keyboard
+include usb_keyboard
 
 -- set all inputs to digital
 enable_digital_io()
@@ -95,6 +95,25 @@ procedure cpc6128() is
    mux165_latch = low
 end procedure
 
+
+-- X1 desc                bckspace -/_  0/)   8/*  6/^  4/$  1/!                    LeftArrow UpArrow
+const byte KEYCODES_X1[] = {0x2A, 0x2D, 0x20, 0x25,0x23,0x21,0x1E,USB_KEYBOARD_KEY_NONE,0x50,0x52}
+-- X2 desc                  [/{   =/+  9/(    7/&  5/%  3/#  2/@                     LeftAlt RightArrow
+const byte KEYCODES_X2[] = {0x2F, 0x2E, 0x26, 0x24,0x22,0x20,0x1F,USB_KEYBOARD_KEY_NONE,0xE2,0x4F}
+-- X3 desc                  RETURN  \/|                                                                              ESC                                        DownArrow
+const byte KEYCODES_X3[] = {0x28,  0x31,USB_KEYBOARD_KEY_O,USB_KEYBOARD_KEY_U,USB_KEYBOARD_KEY_R,USB_KEYBOARD_KEY_E,0x29,USB_KEYBOARD_KEY_NONE,USB_KEYBOARD_KEY_F7,0x51}
+-- X4 desc                  ]/} 
+const byte KEYCODES_X4[] = {0x30,USB_KEYBOARD_KEY_P,USB_KEYBOARD_KEY_I,USB_KEYBOARD_KEY_Y,USB_KEYBOARD_KEY_T,USB_KEYBOARD_KEY_W,USB_KEYBOARD_KEY_Q,USB_KEYBOARD_KEY_NONE,USB_KEYBOARD_KEY_F8,USB_KEYBOARD_KEY_F9}
+-- X5 desc                  KP4  ;/+                                                                              TAB  (empty)
+const byte KEYCODES_X5[] = {0x5C,0x33,USB_KEYBOARD_KEY_L,USB_KEYBOARD_KEY_H,USB_KEYBOARD_KEY_G,USB_KEYBOARD_KEY_S,0x2B,USB_KEYBOARD_KEY_NONE,USB_KEYBOARD_KEY_F5,USB_KEYBOARD_KEY_F6}
+-- X6 desc               LeftShift :
+const byte KEYCODES_X6[] = {0xE1,0xCB,USB_KEYBOARD_KEY_K,USB_KEYBOARD_KEY_J,USB_KEYBOARD_KEY_F,USB_KEYBOARD_KEY_D,USB_KEYBOARD_KEY_A,USB_KEYBOARD_KEY_NONE,USB_KEYBOARD_KEY_F1,USB_KEYBOARD_KEY_F3}
+-- X7 desc                   `    /                                                                                capslock                                       enter
+const byte KEYCODES_X7[] = {0x35, 0x38, USB_KEYBOARD_KEY_M,USB_KEYBOARD_KEY_N,USB_KEYBOARD_KEY_B,USB_KEYBOARD_KEY_C,0x39,USB_KEYBOARD_KEY_NONE,USB_KEYBOARD_KEY_F2,0x58}
+-- X8 desc               LeftCtrl  .     ,   space                                                          suppr                     . (keypad)
+const byte KEYCODES_X8[] = {0xE0, 0x37, 0x36, 0x2C, USB_KEYBOARD_KEY_V,USB_KEYBOARD_KEY_,USB_KEYBOARD_KEY_Z,0x4C,USB_KEYBOARD_KEY_F10,0x63}
+
+
 -- shift out byte's bit through 595 demux
 procedure shift_out(byte in data) is
 var byte i = 0
@@ -121,68 +140,96 @@ function shift_in() return word is
    return value
 end function
 
+procedure send_usb_key(byte in data_write, word in data_read) is
+   ; A
+   ;>00001000
+   ;<0000000001000000
+   ; B
+   ;>00100000
+   ;<0000000001000000
+   var byte idx = 0
+   while data_read != 0 loop
+      data_read = data_read >> 1
+      idx = idx + 1
+   end loop
+   -- one more when left
+   idx = idx - 1
+   var byte code = 0x00
+   case data_write of
+      1  : block code = KEYCODES_X1[idx] end block
+      2  : block code = KEYCODES_X2[idx] end block
+      4  : block code = KEYCODES_X3[idx] end block
+      8  : block code = KEYCODES_X4[idx] end block
+      16 : block code = KEYCODES_X5[idx] end block
+      32 : block code = KEYCODES_X6[idx] end block
+      64 : block code = KEYCODES_X7[idx] end block
+      128: block code = KEYCODES_X8[idx] end block
+      otherwise         code = 0xFF
+   end case
+   ush_keyboard_send_key( 0x00, code)
+   ush_keyboard_send_key( 0x00, USB_KEYBOARD_KEY_NONE)
+   serial_hw_data = "["
+   print_word_hex(serial_hw_data,code)
+   serial_hw_data = "]"
+end procedure
+
 -- init
+usb_keyboard_init()
 cpc6128()
 
-var byte dataout = 0xFF
-var word datain = 0
+var byte data_write = 0xFF
+var word data_read = 0
+var word prevkey = data_read
 forever loop
-   -- demux: send a byte, set pins to high/low
-   serial_hw_data = ">"
-   print_byte_bin(serial_hw_data,dataout)
-   print_crlf(serial_hw_data)
-   -- 595 demux, output bits
-   -- take the latchPin low
-   demux595_latch = low
-   -- shift out the bits for the SECOND 74HC595:
-   shift_out(dataout)
-   -- take the latch pin high so the LEDs update:
-   demux595_latch = high
 
-   -- mux: read inputs, high/low
-   mux165_latch = high
-   datain = shift_in()
-   mux165_latch = low
-   serial_hw_data = "<"
-   print_word_bin(serial_hw_data,datain)
-   print_crlf(serial_hw_data)
+   -- poll the usb flush function on a regular base, in order to 
+   -- serve the USB requests
+   usb_keyboard_flush()
+   
+   -- check if USB device has been configured by the HOST
+   if usb_is_configured()  then
 
-   -- pause before next value:
-   delay_1s(5)
+      -- demux: send a byte, set pins to high/low
+      -- 595 demux, output bits
+      -- take the latchPin low
+      demux595_latch = low
+      -- shift out the bits for the SECOND 74HC595:
+      shift_out(data_write)
+      -- take the latch pin high so the LEDs update:
+      demux595_latch = high
 
-   dataout = dataout + 1
-   onboard_led = ! onboard_led
+      -- mux: read inputs, high/low
+      mux165_latch = high
+      data_read = shift_in()
+      mux165_latch = low
+
+      -- pause before next value:
+      ;delay_1s(5)
+      if data_read != prevkey then
+         prevkey = data_read
+            print_crlf(serial_hw_data)
+            serial_hw_data = ">"
+            print_byte_bin(serial_hw_data,data_write)
+            serial_hw_data = " "
+            serial_hw_data = "<"
+            print_word_bin(serial_hw_data,data_read)
+            serial_hw_data = " "
+            serial_hw_data = "("
+            print_word_hex(serial_hw_data,data_read)
+            serial_hw_data = ")"
+            onboard_led = ! onboard_led
+         if data_read != 0 then
+            send_usb_key(data_write,data_read)
+         end if
+      end if
+
+      if data_write == 0x80 then
+         data_write = 0x01
+      else
+         data_write = data_write << 1
+      end if
+
+   end if
+
 end loop
-
-
-;var byte key_value = USB_KEYBOARD_KEY_A
-
-
-
-;-- intialize the library
-;usb_keyboard_init()
-;
-;-- main loop
-;forever loop
-;	-- poll the usb flush function on a regular base, in order to 
-;	-- serve the USB requests
-;	usb_keyboard_flush()
-;	
-;	-- check if USB device has been configured by the HOST
-;	if usb_is_configured()  then
-;	
-;		if serial_hw_data_available then
-;		key_value = ascii_to_keyscan[serial_hw_data]
-;		;if key_value == 10 then
-;		;	ush_keyboard_send_key( 0x00, 0x28)
-;		;elsif key_value == 32 then
-;		;	ush_keyboard_send_key( 0x00, USB_KEYBOARD_KEY_SPACE)
-;		;else
-;		;	ush_keyboard_send_key( 0x00, key_value - 93)
-;		;end if
-;		ush_keyboard_send_key( 0x00, key_value)
-;		ush_keyboard_send_key( 0x00, 0x00)
-;		end if
-;	end if
-;end loop
 
